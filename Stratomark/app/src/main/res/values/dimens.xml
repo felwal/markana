@@ -1,5 +1,24 @@
 <resources>
 
-    <dimen name="fab_margin">16dp</dimen>
+    <!-- base spacing -->
+    <dimen name="spacing_huge">48dp</dimen>
+    <dimen name="spacing_large">32dp</dimen>
+    <dimen name="spacing_medium">24dp</dimen>
+    <dimen name="spacing_small">16dp</dimen>
+    <dimen name="spacing_tiny">8dp</dimen>
+    <dimen name="spacing_diminutive">4dp</dimen>
+
+    <!-- spacing -->
+    <dimen name="spacing_fab">16dp</dimen>
+
+    <!-- icon size -->
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_viewport_size">24.0</dimen>
+    <dimen name="icon_launcher_size">108dp</dimen>
+    <dimen name="icon_launcher_viewport_size">108</dimen>
+
+    <!-- elevations -->
+    <dimen name="elev_toolbar">4dp</dimen>
+    <dimen name="elev_fab">6dp</dimen>
 
 </resources>
