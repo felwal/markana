@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:scrollbars="none"
         android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/hsv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tb"
@@ -32,7 +32,7 @@
             android:orientation="vertical"
             android:paddingStart="@dimen/spacing_small"
             android:paddingEnd="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_small">
+            android:paddingTop="@dimen/spacing_tiny">
 
             <com.felwal.stratomark.ui.custom.TimidEditText
                 android:id="@+id/et_title"
@@ -65,5 +65,35 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/hsv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/bab_typography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:backgroundTint="?android:colorBackground"
+                android:theme="@style/AppbarTheme"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/menu_bab_edit"
+                style="@style/Widget.MaterialComponents.BottomAppBar.Colored" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

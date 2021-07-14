@@ -20,6 +20,7 @@
     <string name="action_checkbox">Checkbox</string>
     <string name="action_bulleted_list">Bulletlist</string>
     <string name="action_numbered_list">Numberlist</string>
+    <string name="action_schenebreak">Scene break</string>
 
     <!-- layout -->
     

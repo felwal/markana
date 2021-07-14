@@ -18,7 +18,7 @@
     <dimen name="icon_launcher_viewport_size">108</dimen>
 
     <!-- elevations -->
-    <dimen name="elev_toolbar">4dp</dimen>
+    <dimen name="elev_appbar">0dp</dimen>
     <dimen name="elev_fab">6dp</dimen>
 
     <!-- type -->

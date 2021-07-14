@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
+import android.text.Editable
+import android.text.Layout
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -16,12 +18,6 @@ inline fun <reified A : AppCompatActivity> AppCompatActivity.launchActivity(): B
     startActivity(intent)
     return true
 }
-
-val EditText.string: String get() = text.toString()
-
-fun EditText.selectStart() = setSelection(0)
-
-fun EditText.selectEnd() = setSelection(string.length)
 
 fun Activity.close(): Boolean {
     finish()

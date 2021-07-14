@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- toolbar -->
+    <!-- appbar -->
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:elevation">@dimen/elev_toolbar</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:elevation">@dimen/elev_appbar</item>
+        <item name="android:background">?android:colorBackground</item>
         <item name="android:theme">@style/ToolbarTheme</item>
 
         <item name="titleTextColor">?attr/colorOnPrimary</item>
@@ -16,9 +16,16 @@
 
     <style name="ToolbarTheme">
         <!-- built-in action buttons, e.g. home/up -->
-        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+        <item name="colorControlNormal">?attr/colorOnBackground</item>
         <!-- custom action buttons -->
-        <item name="iconTint">?attr/colorOnPrimary</item>
+        <item name="iconTint">?attr/colorSecondary</item>
+    </style>
+
+    <style name="AppbarTheme">
+        <!-- built-in action buttons, e.g. home/up -->
+        <item name="colorControlNormal">?attr/colorSecondary</item>
+        <!-- custom action buttons -->
+        <item name="iconTint">?attr/colorSecondary</item>
     </style>
 
     <!-- edittext -->
