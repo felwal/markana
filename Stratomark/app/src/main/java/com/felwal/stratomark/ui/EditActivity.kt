@@ -10,13 +10,15 @@ import com.felwal.stratomark.data.model.Note
 import com.felwal.stratomark.databinding.ActivityEditBinding
 import com.felwal.stratomark.util.close
 import com.felwal.stratomark.util.showKeyboard
-import com.felwal.stratomark.util.toast
 import android.text.Editable
 import android.text.Layout
+import android.util.Log
+import com.felwal.stratomark.data.db.AppDatabase
 
 class EditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditBinding
+    private lateinit var db: AppDatabase
 
     private val etCurrentFocus: EditText?
         get() = if (currentFocus is EditText) currentFocus as EditText else null
@@ -43,6 +45,8 @@ class EditActivity : AppCompatActivity() {
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        db = AppDatabase.getInstance(applicationContext)
+
         // bab menu
         binding.babTypography.setOnMenuItemClickListener(::onOptionsItemSelected)
 
@@ -51,6 +55,8 @@ class EditActivity : AppCompatActivity() {
             binding.etBody.showKeyboard()
             binding.etBody.selectEnd()
         }
+
+        loadNote(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -141,8 +147,10 @@ class EditActivity : AppCompatActivity() {
 
         for (line in endLine downTo startLine) {
             val lineStart = layout.getLineStart(line)
-            textEdit.insert(lineStart, marker(line))
-            endOffset += marker(line).length
+            val lineIndex = line - startLine
+
+            textEdit.insert(lineStart, marker(lineIndex))
+            endOffset += marker(lineIndex).length
         }
 
         // TODO: toggle
@@ -175,6 +183,19 @@ class EditActivity : AppCompatActivity() {
 
     // save
 
+    private fun loadNote(id: Int) {
+        Thread {
+            val note = db.noteDao().get(id)
+            if (note != null) {
+                Log.i("db", "note: $note")
+                runOnUiThread {
+                    binding.etTitle.setText(note.titleWithExt)
+                    binding.etBody.setText(note.body)
+                }
+            }
+        }.start()
+    }
+
     private fun saveNote(): Boolean {
         var title = binding.etTitle.string
         val body = binding.etBody.string
@@ -183,9 +204,12 @@ class EditActivity : AppCompatActivity() {
         val extension = if (splits.size >= 2) splits.last() else ""
         title = splits.first()
 
-        val note = Note(title, body, extension)
+        val note = Note(0, title, body, extension)
         if (!note.isEmpty()) {
-            toast(note.toString(), true)
+            Thread {
+                Log.i("db", "note: $note")
+                db.noteDao().addOrUpdate(note)
+            }.start()
         }
 
         return true

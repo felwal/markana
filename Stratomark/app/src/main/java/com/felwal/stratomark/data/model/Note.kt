@@ -1,6 +1,18 @@
 package com.felwal.stratomark.data.model
 
-data class Note(var title: String = "", var body: String = "", var extension: String = "txt") {
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "notes")
+data class Note(
+    @PrimaryKey val id: Int,
+    @ColumnInfo(name = "title") var title: String = "",
+    @ColumnInfo(name = "body") var body: String = "",
+    @ColumnInfo(name = "extension") var extension: String = "txt"
+) {
+
+    val titleWithExt: String get() = "$title.$extension"
 
     init {
         if (extension == "") extension = "txt"
