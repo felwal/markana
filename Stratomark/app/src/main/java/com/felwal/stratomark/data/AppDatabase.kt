@@ -1,12 +1,10 @@
-package com.felwal.stratomark.data.db
+package com.felwal.stratomark.data
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.felwal.stratomark.data.model.Note
-
-const val DATABASE_NAME = "stratomark"
+import com.felwal.stratomark.util.DATABASE_NAME
 
 @Database(entities = [Note::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

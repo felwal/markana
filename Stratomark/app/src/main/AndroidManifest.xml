@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Stratomark">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.NoteListActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Stratomark.NoActionBar">
             <intent-filter>
@@ -23,15 +23,15 @@
         </activity>
 
         <activity
-            android:name=".ui.EditActivity"
-            android:parentActivityName=".ui.MainActivity"
+            android:name=".ui.NoteDetailActivity"
+            android:parentActivityName=".ui.NoteListActivity"
             android:label="@string/title_activity_edit"
             android:theme="@style/Theme.Stratomark.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name=".ui.SettingsActivity"
-            android:parentActivityName=".ui.MainActivity"
+            android:parentActivityName=".ui.NoteListActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Stratomark.NoActionBar" />
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context=".ui.EditActivity">
+    tools:context=".ui.NoteDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb"
@@ -34,7 +34,7 @@
             android:paddingEnd="@dimen/spacing_small"
             android:paddingTop="@dimen/spacing_tiny">
 
-            <com.felwal.stratomark.ui.custom.TimidEditText
+            <com.felwal.stratomark.view.TimidEditText
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 style="@style/EditText.Note.Title" />
 
-            <com.felwal.stratomark.ui.custom.TimidEditText
+            <com.felwal.stratomark.view.TimidEditText
                 android:id="@+id/et_body"
                 android:layout_width="match_parent"
                 android:hint="@string/et_hint_edit_doc"

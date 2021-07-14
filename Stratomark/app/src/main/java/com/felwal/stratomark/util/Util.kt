@@ -13,6 +13,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 
+// Context
+
+fun Context.toast(text: String, long: Boolean = false) =
+    Toast
+        .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+        .show()
+
 inline fun <reified A : AppCompatActivity> AppCompatActivity.launchActivity(): Boolean {
     val intent = Intent(this, A::class.java)
     startActivity(intent)
@@ -23,6 +30,12 @@ fun Activity.close(): Boolean {
     finish()
     return true
 }
+
+fun Activity.hideKeyboard() {
+    currentFocus?.hideKeyboard()
+}
+
+// View
 
 fun View.showKeyboard() {
     requestFocus()
@@ -36,17 +49,19 @@ fun View.hideKeyboard() {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun Activity.hideKeyboard() {
-    currentFocus?.hideKeyboard()
-}
-
 fun View.snackbar(text: String, long: Boolean = true, actionText: String = "", action: ((it: View) -> Unit)? = null) =
     Snackbar
         .make(this, text, if (long) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT)
         .setAction(actionText, action)
         .show()
 
-fun Context.toast(text: String, long: Boolean = false) =
-    Toast
-        .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
-        .show()
+val EditText.string: String get() = text.toString()
+
+val Editable.copy: Editable
+    get() = Editable.Factory.getInstance().newEditable(this)
+
+fun EditText.selectStart() = setSelection(0)
+
+fun EditText.selectEnd() = setSelection(string.length)
+
+fun Layout.getStartOfLine(index: Int): Int = getLineStart(getLineForOffset(index))

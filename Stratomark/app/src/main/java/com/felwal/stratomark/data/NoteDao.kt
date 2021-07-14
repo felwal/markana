@@ -1,11 +1,10 @@
-package com.felwal.stratomark.data.db
+package com.felwal.stratomark.data
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.felwal.stratomark.data.model.Note
 
 @Dao
 interface NoteDao {

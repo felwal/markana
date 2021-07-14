@@ -1,4 +1,4 @@
-package com.felwal.stratomark.ui.custom
+package com.felwal.stratomark.view
 
 import android.content.Context
 import android.util.AttributeSet

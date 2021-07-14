@@ -6,17 +6,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.felwal.stratomark.R
 
-import com.felwal.stratomark.databinding.ActivityMainBinding
+import com.felwal.stratomark.databinding.ActivityNoteListBinding
 import com.felwal.stratomark.util.launchActivity
 
-class MainActivity : AppCompatActivity() {
+class NoteListActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityNoteListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityNoteListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFab() {
         binding.fab.setOnClickListener { view ->
-            launchActivity<EditActivity>()
+            launchActivity<NoteDetailActivity>()
             //view.snackbar("Replace with your own action", actionText = "Action") {}
         }
     }

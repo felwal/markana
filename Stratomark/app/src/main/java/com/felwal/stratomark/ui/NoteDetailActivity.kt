@@ -6,40 +6,32 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.felwal.stratomark.R
-import com.felwal.stratomark.data.model.Note
-import com.felwal.stratomark.databinding.ActivityEditBinding
+import com.felwal.stratomark.data.Note
+import com.felwal.stratomark.databinding.ActivityNoteDetailBinding
 import com.felwal.stratomark.util.close
-import com.felwal.stratomark.util.showKeyboard
 import android.text.Editable
 import android.text.Layout
 import android.util.Log
-import com.felwal.stratomark.data.db.AppDatabase
+import com.felwal.stratomark.data.AppDatabase
+import com.felwal.stratomark.util.copy
+import com.felwal.stratomark.util.selectEnd
+import com.felwal.stratomark.util.showKeyboard
+import com.felwal.stratomark.util.string
 
-class EditActivity : AppCompatActivity() {
+class NoteDetailActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityEditBinding
+    private lateinit var binding: ActivityNoteDetailBinding
     private lateinit var db: AppDatabase
 
     private val etCurrentFocus: EditText?
         get() = if (currentFocus is EditText) currentFocus as EditText else null
-
-    val EditText.string: String get() = text.toString()
-
-    val Editable.copy: Editable
-        get() = Editable.Factory.getInstance().newEditable(this)
-
-    fun EditText.selectStart() = setSelection(0)
-
-    fun EditText.selectEnd() = setSelection(string.length)
-
-    fun Layout.getStartOfLine(index: Int): Int = getLineStart(getLineForOffset(index))
 
     // Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityEditBinding.inflate(layoutInflater)
+        binding = ActivityNoteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
         supportActionBar?.title = ""
@@ -66,10 +58,7 @@ class EditActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
-                saveNote()
-                close()
-            }
+            android.R.id.home -> close()
             R.id.action_undo -> {} // TODO
             R.id.action_redo -> {} // TODO
             R.id.action_bold -> etCurrentFocus?.bold()
@@ -90,10 +79,12 @@ class EditActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (hasAnyFocus()) clearAllFocus()
-        else {
-            saveNote()
-            super.onBackPressed()
-        }
+        else super.onBackPressed()
+    }
+
+    override fun onDestroy() {
+        saveNote()
+        super.onDestroy()
     }
 
     // focus

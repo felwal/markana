@@ -1,4 +1,4 @@
-package com.felwal.stratomark.data.model
+package com.felwal.stratomark.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
