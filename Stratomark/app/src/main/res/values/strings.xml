@@ -4,10 +4,27 @@
 
     <!-- activities -->
     <string name="title_activity_main">@string/app_name</string>
+    <string name="title_activity_edit">Edit</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- actions -->
     <string name="action_settings">Settings</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_bold">Bold</string>
+    <string name="action_italic">Italic</string>
+    <string name="action_strikethrough">Strikethrough</string>
+    <string name="action_heading">Heading</string>
+    <string name="action_quote">Quote</string>
+    <string name="action_code">Code</string>
+    <string name="action_checkbox">Checkbox</string>
+    <string name="action_bulleted_list">Bulletlist</string>
+    <string name="action_numbered_list">Numberlist</string>
+
+    <!-- layout -->
+    
+    <string name="et_hint_edit_title">note.txt</string>
+    <string name="et_hint_edit_doc">Note</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

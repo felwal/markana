@@ -21,4 +21,20 @@
     <dimen name="elev_toolbar">4dp</dimen>
     <dimen name="elev_fab">6dp</dimen>
 
+    <!-- type -->
+
+    <dimen name="type_note_title">24sp</dimen>
+    <dimen name="type_note_body">16sp</dimen>
+
+    <dimen name="type_headline1">36sp</dimen>
+    <dimen name="type_headline2">28sp</dimen>
+    <dimen name="type_title_toolbar">18sp</dimen>
+    <dimen name="type_title_tab">16sp</dimen>
+    <dimen name="type_heading1">18sp</dimen>
+    <dimen name="type_heading_setting">16dp</dimen>
+    <dimen name="type_heading2">14sp</dimen>
+    <dimen name="type_body">14sp</dimen>
+    <dimen name="type_caption">12sp</dimen>
+    <dimen name="type_overline">12sp</dimen>
+
 </resources>

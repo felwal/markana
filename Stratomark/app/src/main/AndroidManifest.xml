@@ -23,11 +23,17 @@
         </activity>
 
         <activity
+            android:name=".ui.EditActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:label="@string/title_activity_edit"
+            android:theme="@style/Theme.Stratomark.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
             android:name=".ui.SettingsActivity"
             android:parentActivityName=".ui.MainActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.Stratomark.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Stratomark.NoActionBar" />
 
     </application>
 

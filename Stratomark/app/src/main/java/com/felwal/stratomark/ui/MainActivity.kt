@@ -7,8 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.felwal.stratomark.R
 
 import com.felwal.stratomark.databinding.ActivityMainBinding
-import com.felwal.stratomark.launchActivity
-import com.felwal.stratomark.snackbar
+import com.felwal.stratomark.util.launchActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,26 +18,26 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.tb)
 
         initFab()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_tb_main, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.action_settings -> launchActivity<SettingsActivity>()
             else -> super.onOptionsItemSelected(item)
         }
-    }
 
     private fun initFab() {
         binding.fab.setOnClickListener { view ->
-            view.snackbar("Replace with your own action", actionText = "Action") {}
+            launchActivity<EditActivity>()
+            //view.snackbar("Replace with your own action", actionText = "Action") {}
         }
     }
 }

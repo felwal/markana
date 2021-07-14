@@ -1,10 +1,12 @@
 package com.felwal.stratomark.ui
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 import com.felwal.stratomark.R
 import com.felwal.stratomark.databinding.ActivitySettingsBinding
+import com.felwal.stratomark.util.close
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -15,16 +17,22 @@ class SettingsActivity : AppCompatActivity() {
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.tb)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.frame, SettingsFragment())
+                .replace(R.id.fl, SettingsFragment())
                 .commit()
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            android.R.id.home -> close()
+            else -> super.onOptionsItemSelected(item)
+        }
 
     class SettingsFragment : PreferenceFragmentCompat() {
 
