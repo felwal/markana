@@ -11,7 +11,7 @@
         <!-- secondary -->
         <item name="colorSecondary">@color/red_light</item>
         <item name="colorSecondaryVariant">@color/red</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnSecondary">?android:colorBackground</item>
     </style>
 
     <style name="Theme.Stratomark" parent="Theme.Default">

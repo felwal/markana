@@ -1,4 +1,4 @@
-package com.felwal.stratomark.ui
+package com.felwal.stratomark.ui.setting
 
 import android.os.Bundle
 import android.view.MenuItem

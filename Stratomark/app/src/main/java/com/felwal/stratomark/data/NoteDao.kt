@@ -9,29 +9,32 @@ import androidx.room.Update
 @Dao
 interface NoteDao {
 
-    // writer
+    // write
 
     @Insert
-    fun add(vararg notes: Note)
+    fun addNote(vararg notes: Note)
 
     @Update
-    fun update(vararg notes: Note)
+    fun updateNote(vararg notes: Note)
 
-    fun addOrUpdate(note: Note) = if (exists(note.id)) update(note) else add(note)
+    fun addOrUpdateNote(note: Note) = if (doesNoteExist(note.noteId)) updateNote(note) else addNote(note)
 
     @Delete
-    fun delete(note: Note)
+    fun deleteNote(note: Note)
 
-    // reader
+    @Query("DELETE FROM notes WHERE noteId = :noteId")
+    fun deleteNote(noteId: Int);
 
-    @Query("SELECT * FROM notes WHERE id == :id LIMIT 1")
-    fun get(id: Int): Note?
+    // read
+
+    @Query("SELECT * FROM notes WHERE noteId = :noteId LIMIT 1")
+    fun getNote(noteId: Int): Note?
 
     @Query("SELECT * FROM notes")
-    fun getAll(): List<Note>
+    fun getAllNotes(): List<Note>
 
     @Query("SELECT * FROM notes WHERE title LIKE :title AND body LIKE :body LIMIT 1")
-    fun search(title: String, body: String): Note
+    fun searchNote(title: String, body: String): Note
 
-    fun exists(id: Int) = get(id) != null
+    fun doesNoteExist(noteId: Int) = getNote(noteId) != null
 }

@@ -6,65 +6,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context=".ui.NoteDetailActivity">
+    tools:context=".ui.notedetail.NoteDetailActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Toolbar" />
-
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scrollbars="none"
-        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/hsv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tb"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/ab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/spacing_small"
-            android:paddingEnd="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_tiny">
+            android:stateListAnimator="@animator/selector_elev_appbar">
 
-            <com.felwal.stratomark.view.TimidEditText
-                android:id="@+id/et_title"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleGravity="top"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:titleEnabled="false">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/tb"
+                    style="@style/Toolbar" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toTopOf="@+id/hsv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tb">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/et_hint_edit_title"
-                android:singleLine="true"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/EditText.Note.Title" />
+                android:orientation="vertical"
+                android:paddingStart="@dimen/spacing_small"
+                android:paddingEnd="@dimen/spacing_small"
+                android:paddingTop="@dimen/spacing_tiny">
 
-            <com.felwal.stratomark.view.TimidEditText
-                android:id="@+id/et_body"
-                android:layout_width="match_parent"
-                android:hint="@string/et_hint_edit_doc"
-                android:singleLine="false"
-                android:inputType="textMultiLine|textCapSentences"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_title"
-                style="@style/EditText.Note" />
+                <com.felwal.stratomark.view.TimidEditText
+                    android:id="@+id/et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/et_hint_edit_title"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:textColor="?attr/colorAccent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/EditText.Note.Title" />
 
-            <View
-                android:id="@+id/v_empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <com.felwal.stratomark.view.TimidEditText
+                    android:id="@+id/et_body"
+                    android:layout_width="match_parent"
+                    android:hint="@string/et_hint_edit_doc"
+                    android:singleLine="false"
+                    android:inputType="textMultiLine|textCapSentences"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_title"
+                    style="@style/EditText.Note" />
 
-        </LinearLayout>
+                <View
+                    android:id="@+id/v_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-    </ScrollView>
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <HorizontalScrollView
         android:id="@+id/hsv"
@@ -89,7 +116,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:menu="@menu/menu_bab_edit"
+                app:menu="@menu/menu_bab_note_detail"
                 style="@style/Widget.MaterialComponents.BottomAppBar.Colored" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

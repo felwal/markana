@@ -2,16 +2,19 @@
 <resources>
 
     <!-- main -->
-    <color name="red_light">#FFFF522D</color>
-    <color name="red">#FFC82400</color>
-    <color name="red_dark">#FF9B1C00</color>
-    <color name="teal_light">#FF03DAC5</color>
-    <color name="teal_dark">#FF018786</color>
+    <color name="red_light">#FF522D</color>
+    <color name="red_light_trans">#33FF522D</color>
+    <color name="red">#C82400</color>
+    <color name="red_dark">#9B1C00</color>
+    <color name="teal_light">#03DAC5</color>
+    <color name="teal_dark">#018786</color>
 
     <!-- greyscale -->
-    <color name="black">#FF000000</color>
-    <color name="grey">#FF202124</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey1">#121212</color>
+    <color name="grey2">#202124</color>
+    <color name="grey3">#2F3033</color>
+    <color name="white">#FFFFFF</color>
 
     <!-- trans -->
     <color name="trans">#00000000</color>

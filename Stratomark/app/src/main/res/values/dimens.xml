@@ -11,6 +11,9 @@
     <!-- spacing -->
     <dimen name="spacing_fab">16dp</dimen>
 
+    <!-- layout -->
+    <dimen name="corner_radius_medium">10dp</dimen>
+
     <!-- icon size -->
     <dimen name="icon_size">24dp</dimen>
     <dimen name="icon_viewport_size">24.0</dimen>
@@ -18,11 +21,10 @@
     <dimen name="icon_launcher_viewport_size">108</dimen>
 
     <!-- elevations -->
-    <dimen name="elev_appbar">0dp</dimen>
+    <dimen name="elev_appbar">4dp</dimen>
     <dimen name="elev_fab">6dp</dimen>
 
     <!-- type -->
-
     <dimen name="type_note_title">24sp</dimen>
     <dimen name="type_note_body">16sp</dimen>
 
