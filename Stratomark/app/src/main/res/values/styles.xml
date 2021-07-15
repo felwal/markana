@@ -46,4 +46,22 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- text view -->
+
+    <style name="TextView" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="TextView.Heading1">
+        <item name="android:textSize">@dimen/type_heading1</item>
+    </style>
+
+    <style name="TextView.Body">
+        <item name="android:textSize">@dimen/type_body</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
 </resources>

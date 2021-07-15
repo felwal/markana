@@ -3,6 +3,7 @@ package com.felwal.stratomark.ui.notelist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
@@ -77,12 +78,19 @@ class NoteListActivity : AppCompatActivity() {
 
     private fun selectNote(note: Note) {
         val copy = note.copy(noteId = NO_ID)
-        // TODO
+        // TODO: select mode, select toolbar menu
         thread {
             db.noteDao().addNote(copy)
             db.invokeWriteListener(this)
         }
     }
 
-    private fun submitItems() = thread { adapter.submitList(items) }
+    private fun submitItems() = thread {
+        val notes = items
+        runOnUiThread {
+            // toggle empty page
+            binding.clEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
+        }
+        adapter.submitList(notes)
+    }
 }

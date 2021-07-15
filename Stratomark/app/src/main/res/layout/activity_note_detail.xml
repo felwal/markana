@@ -62,7 +62,7 @@
                     android:id="@+id/et_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/et_hint_edit_title"
+                    android:hint="@string/et_hint_note_detail_title"
                     android:singleLine="true"
                     android:inputType="text"
                     android:textColor="?attr/colorAccent"
@@ -74,7 +74,7 @@
                 <com.felwal.stratomark.view.TimidEditText
                     android:id="@+id/et_body"
                     android:layout_width="match_parent"
-                    android:hint="@string/et_hint_edit_doc"
+                    android:hint="@string/et_hint_note_detail_body"
                     android:singleLine="false"
                     android:inputType="textMultiLine|textCapSentences"
                     app:layout_constraintEnd_toEndOf="parent"

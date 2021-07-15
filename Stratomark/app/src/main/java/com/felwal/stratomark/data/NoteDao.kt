@@ -37,4 +37,7 @@ interface NoteDao {
     fun searchNote(title: String, body: String): Note
 
     fun doesNoteExist(noteId: Int) = getNote(noteId) != null
+
+    @Query("SELECT count() FROM notes")
+    fun noteCount(): Int
 }

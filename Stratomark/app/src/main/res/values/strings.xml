@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Stratomark</string>
+    <string name="app_name">StratoMark</string>
 
     <!-- activities -->
     <string name="title_activity_main">@string/app_name</string>
@@ -25,8 +25,11 @@
 
     <!-- layout -->
     
-    <string name="et_hint_edit_title">note.txt</string>
-    <string name="et_hint_edit_doc">Note</string>
+    <string name="et_hint_note_detail_title">note.txt</string>
+    <string name="et_hint_note_detail_body">Note</string>
+
+    <string name="tv_note_list_empty_title">Welcome to StratoMark!</string>
+    <string name="tv_note_list_empty_message">Create your first note with +</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
