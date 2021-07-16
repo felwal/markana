@@ -39,6 +39,10 @@ fun Activity.hideKeyboard() {
 
 // View
 
+fun visibleOrGone(visible: Boolean) = if (visible) View.VISIBLE else View.GONE
+
+fun visibleOrNot(visible: Boolean) = if (visible) View.VISIBLE else View.INVISIBLE
+
 fun View.showKeyboard() {
     requestFocus()
     val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -80,7 +84,6 @@ fun <E> MutableCollection<E>.empty() = removeAll(this)
 
 // res
 
-// get
 @ColorInt
 fun Context.getAttrColor(resId: Int): Int {
     val typedValue = TypedValue()

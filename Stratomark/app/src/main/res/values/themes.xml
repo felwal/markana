@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Default" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- statusbar -->
         <item name="android:statusBarColor" tools:targetApi="l">?android:colorBackground</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:strokeColor">@color/grey5</item>
 
         <!-- primary -->
         <item name="colorPrimary">@color/red</item>
@@ -14,6 +14,12 @@
         <item name="colorSecondary">@color/red_light</item>
         <item name="colorSecondaryVariant">@color/red</item>
         <item name="colorOnSecondary">?android:colorBackground</item>
+
+        <!-- divider (manual) -->
+        <item name="android:strokeColor">@color/grey6</item>
+
+        <!-- surface -->
+        <item name="colorSurface">@color/grey7</item>
     </style>
 
     <style name="Theme.Stratomark" parent="Theme.Default">
@@ -27,6 +33,6 @@
 
     <style name="Theme.Stratomark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.Stratomark.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Stratomark.PopupOverlay" parent="ThemeOverlay.AppCompat.DayNight" />
 
 </resources>

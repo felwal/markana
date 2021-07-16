@@ -49,18 +49,21 @@ class NoteListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // binding
         binding = ActivityNoteListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
 
         // tb: deselect as home
         val homeIcon = ContextCompat.getDrawable(this, R.drawable.ic_cancel)!!.mutate()
-        homeIcon.setColorFilter(getAttrColor(R.attr.colorSecondary), PorterDuff.Mode.SRC_IN)
+        homeIcon.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
         supportActionBar?.setHomeAsUpIndicator(homeIcon)
 
+        // db
         db = AppDatabase.getInstance(applicationContext)
         db.onWriteListener = { submitItems() }
 
+        // animate tb elevation on scroll
         binding.rv.setOnScrollChangeListener { _, _, _, _, _ ->
             binding.ab.isSelected = binding.rv.canScrollVertically(-1)
         }

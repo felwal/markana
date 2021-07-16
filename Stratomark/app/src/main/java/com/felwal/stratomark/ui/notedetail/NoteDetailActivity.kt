@@ -32,13 +32,14 @@ class NoteDetailActivity : AppCompatActivity() {
         get() = if (currentFocus is EditText) currentFocus as EditText else null
 
     private val hasAnyFocus: Boolean
-        get() = binding.etTitle.hasFocus() || binding.etBody.hasFocus()
+        get() = binding.etNoteTitle.hasFocus() || binding.etNoteBody.hasFocus()
 
     // Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // binding
         binding = ActivityNoteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
@@ -47,22 +48,30 @@ class NoteDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // db
         db = AppDatabase.getInstance(applicationContext)
 
-        // bab menu
+        // bab menu listener
         binding.babTypography.setOnMenuItemClickListener(::onOptionsItemSelected)
+
+        // show/hide bab
+        /*binding.etNoteBody.setOnFocusChangeListener { _, focused ->
+            binding.babTypography.visibility = visibleOrGone(focused)
+        }*/
 
         // focus body on outside click
         binding.vEmpty.setOnClickListener {
-            binding.etBody.showKeyboard()
-            binding.etBody.selectEnd()
+            binding.etNoteBody.showKeyboard()
+            binding.etNoteBody.selectEnd()
         }
 
+        // load note
         noteId = intent.getIntExtra(EXTRA_NOTE_ID)
         noteId?.let { loadNote(it) }
 
-        binding.nsv.setOnScrollChangeListener { _, _, _, _, _ ->
-            binding.ab.isSelected = binding.nsv.canScrollVertically(-1)
+        // animate tb elevation on scroll
+        binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
+            binding.ab.isSelected = binding.nsvNote.canScrollVertically(-1)
         }
     }
 
@@ -114,8 +123,8 @@ class NoteDetailActivity : AppCompatActivity() {
     // focus
 
     private fun clearAllFocus() {
-        binding.etTitle.clearFocus()
-        binding.etBody.clearFocus()
+        binding.etNoteTitle.clearFocus()
+        binding.etNoteBody.clearFocus()
     }
 
     // save/load
@@ -127,16 +136,16 @@ class NoteDetailActivity : AppCompatActivity() {
             note?.let {
                 Log.i("db", "note loaded: $it")
                 runOnUiThread {
-                    binding.etTitle.setText(it.titleWithExt)
-                    binding.etBody.setText(it.body)
+                    binding.etNoteTitle.setText(it.titleWithExt)
+                    binding.etNoteBody.setText(it.body)
                 }
             }
         }
     }
 
     private fun saveNote(): Boolean {
-        var title = binding.etTitle.string
-        val body = binding.etBody.string
+        var title = binding.etNoteTitle.string
+        val body = binding.etNoteBody.string
 
         val splits = title.split(".")
         val extension = if (splits.size >= 2) splits.last() else ""
@@ -161,7 +170,7 @@ class NoteDetailActivity : AppCompatActivity() {
 
     // typography bar generals
 
-    private fun EditText.insert(marker: String) {
+    private fun EditText.insertAtCursor(marker: String) {
         val textEdit = text.copy
         val end = selectionEnd
 
@@ -198,7 +207,6 @@ class NoteDetailActivity : AppCompatActivity() {
         val startLine = layout.getLineForOffset(start)
 
         var endOffset = 0
-
         for (line in endLine downTo startLine) {
             val lineStart = layout.getLineStart(line)
             val lineIndex = line - startLine
@@ -207,7 +215,7 @@ class NoteDetailActivity : AppCompatActivity() {
             endOffset += marker(lineIndex).length
         }
 
-        // TODO: toggle
+        // TODO: toggle (also between different lists)
 
         text = textEdit
         setSelection(start + marker(startLine).length, end + endOffset)
@@ -233,7 +241,7 @@ class NoteDetailActivity : AppCompatActivity() {
 
     private fun EditText.checklist() = markSelectedLines { "- [] " }
 
-    private fun EditText.horizontalRule() = insert("* * *")
+    private fun EditText.horizontalRule() = insertAtCursor("* * *")
 
     //
 

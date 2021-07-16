@@ -5,7 +5,7 @@
         <objectAnimator
             android:duration="200"
             android:propertyName="elevation"
-            android:valueTo="@dimen/elev_appbar"
+            android:valueTo="@dimen/elev_ab"
             android:valueType="floatType" />
     </item>
 

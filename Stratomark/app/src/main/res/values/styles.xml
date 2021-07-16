@@ -10,7 +10,7 @@
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:theme">@style/AppbarTheme</item>
 
-        <item name="elevation">@dimen/elev_appbar</item>
+        <item name="elevation">@dimen/elev_ab</item>
         <item name="titleTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">@style/Theme.Stratomark.PopupOverlay</item>
     </style>

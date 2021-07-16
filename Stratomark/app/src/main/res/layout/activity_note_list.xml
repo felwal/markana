@@ -11,7 +11,7 @@
         android:id="@+id/ab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stateListAnimator="@animator/selector_elev_appbar"
+        android:stateListAnimator="@animator/selector_elev_ab"
         android:theme="@style/AppbarTheme">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -25,6 +25,8 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tb"
+                tools:menu="@menu/menu_tb_note_list"
+                tools:title="@string/title_activity_note_list"
                 style="@style/Toolbar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
