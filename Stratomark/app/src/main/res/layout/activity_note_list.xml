@@ -11,9 +11,11 @@
         android:id="@+id/ab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stateListAnimator="@animator/selector_elev_appbar">
+        android:stateListAnimator="@animator/selector_elev_appbar"
+        android:theme="@style/AppbarTheme">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/ctb"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"

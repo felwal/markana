@@ -1,7 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Stratomark" parent="Theme.Default">
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:colorBackground">@color/grey2</item>
+        <item name="android:strokeColor">@color/grey4</item>
 
         <item name="colorSurface">@color/grey3</item>
     </style>

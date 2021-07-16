@@ -42,6 +42,8 @@ class NoteDetailActivity : AppCompatActivity() {
         binding = ActivityNoteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
+
+        // tb: title and home
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -94,6 +96,7 @@ class NoteDetailActivity : AppCompatActivity() {
             R.id.action_bulleted_list -> etCurrentFocus?.bulletlist()
             R.id.action_numbered_list -> etCurrentFocus?.numberlist()
             R.id.action_scenebreak -> etCurrentFocus?.horizontalRule()
+
             else -> return super.onOptionsItemSelected(item)
         }
 
@@ -152,7 +155,7 @@ class NoteDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteNote() = noteId?.let { thread {
-        db.noteDao().deleteNote(it)
+        db.noteDao().deleteNotes(it)
         db.invokeWriteListener(this)
     } }
 

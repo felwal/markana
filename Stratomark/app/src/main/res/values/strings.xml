@@ -3,8 +3,8 @@
     <string name="app_name">StratoMark</string>
 
     <!-- activities -->
-    <string name="title_activity_main">@string/app_name</string>
-    <string name="title_activity_edit">Edit</string>
+    <string name="title_activity_note_list">@string/app_name</string>
+    <string name="title_activity_note_detail">Note</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- actions -->
@@ -12,6 +12,7 @@
     <string name="action_undo">Undo</string>
     <string name="action_redo">Redo</string>
     <string name="action_delete">Delete</string>
+    <string name="action_copy">Copy</string>
     <string name="action_bold">Bold</string>
     <string name="action_italic">Italic</string>
     <string name="action_strikethrough">Strikethrough</string>
@@ -24,7 +25,12 @@
     <string name="action_schenebreak">Scene break</string>
 
     <!-- layout -->
-    
+
+    <plurals name="tb_title_note_list_selection">
+        <item quantity="one">%d note</item>
+        <item quantity="other">%d notes</item>
+    </plurals>
+
     <string name="et_hint_note_detail_title">note.txt</string>
     <string name="et_hint_note_detail_body">Note</string>
 

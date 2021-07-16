@@ -11,9 +11,11 @@
 
     <!-- greyscale -->
     <color name="black">#000000</color>
-    <color name="grey1">#121212</color>
-    <color name="grey2">#202124</color>
-    <color name="grey3">#2F3033</color>
+    <color name="grey1">#121212</color> <!-- dk default bg -->
+    <color name="grey2">#202124</color> <!-- dk bg -->
+    <color name="grey3">#2F3033</color> <!-- dk surface -->
+    <color name="grey4">#4E4F53</color> <!-- dk divider -->
+    <color name="grey5">#DDDDDD</color> <!-- lt divider -->
     <color name="white">#FFFFFF</color>
 
     <!-- trans -->

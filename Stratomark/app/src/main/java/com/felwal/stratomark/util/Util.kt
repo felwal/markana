@@ -6,10 +6,12 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.text.Editable
 import android.text.Layout
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -65,3 +67,23 @@ fun EditText.selectStart() = setSelection(0)
 fun EditText.selectEnd() = setSelection(string.length)
 
 fun Layout.getStartOfLine(index: Int): Int = getLineStart(getLineForOffset(index))
+
+// Collection
+
+fun <E> MutableCollection<E>.toggleInclusion(element: E) =
+    if (contains(element)) remove(element) else add(element)
+
+fun <E> MutableList<E>.replace(oldElement: E, newElement: E) =
+    set(indexOf(oldElement), newElement)
+
+fun <E> MutableCollection<E>.empty() = removeAll(this)
+
+// res
+
+// get
+@ColorInt
+fun Context.getAttrColor(resId: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(resId, typedValue, true)
+    return typedValue.data
+}

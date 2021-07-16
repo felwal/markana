@@ -15,6 +15,8 @@ data class Note(
     @PrimaryKey(autoGenerate = true) var noteId: Int = NO_ID
 ) {
 
+    var selected: Boolean = false
+
     val titleWithExt: String get() = "$title.$extension"
 
     init {

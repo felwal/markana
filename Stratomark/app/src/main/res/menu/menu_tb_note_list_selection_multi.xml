@@ -5,21 +5,9 @@
     tools:context="com.felwal.stratomark.ui.notelist.NoteListActivity">
 
     <item
-        android:id="@+id/action_undo"
-        android:title="@string/action_undo"
-        android:icon="@drawable/ic_undo"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_redo"
-        android:title="@string/action_redo"
-        android:icon="@drawable/ic_redo"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_delete"
         android:title="@string/action_delete"
         android:icon="@drawable/ic_delete"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

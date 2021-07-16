@@ -1,11 +1,15 @@
 package com.felwal.stratomark.ui.notelist
 
+import android.content.Context
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.felwal.stratomark.R
 import com.felwal.stratomark.data.Note
 import com.felwal.stratomark.databinding.ItemNoteBinding
 
@@ -18,7 +22,7 @@ class NoteAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemNoteBinding.inflate(inflater)
 
-        return NoteViewHolder(binding, onClick, onLongClick)
+        return NoteViewHolder(parent.context, binding, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -27,13 +31,15 @@ class NoteAdapter(
     }
 
     class NoteViewHolder(
+        private val c: Context,
         binding: ItemNoteBinding,
         val onClick: (Note) -> Unit,
-        val onLongClick: (Note) -> Unit,
+        val onLongClick: (Note) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val tvTitle: TextView = binding.tvTitle
         private val tvBody: TextView = binding.tvBody
+        private val clBackground: ConstraintLayout = binding.clNote
         private var currentNote: Note? = null
 
         init {
@@ -51,6 +57,11 @@ class NoteAdapter(
 
             tvTitle.text = note.titleWithExt
             tvBody.text = note.body.trim()
+
+            // mark selected
+            clBackground.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+            if (note.selected) clBackground.background.setTint(c.getColor(R.color.red_light_trans))
+            else clBackground.background.setTint(c.getColor(R.color.trans))
         }
     }
 }
@@ -61,5 +72,5 @@ private class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
         oldItem.noteId == newItem.noteId
 
     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
-        oldItem == newItem
+        oldItem == newItem && oldItem.selected == newItem.selected
 }

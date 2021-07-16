@@ -20,10 +20,13 @@ interface NoteDao {
     fun addOrUpdateNote(note: Note) = if (doesNoteExist(note.noteId)) updateNote(note) else addNote(note)
 
     @Delete
-    fun deleteNote(note: Note)
+    fun deleteNote(vararg notes: Note)
+
+    @Delete
+    fun deleteNotes(notes: List<Note>)
 
     @Query("DELETE FROM notes WHERE noteId = :noteId")
-    fun deleteNote(noteId: Int);
+    fun deleteNotes(noteId: Int);
 
     // read
 

@@ -13,6 +13,7 @@
 
     <!-- layout -->
     <dimen name="corner_radius_medium">10dp</dimen>
+    <dimen name="stroke_width_small">1dp</dimen>
 
     <!-- icon size -->
     <dimen name="icon_size">24dp</dimen>

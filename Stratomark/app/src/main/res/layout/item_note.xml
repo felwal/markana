@@ -37,7 +37,7 @@
             android:layout_marginStart="@dimen/spacing_tiny"
             android:layout_marginEnd="@dimen/spacing_tiny"
             android:layout_marginBottom="@dimen/spacing_tiny"
-            android:maxLines="10"
+            android:maxLines="12"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
