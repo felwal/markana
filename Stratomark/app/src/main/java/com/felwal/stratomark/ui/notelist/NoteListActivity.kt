@@ -1,12 +1,15 @@
 package com.felwal.stratomark.ui.notelist
 
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.felwal.stratomark.R
 import com.felwal.stratomark.data.AppDatabase
@@ -15,6 +18,9 @@ import com.felwal.stratomark.data.Note
 import com.felwal.stratomark.databinding.ActivityNoteListBinding
 import com.felwal.stratomark.ui.notedetail.NoteDetailActivity
 import com.felwal.stratomark.ui.setting.SettingsActivity
+import com.felwal.stratomark.util.animateFab
+import com.felwal.stratomark.util.crossfadeIn
+import com.felwal.stratomark.util.crossfadeOut
 import com.felwal.stratomark.util.empty
 import com.felwal.stratomark.util.getAttrColor
 import com.felwal.stratomark.util.launchActivity
@@ -22,12 +28,15 @@ import com.felwal.stratomark.util.toggleInclusion
 import com.google.android.material.appbar.AppBarLayout
 import kotlin.concurrent.thread
 
+const val OVERLAY_ALPHA = 0.96f
+
 class NoteListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteListBinding
     private lateinit var db: AppDatabase
     private lateinit var adapter: NoteAdapter
 
+    private var isFabMenuOpen: Boolean = false
     private val selectedItems: MutableList<Note> = mutableListOf()
     private var _items: MutableList<Note> = mutableListOf()
 
@@ -55,46 +64,49 @@ class NoteListActivity : AppCompatActivity() {
         setSupportActionBar(binding.tb)
 
         // tb: deselect as home
-        val homeIcon = ContextCompat.getDrawable(this, R.drawable.ic_cancel)!!.mutate()
-        homeIcon.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
-        supportActionBar?.setHomeAsUpIndicator(homeIcon)
+        val homeIcon = ContextCompat.getDrawable(this, R.drawable.ic_cancel)?.mutate()
+        homeIcon?.let {
+            it.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+            supportActionBar?.setHomeAsUpIndicator(it)
+        }
 
         // db
         db = AppDatabase.getInstance(applicationContext)
         db.onWriteListener = { submitItems() }
 
-        // animate tb elevation on scroll
-        binding.rv.setOnScrollChangeListener { _, _, _, _, _ ->
+        // animate tb and fab on scroll
+        binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            // animate tb
             binding.ab.isSelected = binding.rv.canScrollVertically(-1)
+
+            // show/hide fab
+            val dy = scrollY - oldScrollY
+            if (binding.fab.isOrWillBeShown && dy > 0) binding.fab.hide()
+            else if (binding.fab.isOrWillBeHidden && dy < 0) binding.fab.show()
         }
 
-        initFab()
+        initFabMenu()
         initRecycler()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         when (selectionCount) {
             0 -> {
+                // set menu
                 menuInflater.inflate(R.menu.menu_tb_note_list, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
                 // change scroll flags: scroll and snap tb
-                val params: AppBarLayout.LayoutParams = binding.ctb.layoutParams as AppBarLayout.LayoutParams
-                params.scrollFlags =
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
-                binding.ctb.layoutParams = params
-
+                enableToolbarScroll()
                 //binding.ab.setExpanded(false, true)
             }
             1 -> {
+                // set menu
                 menuInflater.inflate(R.menu.menu_tb_note_list_selection_single, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
                 // change scroll flags: don't scroll tb
-                val params: AppBarLayout.LayoutParams = binding.ctb.layoutParams as AppBarLayout.LayoutParams
-                params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
-                binding.ctb.layoutParams = params
-
+                disableToolbarScroll()
                 binding.ab.setExpanded(true, false) // anim is not smooth
             }
             else -> {
@@ -105,35 +117,35 @@ class NoteListActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            // normal tb
-            R.id.action_settings -> launchActivity<SettingsActivity>()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        // normal tb
+        R.id.action_settings -> launchActivity<SettingsActivity>()
 
-            // single selection tb
-            R.id.action_copy -> copyNote()
+        // single selection tb
+        R.id.action_copy -> copyNote()
 
-            // multi selection tb
-            android.R.id.home -> {
-                emptySelection()
-                true
-            }
-            R.id.action_delete -> deleteNote()
-
-            else -> super.onOptionsItemSelected(item)
+        // multi selection tb
+        android.R.id.home -> {
+            emptySelection()
+            true
         }
+        R.id.action_delete -> deleteNote()
 
-    override fun onBackPressed() {
-        if (selectionMode) emptySelection()
-        else super.onBackPressed()
+        else -> super.onOptionsItemSelected(item)
     }
 
-    // view
-
-    private fun initFab() = binding.fab.setOnClickListener {
-        emptySelection()
-        NoteDetailActivity.startActivity(this)
+    override fun onRestart() {
+        super.onRestart()
+        if (isFabMenuOpen) closeFabMenu()
     }
+
+    override fun onBackPressed() = when {
+        isFabMenuOpen -> closeFabMenu()
+        selectionMode -> emptySelection()
+        else -> super.onBackPressed()
+    }
+
+    // recycler
 
     private fun initRecycler() {
         adapter = NoteAdapter(
@@ -151,6 +163,78 @@ class NoteListActivity : AppCompatActivity() {
         submitItems()
     }
 
+    // fab
+
+    private fun initFabMenu() {
+        binding.fab.setOnClickListener {
+            if (isFabMenuOpen) closeFabMenu() else openFabMenu()
+        }
+
+        binding.fabCreate.setOnClickListener {
+            emptySelection()
+            NoteDetailActivity.startActivity(this)
+        }
+
+        binding.fabLink.setOnClickListener {
+            emptySelection()
+            // TODO: open Storage Access Framework
+        }
+
+        binding.vOverlay.setOnClickListener { closeFabMenu() }
+    }
+
+    private fun openFabMenu() {
+        animateFab()
+        binding.fabCreate.show()
+        binding.fabLink.show()
+
+        binding.clFabsCreate.crossfadeIn()
+        binding.clFabsLink.crossfadeIn()
+        binding.vOverlay.crossfadeIn(OVERLAY_ALPHA)
+
+        isFabMenuOpen = true
+    }
+
+    private fun closeFabMenu() {
+        animateFab()
+        binding.fabLink.hide()
+        binding.fabCreate.hide()
+
+        binding.clFabsLink.crossfadeOut()
+        binding.clFabsCreate.crossfadeOut()
+        binding.vOverlay.crossfadeOut()
+
+        isFabMenuOpen = false
+    }
+
+    private fun animateFab() {
+        @ColorInt val closedColor: Int = getAttrColor(R.attr.colorSecondary)
+        @ColorInt val openColor: Int = getAttrColor(R.attr.colorSurface)
+
+        @ColorInt val fromColor: Int
+        @ColorInt val toColor: Int
+        val toIcon: Drawable?
+
+        // animate to closed menu
+        if (isFabMenuOpen) {
+            fromColor = openColor
+            toColor = closedColor
+            toIcon = ContextCompat.getDrawable(this, R.drawable.ic_add)?.mutate()
+            toIcon?.setColorFilter(getAttrColor(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
+        }
+        // animate to open menu
+        else {
+            fromColor = closedColor
+            toColor = openColor
+            toIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear)?.mutate()
+            toIcon?.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+        }
+
+        binding.fab.animateFab(fromColor, toColor, toIcon)
+    }
+
+    // toolbar
+
     private fun updateToolbarTitle() {
         if (selectionCount == 0) {
             supportActionBar?.title = getString(R.string.title_activity_note_list)
@@ -159,6 +243,19 @@ class NoteListActivity : AppCompatActivity() {
             supportActionBar?.title =
                 resources.getQuantityString(R.plurals.tb_title_note_list_selection, selectionCount, selectionCount)
         }
+    }
+
+    private fun enableToolbarScroll() {
+        val params: AppBarLayout.LayoutParams = binding.ctb.layoutParams as AppBarLayout.LayoutParams
+        params.scrollFlags =
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+        binding.ctb.layoutParams = params
+    }
+
+    private fun disableToolbarScroll() {
+        val params: AppBarLayout.LayoutParams = binding.ctb.layoutParams as AppBarLayout.LayoutParams
+        params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+        binding.ctb.layoutParams = params
     }
 
     //

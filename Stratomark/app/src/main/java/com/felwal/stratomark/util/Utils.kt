@@ -1,6 +1,8 @@
 package com.felwal.stratomark.util
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
@@ -16,6 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 
 // Context
+
+fun Context.copyToClipboard(text: CharSequence) {
+    val clipboard = getSystemService(ClipboardManager::class.java)
+    val clip = ClipData.newPlainText("label", text)
+    clipboard.setPrimaryClip(clip)
+}
 
 fun Context.toast(text: String, long: Boolean = false) =
     Toast

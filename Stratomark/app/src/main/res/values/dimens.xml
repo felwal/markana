@@ -23,8 +23,10 @@
 
     <!-- elevation -->
     <dimen name="elev_ab">4dp</dimen>
-    <dimen name="elev_bab">40dp</dimen>
+    <dimen name="elev_nb">8dp</dimen>
     <dimen name="elev_fab">6dp</dimen>
+    <dimen name="elev_overlay">9dp</dimen>
+    <dimen name="elev_fabmenu">10dp</dimen>
 
     <!-- type -->
     <dimen name="type_note_title">24sp</dimen>

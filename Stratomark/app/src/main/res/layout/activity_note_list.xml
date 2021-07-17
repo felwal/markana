@@ -99,14 +99,111 @@
         tools:itemCount="2"
         tools:listitem="@layout/item_note" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+    <LinearLayout
+        android:id="@+id/ll_fabs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/spacing_fab"
-        app:backgroundTint="?attr/colorSecondary"
-        app:iconTint="?attr/colorOnSecondary"
-        app:srcCompat="@drawable/ic_add" />
+        android:paddingTop="@dimen/spacing_tiny"
+        android:paddingBottom="@dimen/spacing_fab"
+        android:paddingStart="@dimen/spacing_small"
+        android:paddingEnd="@dimen/spacing_fab"
+        android:orientation="vertical"
+        android:clipToPadding="false"
+        android:elevation="@dimen/elev_fabmenu"
+        app:layout_constraintBottom_toBottomOf="@+id/cdl_main"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_fabs_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/spacing_diminutive"
+            android:paddingBottom="@dimen/spacing_small"
+            android:paddingEnd="@dimen/spacing_diminutive"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            android:clipToPadding="false"
+            tools:visibility="visible">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_link"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_link"
+                style="@style/Fab.Mini" />
+
+            <TextView
+                android:id="@+id/tv_fabs_link"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:text="@string/tv_fab_link"
+                app:layout_constraintBottom_toBottomOf="@+id/fab_link"
+                app:layout_constraintEnd_toStartOf="@+id/fab_link"
+                app:layout_constraintTop_toTopOf="@+id/fab_link"
+                app:layout_constraintVertical_bias="0.4"
+                style="@style/TextView.Body.FabTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_fabs_create"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/spacing_diminutive"
+            android:paddingBottom="@dimen/spacing_small"
+            android:paddingEnd="@dimen/spacing_diminutive"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            android:clipToPadding="false"
+            tools:visibility="visible">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_create"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_create"
+                style="@style/Fab.Mini" />
+
+            <TextView
+                android:id="@+id/tv_fabs_create"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:text="@string/tv_fab_create"
+                app:layout_constraintBottom_toBottomOf="@+id/fab_create"
+                app:layout_constraintEnd_toStartOf="@+id/fab_create"
+                app:layout_constraintTop_toTopOf="@+id/fab_create"
+                app:layout_constraintVertical_bias="0.4"
+                style="@style/TextView.Body.FabTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_marginTop="@dimen/spacing_diminutive"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_add"
+            style="@style/Fab" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.96"
+        android:background="?android:attr/colorBackground"
+        android:defaultFocusHighlightEnabled="false"
+        android:elevation="@dimen/elev_overlay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

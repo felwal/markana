@@ -15,6 +15,7 @@ import com.felwal.stratomark.data.Note
 import com.felwal.stratomark.databinding.ActivityNoteDetailBinding
 import com.felwal.stratomark.util.close
 import com.felwal.stratomark.util.copy
+import com.felwal.stratomark.util.copyToClipboard
 import com.felwal.stratomark.util.selectEnd
 import com.felwal.stratomark.util.showKeyboard
 import com.felwal.stratomark.util.string
@@ -89,6 +90,7 @@ class NoteDetailActivity : AppCompatActivity() {
             }
             R.id.action_undo -> {} // TODO
             R.id.action_redo -> {} // TODO
+            R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
             R.id.action_delete -> {
                 deleteNote()
                 close()
@@ -99,11 +101,11 @@ class NoteDetailActivity : AppCompatActivity() {
             R.id.action_italic -> etCurrentFocus?.italic()
             R.id.action_strikethrough -> etCurrentFocus?.strikethrough()
             R.id.action_heading -> etCurrentFocus?.header()
-            R.id.action_checkbox -> etCurrentFocus?.checklist()
+            R.id.action_checklist -> etCurrentFocus?.checklist()
             R.id.action_quote -> etCurrentFocus?.quote()
             R.id.action_code -> etCurrentFocus?.code()
-            R.id.action_bulleted_list -> etCurrentFocus?.bulletlist()
-            R.id.action_numbered_list -> etCurrentFocus?.numberlist()
+            R.id.action_bulletlist -> etCurrentFocus?.bulletlist()
+            R.id.action_numberlist -> etCurrentFocus?.numberlist()
             R.id.action_scenebreak -> etCurrentFocus?.horizontalRule()
 
             else -> return super.onOptionsItemSelected(item)

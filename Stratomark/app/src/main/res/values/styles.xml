@@ -22,6 +22,24 @@
         <item name="iconTint">?attr/colorControlActivated</item>
     </style>
 
+    <!-- fab -->
+
+    <style name="Fab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:elevation">@dimen/elev_fab</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+
+        <item name="fabSize">normal</item>
+        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="iconTint">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="Fab.Mini">
+        <item name="fabSize">mini</item>
+    </style>
+
     <!-- edittext -->
 
     <style name="EditText">
@@ -40,7 +58,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- text view -->
+    <!-- textview -->
 
     <style name="TextView" parent="TextAppearance.AppCompat">
         <item name="android:layout_width">wrap_content</item>
@@ -56,6 +74,10 @@
     <style name="TextView.Body">
         <item name="android:textSize">@dimen/type_body</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="TextView.Body.FabTitle">
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>
