@@ -37,6 +37,7 @@ class NoteAdapter(
         val onLongClick: (Note) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        private val tvUri: TextView = binding.tvUri
         private val tvTitle: TextView = binding.tvTitle
         private val tvBody: TextView = binding.tvBody
         private val clBackground: ConstraintLayout = binding.clNote
@@ -55,8 +56,9 @@ class NoteAdapter(
         fun bind(note: Note) {
             currentNote = note
 
-            tvTitle.text = note.titleWithExt
-            tvBody.text = note.body.trim()
+            tvUri.text = note.uri
+            tvTitle.text = note.filename
+            tvBody.text = note.content.trim()
 
             // mark selected
             clBackground.background.setTintMode(PorterDuff.Mode.SRC_OVER)
@@ -69,7 +71,7 @@ class NoteAdapter(
 private class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
 
     override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
-        oldItem.noteId == newItem.noteId
+        oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
         oldItem == newItem && oldItem.selected == newItem.selected

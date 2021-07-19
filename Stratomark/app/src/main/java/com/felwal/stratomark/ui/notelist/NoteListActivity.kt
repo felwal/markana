@@ -9,18 +9,20 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.felwal.stratomark.R
 import com.felwal.stratomark.data.AppDatabase
 import com.felwal.stratomark.data.NO_ID
 import com.felwal.stratomark.data.Note
+import com.felwal.stratomark.data.NoteRepository
 import com.felwal.stratomark.databinding.ActivityNoteListBinding
+import com.felwal.stratomark.network.SafHelper
 import com.felwal.stratomark.ui.notedetail.NoteDetailActivity
 import com.felwal.stratomark.ui.setting.SettingsActivity
 import com.felwal.stratomark.util.animateFab
 import com.felwal.stratomark.util.crossfadeIn
 import com.felwal.stratomark.util.crossfadeOut
+import com.felwal.stratomark.util.defaults
 import com.felwal.stratomark.util.empty
 import com.felwal.stratomark.util.getAttrColor
 import com.felwal.stratomark.util.launchActivity
@@ -33,8 +35,11 @@ const val OVERLAY_ALPHA = 0.96f
 class NoteListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteListBinding
-    private lateinit var db: AppDatabase
     private lateinit var adapter: NoteAdapter
+
+    private lateinit var db: AppDatabase
+    private lateinit var saf: SafHelper
+    private lateinit var repo: NoteRepository
 
     private var isFabMenuOpen: Boolean = false
     private val selectedItems: MutableList<Note> = mutableListOf()
@@ -42,7 +47,7 @@ class NoteListActivity : AppCompatActivity() {
 
     private val items: MutableList<Note>
         get() {
-            val freshItems = db.noteDao().getAllNotes().toMutableList()
+            val freshItems = repo.getAllNotes().toMutableList()
             if (freshItems != _items) _items = freshItems
             return _items
         }
@@ -70,9 +75,11 @@ class NoteListActivity : AppCompatActivity() {
             supportActionBar?.setHomeAsUpIndicator(it)
         }
 
-        // db
+        // data
         db = AppDatabase.getInstance(applicationContext)
         db.onWriteListener = { submitItems() }
+        saf = SafHelper(this)
+        repo = NoteRepository(db, saf)
 
         // animate tb and fab on scroll
         binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
@@ -117,19 +124,17 @@ class NoteListActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
         // normal tb
         R.id.action_settings -> launchActivity<SettingsActivity>()
-
++
         // single selection tb
-        R.id.action_copy -> copyNote()
+        R.id.action_copy -> copySelection()
 
         // multi selection tb
-        android.R.id.home -> {
-            emptySelection()
-            true
-        }
-        R.id.action_delete -> deleteNote()
+        android.R.id.home -> emptySelection()
+        R.id.action_unlink -> unlinkSelection()
+        R.id.action_delete -> deleteSelection()
 
         else -> super.onOptionsItemSelected(item)
     }
@@ -151,7 +156,7 @@ class NoteListActivity : AppCompatActivity() {
         adapter = NoteAdapter(
             onClick = {
                 if (selectionMode) selectNote(it)
-                else NoteDetailActivity.startActivity(this, it.noteId)
+                else NoteDetailActivity.startActivity(this, it.uri)
             },
             onLongClick = {
                 selectNote(it)
@@ -163,23 +168,38 @@ class NoteListActivity : AppCompatActivity() {
         submitItems()
     }
 
+    private fun submitItems() = thread {
+        val notes = items
+
+        runOnUiThread {
+            adapter.submitList(notes)
+
+            // toggle empty page
+            binding.clEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
+        }
+    }
+
     // fab
 
     private fun initFabMenu() {
+        // open/close fab menu
         binding.fab.setOnClickListener {
             if (isFabMenuOpen) closeFabMenu() else openFabMenu()
         }
 
+        // create note; launch NoteDetailActivity
         binding.fabCreate.setOnClickListener {
             emptySelection()
             NoteDetailActivity.startActivity(this)
         }
 
+        // link note; launch Storage Access Framework
         binding.fabLink.setOnClickListener {
             emptySelection()
-            // TODO: open Storage Access Framework
+            saf.linkFile()
         }
 
+        // close fab menu
         binding.vOverlay.setOnClickListener { closeFabMenu() }
     }
 
@@ -258,41 +278,42 @@ class NoteListActivity : AppCompatActivity() {
         binding.ctb.layoutParams = params
     }
 
-    //
+    // data
 
-    private fun submitItems() = thread {
-        val notes = items
-
-        runOnUiThread {
-            adapter.submitList(notes)
-
-            // toggle empty page
-            binding.clEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
-        }
-    }
-
-    // note actions
-
-    private fun copyNote(): Boolean {
-        selectedItem?.let {
-            val copy = it.copy(noteId = NO_ID)
+    private fun copyNote(note: Note?) {
+        note?.let {
+            val copy = it.copy(id = NO_ID)
             thread {
                 db.noteDao().addNote(copy)
                 db.invokeWriteListener(this)
                 runOnUiThread { emptySelection() }
             }
         }
-        return true
     }
 
-    private fun deleteNote(): Boolean {
+    private fun unlinkNotes(notes: List<Note>) {
         thread {
-            db.noteDao().deleteNotes(selectedItems)
+            repo.unlinkNotes(selectedItems.map { it.uri })
             db.invokeWriteListener(this)
-            runOnUiThread { emptySelection(/*false*/) }
+            runOnUiThread { emptySelection() }
         }
-        return true
     }
+
+    private fun deleteNotes(notes: List<Note>) {
+        thread {
+            repo.deleteNotes(notes.map { it.uri })
+            db.invokeWriteListener(this)
+            runOnUiThread { emptySelection() }
+        }
+    }
+
+    // data: convenience
+
+    private fun copySelection() = copyNote(selectedItem)
+
+    private fun deleteSelection() = deleteNotes(selectedItems)
+
+    private fun unlinkSelection() = unlinkNotes(selectedItems)
 
     // selection
 

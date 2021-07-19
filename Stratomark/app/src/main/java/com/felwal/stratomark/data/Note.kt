@@ -1,29 +1,33 @@
 package com.felwal.stratomark.data
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 // must be 0 to enable autoincrement
 const val NO_ID = 0
+const val URI_DEFAULT = ""
 
 @Entity(tableName = "notes")
 data class Note(
-    @ColumnInfo(name = "title") var title: String = "",
-    @ColumnInfo(name = "body") var body: String = "",
-    @ColumnInfo(name = "extension") var extension: String = "txt",
-    @PrimaryKey(autoGenerate = true) var noteId: Int = NO_ID
+    @ColumnInfo(name = "filename") var filename: String = "", // TODO: remove from db?
+    @ColumnInfo(name = "content") var content: String = "", // TODO: remove from db?
+    @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
+    @PrimaryKey(autoGenerate = true) var id: Int = NO_ID
 ) {
+
+    //@ColumnInfo var type: String = "txt"
 
     var selected: Boolean = false
 
-    val titleWithExt: String get() = "$title.$extension"
-
     init {
-        if (extension == "") extension = "txt"
+        //val splits = filename.split(".")
+        //type = if (splits.size >= 2) splits.last() else ""
+        //title = splits.first()
     }
 
-    override fun toString(): String = "$title.$extension: $body"
+    override fun toString(): String = "$filename: $content"
 
-    fun isEmpty(): Boolean = title == "" && body == ""
+    fun isEmpty(): Boolean = filename == "" && content == ""
 }

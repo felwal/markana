@@ -2,38 +2,56 @@ package com.felwal.stratomark.ui.notedetail
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.felwal.stratomark.R
 import com.felwal.stratomark.data.AppDatabase
 import com.felwal.stratomark.data.NO_ID
 import com.felwal.stratomark.data.Note
+import com.felwal.stratomark.data.NoteRepository
+import com.felwal.stratomark.data.URI_DEFAULT
 import com.felwal.stratomark.databinding.ActivityNoteDetailBinding
-import com.felwal.stratomark.util.close
+import com.felwal.stratomark.network.SafHelper
 import com.felwal.stratomark.util.copy
 import com.felwal.stratomark.util.copyToClipboard
+import com.felwal.stratomark.util.defaults
 import com.felwal.stratomark.util.selectEnd
 import com.felwal.stratomark.util.showKeyboard
 import com.felwal.stratomark.util.string
+import com.felwal.stratomark.util.then
 import kotlin.concurrent.thread
 
+private const val LOG_TAG = "NoteDetail"
+private const val EXTRA_NOTE_URI = "uri"
 private const val EXTRA_NOTE_ID = "id"
 
 class NoteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteDetailBinding
+
     private lateinit var db: AppDatabase
+    private lateinit var saf: SafHelper
+    private lateinit var repo: NoteRepository
+
+    private var noteUri: String? = null
     private var noteId: Int? = null
+    private var initialTitle = ""
+    private var initialBody = ""
 
     private val etCurrentFocus: EditText?
         get() = if (currentFocus is EditText) currentFocus as EditText else null
 
     private val hasAnyFocus: Boolean
         get() = binding.etNoteTitle.hasFocus() || binding.etNoteBody.hasFocus()
+
+    private val haveChangesBeenMade: Boolean
+        get() = binding.etNoteTitle.string != initialTitle || binding.etNoteBody.string != initialBody
 
     // Activity
 
@@ -49,16 +67,16 @@ class NoteDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // db
+        // data
         db = AppDatabase.getInstance(applicationContext)
+        saf = SafHelper(this) { uri ->
+            uri ?: finish() // if user didn't pick a location, cancel
+            noteUri = uri.toString()
+        }
+        repo = NoteRepository(db, saf)
 
         // bab menu listener
         binding.babTypography.setOnMenuItemClickListener(::onOptionsItemSelected)
-
-        // show/hide bab
-        /*binding.etNoteBody.setOnFocusChangeListener { _, focused ->
-            binding.babTypography.visibility = visibleOrGone(focused)
-        }*/
 
         // focus body on outside click
         binding.vEmpty.setOnClickListener {
@@ -66,9 +84,16 @@ class NoteDetailActivity : AppCompatActivity() {
             binding.etNoteBody.selectEnd()
         }
 
-        // load note
-        noteId = intent.getIntExtra(EXTRA_NOTE_ID)
-        noteId?.let { loadNote(it) }
+        // set up uri and load or create file
+        noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
+        noteUri?.let {
+            thread {
+                val note = repo.getNote(it)
+                note ?: finish() // the note was not found or had not granted access
+                note?.let { runOnUiThread { loadNote(it) } }
+            }
+        }
+        noteUri ?: repo.createNote()
 
         // animate tb elevation on scroll
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
@@ -81,37 +106,27 @@ class NoteDetailActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            // tb
-            android.R.id.home -> {
-                saveNote()
-                close()
-            }
-            R.id.action_undo -> {} // TODO
-            R.id.action_redo -> {} // TODO
-            R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
-            R.id.action_delete -> {
-                deleteNote()
-                close()
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
+        // tb
+        android.R.id.home -> saveNote() then finish()
+        R.id.action_undo -> {} // TODO
+        R.id.action_redo -> {} // TODO
+        R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
+        R.id.action_delete -> deleteNote() then finish() then true
 
-            // bab
-            R.id.action_bold -> etCurrentFocus?.bold()
-            R.id.action_italic -> etCurrentFocus?.italic()
-            R.id.action_strikethrough -> etCurrentFocus?.strikethrough()
-            R.id.action_heading -> etCurrentFocus?.header()
-            R.id.action_checklist -> etCurrentFocus?.checklist()
-            R.id.action_quote -> etCurrentFocus?.quote()
-            R.id.action_code -> etCurrentFocus?.code()
-            R.id.action_bulletlist -> etCurrentFocus?.bulletlist()
-            R.id.action_numberlist -> etCurrentFocus?.numberlist()
-            R.id.action_scenebreak -> etCurrentFocus?.horizontalRule()
+        // bab
+        R.id.action_bold -> etCurrentFocus?.bold()
+        R.id.action_italic -> etCurrentFocus?.italic()
+        R.id.action_strikethrough -> etCurrentFocus?.strikethrough()
+        R.id.action_heading -> etCurrentFocus?.header()
+        R.id.action_checklist -> etCurrentFocus?.checklist()
+        R.id.action_quote -> etCurrentFocus?.quote()
+        R.id.action_code -> etCurrentFocus?.code()
+        R.id.action_bulletlist -> etCurrentFocus?.bulletlist()
+        R.id.action_numberlist -> etCurrentFocus?.numberlist()
+        R.id.action_scenebreak -> etCurrentFocus?.horizontalRule()
 
-            else -> return super.onOptionsItemSelected(item)
-        }
-
-        return true
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
@@ -129,46 +144,34 @@ class NoteDetailActivity : AppCompatActivity() {
         binding.etNoteBody.clearFocus()
     }
 
-    // save/load
+    // view
 
-    private fun loadNote(noteId: Int) {
-        thread {
-            val note = db.noteDao().getNote(noteId)
+    private fun loadNote(note: Note) {
+        binding.etNoteTitle.setText(note.filename)
+        binding.etNoteBody.setText(note.content)
 
-            note?.let {
-                Log.i("db", "note loaded: $it")
-                runOnUiThread {
-                    binding.etNoteTitle.setText(it.titleWithExt)
-                    binding.etNoteBody.setText(it.body)
-                }
-            }
-        }
+        initialTitle = note.filename
+        initialBody = note.content
     }
 
-    private fun saveNote(): Boolean {
-        var title = binding.etNoteTitle.string
+    // data
+
+    private fun saveNote() {
+        if (!haveChangesBeenMade) return
+
+        val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string
+        val note = Note(title, body, noteUri ?: URI_DEFAULT, noteId ?: NO_ID)
 
-        val splits = title.split(".")
-        val extension = if (splits.size >= 2) splits.last() else ""
-        title = splits.first()
-
-        val note = Note(title, body, extension, noteId ?: NO_ID)
-        if (note.isEmpty()) return true
+        Log.i(LOG_TAG, "note saved: $note")
 
         thread {
-            Log.i("db", "note saved: $note")
-            db.noteDao().addOrUpdateNote(note)
+            repo.saveNote(note, title != initialTitle)
             db.invokeWriteListener(this)
         }
-
-        return true
     }
 
-    private fun deleteNote() = noteId?.let { thread {
-        db.noteDao().deleteNotes(it)
-        db.invokeWriteListener(this)
-    } }
+    private fun deleteNote() = noteUri?.let { repo.deleteNote(it) }
 
     // typography bar generals
 
@@ -249,9 +252,9 @@ class NoteDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        fun startActivity(c: Context, id: Int? = null) {
+        fun startActivity(c: Context, uri: String? = null) {
             val intent = Intent(c, NoteDetailActivity::class.java)
-            id?.let { intent.putExtra(EXTRA_NOTE_ID, it); }
+            uri?.let { intent.putExtra(EXTRA_NOTE_URI, it); }
             c.startActivity(intent)
         }
     }

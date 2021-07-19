@@ -17,7 +17,7 @@ interface NoteDao {
     @Update
     fun updateNote(vararg notes: Note)
 
-    fun addOrUpdateNote(note: Note) = if (doesNoteExist(note.noteId)) updateNote(note) else addNote(note)
+    fun addOrUpdateNote(note: Note) = if (doesNoteExist(note.uri)) updateNote(note) else addNote(note)
 
     @Delete
     fun deleteNote(vararg notes: Note)
@@ -25,21 +25,32 @@ interface NoteDao {
     @Delete
     fun deleteNotes(notes: List<Note>)
 
-    @Query("DELETE FROM notes WHERE noteId = :noteId")
-    fun deleteNotes(noteId: Int);
+    @Query("DELETE FROM notes WHERE id = :id")
+    fun deleteNote(id: Int);
+
+    @Query("DELETE FROM notes WHERE uri = :uri")
+    fun deleteNote(uri: String);
 
     // read
 
-    @Query("SELECT * FROM notes WHERE noteId = :noteId LIMIT 1")
-    fun getNote(noteId: Int): Note?
+    @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
+    fun getNote(id: Int): Note?
+
+    @Query("SELECT * FROM notes WHERE uri = :uri LIMIT 1")
+    fun getNote(uri: String): Note?
 
     @Query("SELECT * FROM notes")
     fun getAllNotes(): List<Note>
 
-    @Query("SELECT * FROM notes WHERE title LIKE :title AND body LIKE :body LIMIT 1")
-    fun searchNote(title: String, body: String): Note
+    @Query("SELECT uri FROM notes")
+    fun getAllUris(): List<String>
 
-    fun doesNoteExist(noteId: Int) = getNote(noteId) != null
+    @Query("SELECT * FROM notes WHERE filename LIKE :filename AND content LIKE :content LIMIT 1")
+    fun searchNote(filename: String, content: String): Note
+
+    fun doesNoteExist(id: Int) = getNote(id) != null
+
+    fun doesNoteExist(uri: String) = getNote(uri) != null
 
     @Query("SELECT count() FROM notes")
     fun noteCount(): Int
