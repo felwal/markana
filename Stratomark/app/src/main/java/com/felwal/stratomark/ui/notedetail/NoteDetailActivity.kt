@@ -21,6 +21,7 @@ import com.felwal.stratomark.network.SafHelper
 import com.felwal.stratomark.util.copy
 import com.felwal.stratomark.util.copyToClipboard
 import com.felwal.stratomark.util.defaults
+import com.felwal.stratomark.util.makeMultilinePreventEnter
 import com.felwal.stratomark.util.selectEnd
 import com.felwal.stratomark.util.showKeyboard
 import com.felwal.stratomark.util.string
@@ -99,6 +100,8 @@ class NoteDetailActivity : AppCompatActivity() {
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
             binding.ab.isSelected = binding.nsvNote.canScrollVertically(-1)
         }
+
+        binding.etNoteTitle.makeMultilinePreventEnter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

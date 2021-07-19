@@ -56,15 +56,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="@dimen/spacing_small"
-                android:paddingEnd="@dimen/spacing_small"
-                android:paddingTop="@dimen/spacing_tiny">
+                android:paddingEnd="@dimen/spacing_small">
 
                 <com.felwal.stratomark.view.TimidEditText
                     android:id="@+id/et_note_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/et_hint_note_detail_title"
-                    android:singleLine="true"
                     android:inputType="text"
                     android:textColor="?attr/colorAccent"
                     app:layout_constraintEnd_toEndOf="parent"

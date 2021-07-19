@@ -97,6 +97,12 @@ fun EditText.selectStart() = setSelection(0)
 
 fun EditText.selectEnd() = setSelection(string.length)
 
+fun EditText.makeMultilinePreventEnter() = apply {
+    isSingleLine = true
+    setHorizontallyScrolling(false) // allow wrapping
+    maxLines = 100 // allow expanding
+}
+
 fun Layout.getStartOfLine(index: Int): Int = getLineStart(getLineForOffset(index))
 
 // Collection
