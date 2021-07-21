@@ -7,35 +7,24 @@ import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
-import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.felwal.stratomark.data.AppDatabase
 import com.felwal.stratomark.data.Note
-import com.felwal.stratomark.data.NoteRepository
-import com.felwal.stratomark.data.URI_DEFAULT
-import com.felwal.stratomark.util.safeToast
 import com.felwal.stratomark.util.safeToastLog
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.InputStreamReader
-import kotlin.concurrent.thread
 
 private const val LOG_TAG = "Saf"
 private const val MIME_TEXT = "text/*"
 private const val MIME_TEXT_PLAIN = "text/plain"
 
-class SafHelper(
-    val a: AppCompatActivity,
-    createDocumentCallback: ((uri: Uri?) -> Unit)? = null
-) {
+class SafHelper(private val applicationContext: Context) {
 
-    private val resolver = a.applicationContext.contentResolver
-    private val db = AppDatabase.getInstance(a.applicationContext)
-    private val repo = NoteRepository(db, this)
+    private val resolver = applicationContext.contentResolver
 
     private val persistPermissionsFlags: Int =
         Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -49,49 +38,22 @@ class SafHelper(
     private val canPersistMorePermissions: Boolean
         get() = persistedPermissionCount < persistedPermissionCountCap
 
-    private val openDocument = a.registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        uri ?: return@registerForActivityResult
-        Log.d(LOG_TAG, "open document uri result: $uri")
-
-        persistPermissions(uri)
-
-        // we now have the uri; read and save it to the db
-        thread {
-            if (!db.noteDao().doesNoteExist(uri.toString())) {
-                val note = readFile(uri)
-                note?.let {
-                    db.noteDao().addNote(it)
-                    db.invokeWriteListener(a)
-                }
-            }
-            else a.safeToast("Note already linked")
-        }
-    }
-
-    private val createDocument = a.registerForActivityResult(CreateTextDocument()) { uri ->
-        //uri ?: return@registerForActivityResult
-        Log.d(LOG_TAG, "create document uri result: $uri")
-
-        uri?.let { persistPermissions(uri) }
-
-        // the file has been created (or failed), now we need to save it's contents (or finish)
-        createDocumentCallback?.invoke(uri)
-    }
-
     // read
 
-    fun linkFile() = openDocument.launch(arrayOf(MIME_TEXT))
+    fun openFile(openDocumentResultLauncher: ActivityResultLauncher<Array<String>>) =
+        openDocumentResultLauncher.launch(arrayOf(MIME_TEXT))
 
     fun readFile(uri: Uri): Note? {
         if (!hasReadPermission(uri.toString())) {
             // this also fires if the file has been moved/deleted
             // and in the case of DropBox, when renamed
-            a.safeToastLog(LOG_TAG, "File not found or permission to read not persisted, unlinking note ...")
+            applicationContext
+                .safeToastLog(LOG_TAG, "Provider not found or permission to read not persisted, unlinking note ...")
 
             // TODO: get option to relink
 
+            val db = AppDatabase.getInstance(applicationContext)
             db.noteDao().deleteNote(uri.toString())
-            db.invokeWriteListener(a)
             return null
 
             // TODO: update to allow temporary permissions / edit with
@@ -119,13 +81,13 @@ class SafHelper(
             catch (e: FileNotFoundException) {
                 // files from google drive fire this after restart. why?
                 // they aren't caught with not having permissions.
-                a.safeToastLog(LOG_TAG, "File not found or permissions not persisted", e)
+                applicationContext.safeToastLog(LOG_TAG, "Provider not found or permissions not persisted", e)
             }
 
             return Note(filename, content, uri.toString())
         }
         catch (e: SecurityException) {
-            a.safeToastLog(LOG_TAG, "Permissions denied for note", e)
+            applicationContext.safeToastLog(LOG_TAG, "Permissions denied for note", e)
         }
 
         return null
@@ -133,11 +95,12 @@ class SafHelper(
 
     // write
 
-    fun createFile(filename: String) = createDocument.launch(filename)
+    fun createFile(createDocumentResultLauncher: ActivityResultLauncher<String>, filename: String) =
+        createDocumentResultLauncher.launch(filename)
 
     fun writeFile(note: Note) {
         if (!hasWritePermission(note.uri)) {
-            a.safeToast("File not found or permission to write not persisted")
+            applicationContext.safeToastLog(LOG_TAG, "Provider not found or permission to write not persisted")
 
             // TODO: save edits in db and suggest saving copy?
 
@@ -152,7 +115,7 @@ class SafHelper(
             }
         }
         catch (e: FileNotFoundException) {
-            a.safeToastLog(LOG_TAG, "File note found", e)
+            applicationContext.safeToastLog(LOG_TAG, "File note found", e)
         }
     }
 
@@ -161,10 +124,11 @@ class SafHelper(
             DocumentsContract.renameDocument(resolver, uri, filename)
         }
         catch (e: UnsupportedOperationException) {
-            a.safeToastLog(LOG_TAG, "File does not support rename", e)
+            applicationContext.safeToastLog(LOG_TAG, "Provider does not support rename", e)
         }
         catch (e: IllegalStateException) {
-            a.safeToastLog(LOG_TAG, "Could not rename file; '$filename' already exists at the given location", e)
+            applicationContext
+                .safeToastLog(LOG_TAG,"Could not rename file; '$filename' already exists at the given location", e)
         }
     }
 
@@ -173,13 +137,13 @@ class SafHelper(
             DocumentsContract.deleteDocument(resolver, uri)
         }
         catch (e: UnsupportedOperationException) {
-            a.safeToastLog(LOG_TAG, "File does not support delete", e)
+            applicationContext.safeToastLog(LOG_TAG, "Provider does not support delete", e)
         }
     }
 
     // persist permissions
 
-    private fun persistPermissions(uri: Uri) {
+    fun persistPermissions(uri: Uri) {
         return resolver.takePersistableUriPermission(uri, persistPermissionsFlags)
     }
 

@@ -3,20 +3,18 @@ package com.felwal.stratomark.ui.notelist
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.felwal.stratomark.MainApplication
 import com.felwal.stratomark.R
-import com.felwal.stratomark.data.AppDatabase
-import com.felwal.stratomark.data.NO_ID
 import com.felwal.stratomark.data.Note
-import com.felwal.stratomark.data.NoteRepository
 import com.felwal.stratomark.databinding.ActivityNoteListBinding
-import com.felwal.stratomark.network.SafHelper
 import com.felwal.stratomark.ui.notedetail.NoteDetailActivity
 import com.felwal.stratomark.ui.setting.SettingsActivity
 import com.felwal.stratomark.util.animateFab
@@ -27,36 +25,30 @@ import com.felwal.stratomark.util.empty
 import com.felwal.stratomark.util.getAttrColor
 import com.felwal.stratomark.util.launchActivity
 import com.felwal.stratomark.util.toggleInclusion
+import com.felwal.stratomark.util.visibleOrGone
 import com.google.android.material.appbar.AppBarLayout
-import kotlin.concurrent.thread
 
+private const val LOG_TAG = "NoteList"
 const val OVERLAY_ALPHA = 0.96f
 
 class NoteListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteListBinding
     private lateinit var adapter: NoteAdapter
-
-    private lateinit var db: AppDatabase
-    private lateinit var saf: SafHelper
-    private lateinit var repo: NoteRepository
+    private lateinit var model: NoteListViewModel
 
     private var isFabMenuOpen: Boolean = false
-    private val selectedItems: MutableList<Note> = mutableListOf()
-    private var _items: MutableList<Note> = mutableListOf()
 
-    private val items: MutableList<Note>
-        get() {
-            val freshItems = repo.getAllNotes().toMutableList()
-            if (freshItems != _items) _items = freshItems
-            return _items
-        }
-
-    private val selectionCount: Int get() = selectedItems.size
-
+    private val selectionCount: Int get() = model.selectionIndices.size
     private val selectionMode: Boolean get() = selectionCount != 0
+    private val selectedItem: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
 
-    private val selectedItem: Note? get() = if (selectionCount > 0) selectedItems[0] else null
+    private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri ?: return@registerForActivityResult
+        Log.d(LOG_TAG, "open document uri result: $uri")
+
+        model.handleOpenedDocument(uri)
+    }
 
     // Activity
 
@@ -76,10 +68,9 @@ class NoteListActivity : AppCompatActivity() {
         }
 
         // data
-        db = AppDatabase.getInstance(applicationContext)
-        db.onWriteListener = { submitItems() }
-        saf = SafHelper(this)
-        repo = NoteRepository(db, saf)
+        val container = (application as MainApplication).appContainer
+        model = container.noteListViewModel
+        model.writeCallback = { submitItems() }
 
         // animate tb and fab on scroll
         binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
@@ -94,6 +85,7 @@ class NoteListActivity : AppCompatActivity() {
 
         initFabMenu()
         initRecycler()
+        submitItems()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -144,6 +136,11 @@ class NoteListActivity : AppCompatActivity() {
         if (isFabMenuOpen) closeFabMenu()
     }
 
+    override fun onResume() {
+        super.onResume()
+        submitItems()
+    }
+
     override fun onBackPressed() = when {
         isFabMenuOpen -> closeFabMenu()
         selectionMode -> emptySelection()
@@ -164,18 +161,14 @@ class NoteListActivity : AppCompatActivity() {
         )
         binding.rv.adapter = adapter
         binding.rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-
-        submitItems()
     }
 
-    private fun submitItems() = thread {
-        val notes = items
-
-        runOnUiThread {
+    private fun submitItems() {
+        model.getNotes { notes ->
             adapter.submitList(notes)
 
             // toggle empty page
-            binding.clEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
+            binding.clEmpty.visibility = visibleOrGone(notes.isEmpty())
         }
     }
 
@@ -196,7 +189,7 @@ class NoteListActivity : AppCompatActivity() {
         // link note; launch Storage Access Framework
         binding.fabLink.setOnClickListener {
             emptySelection()
-            saf.linkFile()
+            model.linkNote(openDocument)
         }
 
         // close fab menu
@@ -281,29 +274,25 @@ class NoteListActivity : AppCompatActivity() {
     // data
 
     private fun copyNote(note: Note?) {
-        note?.let {
+        // TODO: needs createAndSave
+        /*note?.let {
             val copy = it.copy(id = NO_ID)
             thread {
                 db.noteDao().addNote(copy)
-                db.invokeWriteListener(this)
                 runOnUiThread { emptySelection() }
             }
-        }
+        }*/
     }
 
     private fun unlinkNotes(notes: List<Note>) {
-        thread {
-            repo.unlinkNotes(selectedItems.map { it.uri })
-            db.invokeWriteListener(this)
-            runOnUiThread { emptySelection() }
+        model.unlinkNotes(notes) {
+            emptySelection()
         }
     }
 
     private fun deleteNotes(notes: List<Note>) {
-        thread {
-            repo.deleteNotes(notes.map { it.uri })
-            db.invokeWriteListener(this)
-            runOnUiThread { emptySelection() }
+        model.deleteNotes(notes) {
+            emptySelection()
         }
     }
 
@@ -311,9 +300,9 @@ class NoteListActivity : AppCompatActivity() {
 
     private fun copySelection() = copyNote(selectedItem)
 
-    private fun deleteSelection() = deleteNotes(selectedItems)
+    private fun deleteSelection() = deleteNotes(model.selectedNotes)
 
-    private fun unlinkSelection() = unlinkNotes(selectedItems)
+    private fun unlinkSelection() = unlinkNotes(model.selectedNotes)
 
     // selection
 
@@ -321,9 +310,10 @@ class NoteListActivity : AppCompatActivity() {
         note.selected = !note.selected
 
         // sync with lists and adapter
-        val index = _items.indexOf(note)
-        _items[index] = note
-        selectedItems.toggleInclusion(note)
+        val index = model.items.indexOf(note)
+        model.items[index] = note
+        //model.selectedNotes.toggleInclusion(note)
+        model.selectionIndices.toggleInclusion(index)
         adapter.notifyItemChanged(index)
 
         // selection mode just turned off/single/multi; sync tb
@@ -332,15 +322,15 @@ class NoteListActivity : AppCompatActivity() {
     }
 
     private fun emptySelection(notifyAdapter: Boolean = true) {
-        for (note in selectedItems) {
+        for (note in model.selectedNotes) {
             note.selected = false
 
             if (notifyAdapter) {
-                val index = _items.indexOf(note)
+                val index = model.items.indexOf(note)
                 adapter.notifyItemChanged(index)
             }
         }
-        selectedItems.empty()
+        model.selectionIndices.empty()
 
         // sync tb
         invalidateOptionsMenu()

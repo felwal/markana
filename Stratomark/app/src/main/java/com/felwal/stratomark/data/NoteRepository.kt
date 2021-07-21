@@ -1,52 +1,90 @@
 package com.felwal.stratomark.data
 
+import android.content.Context
+import android.net.Uri
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.net.toUri
 import com.felwal.stratomark.network.SafHelper
+import com.felwal.stratomark.util.safeToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+suspend fun <T> withIO(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.IO, block)
 
 class NoteRepository(
+    private val applicationContext: Context,
     private val db: AppDatabase,
     private val saf: SafHelper
 ) {
 
     // read
 
-    fun getAllNotes(): List<Note> {
+    suspend fun getAllNotes(): List<Note> = withIO {
         val uris = db.noteDao().getAllUris()
-        return uris.mapNotNull { saf.readFile(it.toUri()) }
+        return@withIO uris.mapNotNull { saf.readFile(it.toUri()) }
     }
 
-    fun getNote(uri: String): Note? {
-        return saf.readFile(uri.toUri())
+    suspend fun getNote(uri: String): Note? = withIO {
+        return@withIO saf.readFile(uri.toUri())
     }
 
     // write
 
-    fun createNote() {
-        saf.createFile("")
+    suspend fun linkNote(resultLauncher: ActivityResultLauncher<Array<String>>) = withIO {
+        saf.openFile(resultLauncher)
     }
 
-    fun saveNote(note: Note, rename: Boolean) {
+    suspend fun createNote(resultLauncher: ActivityResultLauncher<String>) = withIO {
+        saf.createFile(resultLauncher, "")
+    }
+
+    suspend fun saveNote(note: Note, rename: Boolean) = withIO {
         db.noteDao().addOrUpdateNote(note)
         saf.writeFile(note)
         if (rename) saf.renameFile(note.uri.toUri(), note.filename)
     }
 
-    fun createAndSaveNote(note: Note) {
-        // TODO: unfinished; update uri
-        saf.writeFile(note)
-        saf.createFile(note.filename)
-    }
-
-    fun unlinkNote(uri: String) {
+    suspend fun unlinkNote(uri: String) = withIO {
         db.noteDao().deleteNote(uri)
     }
 
-    fun unlinkNotes(uris: List<String>) = uris.forEach { unlinkNote(it) }
+    suspend fun unlinkNotes(uris: List<String>) = withIO {
+        for (uri in uris) {
+            unlinkNote(uri)
+        }
+    }
 
-    fun deleteNote(uri: String) {
+    suspend fun deleteNote(uri: String) = withIO {
         saf.deleteFile(uri.toUri())
         unlinkNote(uri)
     }
 
-    fun deleteNotes(uris: List<String>) = uris.forEach { deleteNote(it) }
+    suspend fun deleteNotes(uris: List<String>) = withIO {
+        for (uri in uris) {
+            saf.deleteFile(uri.toUri())
+            unlinkNote(uri)
+        }
+    }
+
+    //
+
+    suspend fun persistPermissions(uri: Uri) = withIO {
+        saf.persistPermissions(uri)
+    }
+
+    //
+
+    suspend fun handleDocumentOpened(uri: Uri) = withIO {
+        saf.persistPermissions(uri)
+
+        // read and save to db
+        if (!db.noteDao().doesNoteExist(uri.toString())) {
+            val note = saf.readFile(uri)
+            note?.let {
+                db.noteDao().addNote(it)
+            }
+        }
+        else applicationContext.safeToast("Note already linked")
+    }
 }

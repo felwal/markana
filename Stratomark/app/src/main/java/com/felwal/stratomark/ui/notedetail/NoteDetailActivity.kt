@@ -2,22 +2,18 @@ package com.felwal.stratomark.ui.notedetail
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
+import com.felwal.stratomark.MainApplication
 import com.felwal.stratomark.R
-import com.felwal.stratomark.data.AppDatabase
-import com.felwal.stratomark.data.NO_ID
 import com.felwal.stratomark.data.Note
-import com.felwal.stratomark.data.NoteRepository
 import com.felwal.stratomark.data.URI_DEFAULT
 import com.felwal.stratomark.databinding.ActivityNoteDetailBinding
-import com.felwal.stratomark.network.SafHelper
+import com.felwal.stratomark.network.CreateTextDocument
 import com.felwal.stratomark.util.copy
 import com.felwal.stratomark.util.copyToClipboard
 import com.felwal.stratomark.util.defaults
@@ -26,7 +22,6 @@ import com.felwal.stratomark.util.selectEnd
 import com.felwal.stratomark.util.showKeyboard
 import com.felwal.stratomark.util.string
 import com.felwal.stratomark.util.then
-import kotlin.concurrent.thread
 
 private const val LOG_TAG = "NoteDetail"
 private const val EXTRA_NOTE_URI = "uri"
@@ -35,13 +30,8 @@ private const val EXTRA_NOTE_ID = "id"
 class NoteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteDetailBinding
+    private lateinit var model: NoteDetailViewModel
 
-    private lateinit var db: AppDatabase
-    private lateinit var saf: SafHelper
-    private lateinit var repo: NoteRepository
-
-    private var noteUri: String? = null
-    private var noteId: Int? = null
     private var initialTitle = ""
     private var initialBody = ""
 
@@ -53,6 +43,22 @@ class NoteDetailActivity : AppCompatActivity() {
 
     private val haveChangesBeenMade: Boolean
         get() = binding.etNoteTitle.string != initialTitle || binding.etNoteBody.string != initialBody
+
+    private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
+        //uri ?: return@registerForActivityResult
+        Log.d(LOG_TAG, "create document uri result: $uri")
+
+        model.persistPermissions(uri)
+
+        if (uri == null) {
+            // the user didn't pick a location; cancel
+            finish()
+            return@registerForActivityResult
+        }
+
+        // the file has been created (or failed), now we need to save it's contents (or finish)
+        model.noteUri = uri.toString()
+    }
 
     // Activity
 
@@ -68,14 +74,6 @@ class NoteDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // data
-        db = AppDatabase.getInstance(applicationContext)
-        saf = SafHelper(this) { uri ->
-            uri ?: finish() // if user didn't pick a location, cancel
-            noteUri = uri.toString()
-        }
-        repo = NoteRepository(db, saf)
-
         // bab menu listener
         binding.babTypography.setOnMenuItemClickListener(::onOptionsItemSelected)
 
@@ -85,16 +83,19 @@ class NoteDetailActivity : AppCompatActivity() {
             binding.etNoteBody.selectEnd()
         }
 
-        // set up uri and load or create file
-        noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
-        noteUri?.let {
-            thread {
-                val note = repo.getNote(it)
-                note ?: finish() // the note was not found or had not granted access
-                note?.let { runOnUiThread { loadNote(it) } }
-            }
+        // data
+        val container = (application as MainApplication).appContainer
+        model = container.noteDetailViewModel
+
+        // set up uri and load / create file
+        model.noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
+
+        model.getNote { note ->
+            note ?: finish() // the note was not found or had not granted access
+            note?.let { loadNote(it) }
         }
-        noteUri ?: repo.createNote()
+
+        model.noteUri ?: model.createNote(createDocument)
 
         // animate tb elevation on scroll
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
@@ -115,7 +116,7 @@ class NoteDetailActivity : AppCompatActivity() {
         R.id.action_undo -> {} // TODO
         R.id.action_redo -> {} // TODO
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
-        R.id.action_delete -> deleteNote() then finish() then true
+        R.id.action_delete -> model.deleteNote() then finish() then true
 
         // bab
         R.id.action_bold -> etCurrentFocus?.bold()
@@ -164,17 +165,12 @@ class NoteDetailActivity : AppCompatActivity() {
 
         val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string
-        val note = Note(title, body, noteUri ?: URI_DEFAULT, noteId ?: NO_ID)
+        val note = Note(title, body, model.noteUri ?: URI_DEFAULT)
 
         Log.i(LOG_TAG, "note saved: $note")
 
-        thread {
-            repo.saveNote(note, title != initialTitle)
-            db.invokeWriteListener(this)
-        }
+        model.saveNote(note, title != initialTitle)
     }
-
-    private fun deleteNote() = noteUri?.let { repo.deleteNote(it) }
 
     // typography bar generals
 
