@@ -23,7 +23,7 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
     fun loadNotes() {
         viewModelScope.launch {
-            itemsData.value = repo.getAllNotes().toMutableList()
+            itemsData.postValue(repo.getAllNotes().toMutableList())
 
             // sync with selection
             itemsData.value?.onEachIndexed { index, note ->

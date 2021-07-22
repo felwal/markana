@@ -13,7 +13,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        // For Singleton instantiation
+        // for Singleton instantiation
         @Volatile private var instance: AppDatabase? = null
 
         fun getInstance(applicationContext: Context): AppDatabase {

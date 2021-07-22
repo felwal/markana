@@ -12,7 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import com.felwal.stratomark.data.AppDatabase
 import com.felwal.stratomark.data.Note
-import com.felwal.stratomark.util.safeToastLog
+import com.felwal.stratomark.util.coToastLog
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -43,12 +43,12 @@ class SafHelper(private val applicationContext: Context) {
     fun openFile(openDocumentResultLauncher: ActivityResultLauncher<Array<String>>) =
         openDocumentResultLauncher.launch(arrayOf(MIME_TEXT))
 
-    fun readFile(uri: Uri): Note? {
+    suspend fun readFile(uri: Uri): Note? {
         if (!hasReadPermission(uri.toString())) {
             // this also fires if the file has been moved/deleted
             // and in the case of DropBox, when renamed
             applicationContext
-                .safeToastLog(LOG_TAG, "Provider not found or permission to read not persisted, unlinking note ...")
+                .coToastLog(LOG_TAG, "Provider not found or permission to read not persisted, unlinking note ...")
 
             // TODO: get option to relink
 
@@ -81,13 +81,13 @@ class SafHelper(private val applicationContext: Context) {
             catch (e: FileNotFoundException) {
                 // files from google drive fire this after restart. why?
                 // they aren't caught with not having permissions.
-                applicationContext.safeToastLog(LOG_TAG, "Provider not found or permissions not persisted", e)
+                applicationContext.coToastLog(LOG_TAG, "Provider not found or permissions not persisted", e)
             }
 
             return Note(filename, content, uri.toString())
         }
         catch (e: SecurityException) {
-            applicationContext.safeToastLog(LOG_TAG, "Permissions denied for note", e)
+            applicationContext.coToastLog(LOG_TAG, "Permissions denied for note", e)
         }
 
         return null
@@ -98,9 +98,9 @@ class SafHelper(private val applicationContext: Context) {
     fun createFile(createDocumentResultLauncher: ActivityResultLauncher<String>, filename: String) =
         createDocumentResultLauncher.launch(filename)
 
-    fun writeFile(note: Note) {
+    suspend fun writeFile(note: Note) {
         if (!hasWritePermission(note.uri)) {
-            applicationContext.safeToastLog(LOG_TAG, "Provider not found or permission to write not persisted")
+            applicationContext.coToastLog(LOG_TAG, "Provider not found or permission to write not persisted")
 
             // TODO: save edits in db and suggest saving copy?
 
@@ -115,29 +115,29 @@ class SafHelper(private val applicationContext: Context) {
             }
         }
         catch (e: FileNotFoundException) {
-            applicationContext.safeToastLog(LOG_TAG, "File note found", e)
+            applicationContext.coToastLog(LOG_TAG, "File note found", e)
         }
     }
 
-    fun renameFile(uri: Uri, filename: String) {
+    suspend fun renameFile(uri: Uri, filename: String) {
         try {
             DocumentsContract.renameDocument(resolver, uri, filename)
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.safeToastLog(LOG_TAG, "Provider does not support rename", e)
+            applicationContext.coToastLog(LOG_TAG, "Provider does not support rename", e)
         }
         catch (e: IllegalStateException) {
             applicationContext
-                .safeToastLog(LOG_TAG,"Could not rename file; '$filename' already exists at the given location", e)
+                .coToastLog(LOG_TAG,"Could not rename file; '$filename' already exists at the given location", e)
         }
     }
 
-    fun deleteFile(uri: Uri) {
+    suspend fun deleteFile(uri: Uri) {
         try {
             DocumentsContract.deleteDocument(resolver, uri)
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.safeToastLog(LOG_TAG, "Provider does not support delete", e)
+            applicationContext.coToastLog(LOG_TAG, "Provider does not support delete", e)
         }
     }
 

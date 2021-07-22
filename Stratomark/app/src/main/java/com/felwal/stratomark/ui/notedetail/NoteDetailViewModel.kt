@@ -22,17 +22,19 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
     fun loadNote() {
         noteUri?.let {
             viewModelScope.launch {
-                noteData.value = repo.getNote(it)
+                noteData.postValue(repo.getNote(it))
             }
         }
     }
 
     // write
 
+    /**
+     * [loadNote] should be called in [resultLauncher]
+     */
     fun createNote(resultLauncher: ActivityResultLauncher<String>) {
         viewModelScope.launch {
             repo.createNote(resultLauncher)
-            //loadNote()
         }
     }
 

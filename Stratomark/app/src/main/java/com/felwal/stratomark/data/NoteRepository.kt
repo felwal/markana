@@ -5,12 +5,9 @@ import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.net.toUri
 import com.felwal.stratomark.network.SafHelper
-import com.felwal.stratomark.util.safeToast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-
-suspend fun <T> withIO(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.IO, block)
+import com.felwal.stratomark.util.coToast
+import com.felwal.stratomark.util.tryToast
+import com.felwal.stratomark.util.withIO
 
 class NoteRepository(
     private val applicationContext: Context,
@@ -85,6 +82,6 @@ class NoteRepository(
                 db.noteDao().addNote(it)
             }
         }
-        else applicationContext.safeToast("Note already linked")
+        else applicationContext.coToast("Note already linked")
     }
 }

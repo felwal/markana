@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.felwal.stratomark.AppContainer
 import com.felwal.stratomark.MainApplication
 import com.felwal.stratomark.R
 import com.felwal.stratomark.data.Note
@@ -30,6 +31,8 @@ private const val EXTRA_NOTE_ID = "id"
 class NoteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteDetailBinding
+
+    private lateinit var appContainer: AppContainer
     private lateinit var model: NoteDetailViewModel
 
     private var initialTitle = ""
@@ -83,8 +86,9 @@ class NoteDetailActivity : AppCompatActivity() {
         }
 
         // data
-        val container = (application as MainApplication).appContainer
-        model = container.noteDetailViewModel
+        appContainer = (application as MainApplication).appContainer
+        appContainer.noteDetailContainer = NoteDetailContainer(appContainer.noteRepository)
+        model = appContainer.noteDetailContainer!!.noteDetailViewModel
 
         // set up uri and load / create file
         model.noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
@@ -137,6 +141,11 @@ class NoteDetailActivity : AppCompatActivity() {
             saveNote()
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        appContainer.noteDetailContainer = null
+        super.onDestroy()
     }
 
     // focus

@@ -11,7 +11,7 @@ fun Context.copyToClipboard(text: CharSequence) {
     val clipboard = getSystemService(ClipboardManager::class.java)
     val clip = ClipData.newPlainText("label", text)
     clipboard.setPrimaryClip(clip)
-    safeToast("Copied to clipboard.")
+    tryToast("Copied to clipboard.")
 }
 
 fun Activity.hideKeyboard() {

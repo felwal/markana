@@ -1,6 +1,6 @@
 package com.felwal.stratomark.util
 
-// Collection
+// collection
 
 fun <E> MutableCollection<E>.toggleInclusion(element: E) =
     if (contains(element)) remove(element) else add(element)

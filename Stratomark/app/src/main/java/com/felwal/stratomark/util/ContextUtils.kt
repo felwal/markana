@@ -8,6 +8,9 @@ import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.lang.RuntimeException
 
@@ -25,9 +28,10 @@ fun Activity.close(): Boolean {
 
 // toast
 
-fun Context.safeToast(text: String, long: Boolean = false) {
+fun Context.tryToast(text: String, long: Boolean = false) {
     try {
-        Toast.makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+        Toast
+            .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
             .show()
     }
     catch (e: RuntimeException) {
@@ -35,15 +39,28 @@ fun Context.safeToast(text: String, long: Boolean = false) {
     }
 }
 
-fun Activity.uiToast(text: String, long: Boolean = false) = runOnUiThread {
-    Toast.makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+fun Context.tryToastLog(tag: String, msg: String, e: Exception? = null) {
+    tryToast(msg, true)
+    Log.d(tag, msg, e)
+    e?.printStackTrace()
+}
+
+suspend fun Context.coToast(text: String, long: Boolean = false) = withUI {
+    Toast
+        .makeText(this@coToast, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
         .show()
 }
 
-fun Context.safeToastLog(tag: String, msg: String, e: Exception? = null) {
-    safeToast(msg, true)
+suspend fun Context.coToastLog(tag: String, msg: String, e: Exception? = null) {
+    coToast(msg, true)
     Log.d(tag, msg, e)
     e?.printStackTrace()
+}
+
+fun Activity.uiToast(text: String, long: Boolean = false) = runOnUiThread {
+    Toast
+        .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+        .show()
 }
 
 fun Activity.uiToastLog(tag: String, msg: String, e: Exception? = null) = runOnUiThread {
@@ -60,3 +77,9 @@ fun Context.getAttrColor(resId: Int): Int {
     theme.resolveAttribute(resId, typedValue, true)
     return typedValue.data
 }
+
+// coroutines
+
+suspend fun <T> withUI(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.Main, block)
+
+suspend fun <T> withIO(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.IO, block)
