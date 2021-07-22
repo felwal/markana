@@ -75,7 +75,7 @@ class NoteRepository(
 
     //
 
-    suspend fun handleDocumentOpened(uri: Uri) = withIO {
+    suspend fun handleOpenedDocument(uri: Uri) = withIO {
         saf.persistPermissions(uri)
 
         // read and save to db

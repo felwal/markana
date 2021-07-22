@@ -12,28 +12,34 @@ import kotlinx.coroutines.launch
 
 class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
 
+    val noteData: MutableLiveData<Note> by lazy {
+        MutableLiveData<Note>()
+    }
     var noteUri: String? = null
 
-    //
+    // read
 
-    fun getNote(callback: (note: Note?) -> Unit) {
+    fun loadNote() {
         noteUri?.let {
             viewModelScope.launch {
-                val note = repo.getNote(it)
-                callback(note)
+                noteData.value = repo.getNote(it)
             }
         }
     }
 
+    // write
+
     fun createNote(resultLauncher: ActivityResultLauncher<String>) {
         viewModelScope.launch {
             repo.createNote(resultLauncher)
+            //loadNote()
         }
     }
 
     fun saveNote(note: Note, rename: Boolean) {
         viewModelScope.launch {
             repo.saveNote(note, rename)
+            loadNote()
         }
     }
 
@@ -41,11 +47,12 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
         noteUri?.let {
             viewModelScope.launch {
                 repo.deleteNote(it)
+                loadNote()
             }
         }
     }
 
-    fun persistPermissions(uri: Uri) {
+    fun persistNotePermissions(uri: Uri) {
         viewModelScope.launch {
             repo.persistPermissions(uri)
         }

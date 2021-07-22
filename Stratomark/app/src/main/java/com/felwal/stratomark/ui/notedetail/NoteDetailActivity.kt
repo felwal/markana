@@ -45,19 +45,18 @@ class NoteDetailActivity : AppCompatActivity() {
         get() = binding.etNoteTitle.string != initialTitle || binding.etNoteBody.string != initialBody
 
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
-        //uri ?: return@registerForActivityResult
-        Log.d(LOG_TAG, "create document uri result: $uri")
+        Log.i(LOG_TAG, "create document uri result: $uri")
 
-        model.persistPermissions(uri)
-
+        // the user didn't pick a location; cancel activity
         if (uri == null) {
-            // the user didn't pick a location; cancel
             finish()
             return@registerForActivityResult
         }
 
-        // the file has been created (or failed), now we need to save it's contents (or finish)
+        // the file has been created
+        model.persistNotePermissions(uri)
         model.noteUri = uri.toString()
+        model.loadNote()
     }
 
     // Activity
@@ -89,13 +88,12 @@ class NoteDetailActivity : AppCompatActivity() {
 
         // set up uri and load / create file
         model.noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
-
-        model.getNote { note ->
+        model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
-            note?.let { loadNote(it) }
+            note?.let { setEditTexts(it) }
         }
-
         model.noteUri ?: model.createNote(createDocument)
+        model.loadNote()
 
         // animate tb elevation on scroll
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
@@ -150,7 +148,7 @@ class NoteDetailActivity : AppCompatActivity() {
 
     // view
 
-    private fun loadNote(note: Note) {
+    private fun setEditTexts(note: Note) {
         binding.etNoteTitle.setText(note.filename)
         binding.etNoteBody.setText(note.content)
 

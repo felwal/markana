@@ -37,18 +37,18 @@ class NoteListActivity : AppCompatActivity() {
     private lateinit var adapter: NoteAdapter
     private lateinit var model: NoteListViewModel
 
-    private var isFabMenuOpen: Boolean = false
-
     private val selectionCount: Int get() = model.selectionIndices.size
     private val selectionMode: Boolean get() = selectionCount != 0
-    private val selectedItem: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
+    private val selectedNote: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
 
     private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
-        Log.d(LOG_TAG, "open document uri result: $uri")
+        Log.i(LOG_TAG, "open document uri result: $uri")
 
-        model.handleOpenedDocument(uri)
+        model.handleCreatedNote(uri)
     }
+
+    private var isFabMenuOpen: Boolean = false
 
     // Activity
 
@@ -67,11 +67,6 @@ class NoteListActivity : AppCompatActivity() {
             supportActionBar?.setHomeAsUpIndicator(it)
         }
 
-        // data
-        val container = (application as MainApplication).appContainer
-        model = container.noteListViewModel
-        model.writeCallback = { submitItems() }
-
         // animate tb and fab on scroll
         binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // animate tb
@@ -85,7 +80,15 @@ class NoteListActivity : AppCompatActivity() {
 
         initFabMenu()
         initRecycler()
-        submitItems()
+
+        // data
+        val container = (application as MainApplication).appContainer
+        model = container.noteListViewModel
+
+        model.itemsData.observe(this) { items ->
+            submitItems(items)
+        }
+        model.loadNotes()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -119,7 +122,7 @@ class NoteListActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
         // normal tb
         R.id.action_settings -> launchActivity<SettingsActivity>()
-+
+        +
         // single selection tb
         R.id.action_copy -> copySelection()
 
@@ -133,13 +136,10 @@ class NoteListActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
+        model.loadNotes()
         if (isFabMenuOpen) closeFabMenu()
     }
 
-    override fun onResume() {
-        super.onResume()
-        submitItems()
-    }
 
     override fun onBackPressed() = when {
         isFabMenuOpen -> closeFabMenu()
@@ -163,13 +163,11 @@ class NoteListActivity : AppCompatActivity() {
         binding.rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     }
 
-    private fun submitItems() {
-        model.getNotes { notes ->
-            adapter.submitList(notes)
+    private fun submitItems(items: List<Note>) {
+        adapter.submitList(items)
 
-            // toggle empty page
-            binding.clEmpty.visibility = visibleOrGone(notes.isEmpty())
-        }
+        // toggle empty page
+        binding.clEmpty.visibility = visibleOrGone(items.isEmpty())
     }
 
     // fab
@@ -277,28 +275,24 @@ class NoteListActivity : AppCompatActivity() {
         // TODO: needs createAndSave
         /*note?.let {
             val copy = it.copy(id = NO_ID)
-            thread {
-                db.noteDao().addNote(copy)
-                runOnUiThread { emptySelection() }
-            }
+            db.noteDao().addNote(copy)
+            emptySelection()
         }*/
     }
 
     private fun unlinkNotes(notes: List<Note>) {
-        model.unlinkNotes(notes) {
-            emptySelection()
-        }
+        model.unlinkNotes(notes)
+        emptySelection()
     }
 
     private fun deleteNotes(notes: List<Note>) {
-        model.deleteNotes(notes) {
-            emptySelection()
-        }
+        model.deleteNotes(notes)
+        emptySelection()
     }
 
     // data: convenience
 
-    private fun copySelection() = copyNote(selectedItem)
+    private fun copySelection() = copyNote(selectedNote)
 
     private fun deleteSelection() = deleteNotes(model.selectedNotes)
 
@@ -309,10 +303,9 @@ class NoteListActivity : AppCompatActivity() {
     private fun selectNote(note: Note) {
         note.selected = !note.selected
 
-        // sync with lists and adapter
+        // sync with data and adapter
         val index = model.items.indexOf(note)
-        model.items[index] = note
-        //model.selectedNotes.toggleInclusion(note)
+        model.itemsData.value?.set(index, note)
         model.selectionIndices.toggleInclusion(index)
         adapter.notifyItemChanged(index)
 
@@ -321,14 +314,13 @@ class NoteListActivity : AppCompatActivity() {
         updateToolbarTitle()
     }
 
-    private fun emptySelection(notifyAdapter: Boolean = true) {
+    private fun emptySelection() {
         for (note in model.selectedNotes) {
             note.selected = false
 
-            if (notifyAdapter) {
-                val index = model.items.indexOf(note)
-                adapter.notifyItemChanged(index)
-            }
+            val index = model.items.indexOf(note)
+            model.itemsData.value?.set(index, note)
+            adapter.notifyItemChanged(index)
         }
         model.selectionIndices.empty()
 

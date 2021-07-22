@@ -2,6 +2,7 @@ package com.felwal.stratomark.ui.notelist
 
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felwal.stratomark.data.Note
@@ -10,52 +11,54 @@ import kotlinx.coroutines.launch
 
 class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
-    var items: MutableList<Note> = mutableListOf()
+    val itemsData: MutableLiveData<MutableList<Note>> by lazy {
+        MutableLiveData<MutableList<Note>>()
+    }
     val selectionIndices: MutableList<Int> = mutableListOf()
 
-    val selectedNotes: List<Note>
-        get() = items.onEachIndexed { index, note ->
-            note.selected = index in selectionIndices
-        }.filter { it.selected }.toMutableList()
+    val items: List<Note> get() = itemsData.value ?: listOf()
+    val selectedNotes: List<Note> get() = items.filter { it.selected }
 
-    lateinit var writeCallback: () -> Unit
+    // read
 
-    //
-
-    fun getNotes(callback: (notes: List<Note>) -> Unit) {
+    fun loadNotes() {
         viewModelScope.launch {
-            val notes = repo.getAllNotes().toMutableList()
-            items = notes
-            callback(notes)
+            itemsData.value = repo.getAllNotes().toMutableList()
+
+            // sync with selection
+            itemsData.value?.onEachIndexed { index, note ->
+                note.selected = index in selectionIndices
+            }
         }
     }
+
+    // write
 
     fun linkNote(resultLauncher: ActivityResultLauncher<Array<String>>) {
         viewModelScope.launch {
             repo.linkNote(resultLauncher)
-            writeCallback()
+            loadNotes()
         }
     }
 
-    fun unlinkNotes(notes: List<Note>, callback: () -> Unit) {
+    fun unlinkNotes(notes: List<Note>) {
         viewModelScope.launch {
             repo.unlinkNotes(notes.map { it.uri })
-            callback()
-            writeCallback()
+            loadNotes()
         }
     }
 
-    fun deleteNotes(notes: List<Note>, callback: () -> Unit) {
+    fun deleteNotes(notes: List<Note>) {
         viewModelScope.launch {
             repo.deleteNotes(notes.map { it.uri })
-            callback()
-            writeCallback()
+            loadNotes()
         }
     }
 
-    fun handleOpenedDocument(uri: Uri) {
+    fun handleCreatedNote(uri: Uri) {
         viewModelScope.launch {
-            repo.handleDocumentOpened(uri)
+            repo.handleOpenedDocument(uri)
+            loadNotes()
         }
     }
 }
