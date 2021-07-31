@@ -1,0 +1,56 @@
+<resources>
+
+    <string name="app_name">Markana</string>
+
+    <!-- activity -->
+    <string name="title_activity_note_list">@string/app_name</string>
+    <string name="title_activity_note_detail">Note</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- action -->
+    <string name="action_settings">Settings</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_unlink">Unlink</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_bold">Bold</string>
+    <string name="action_italic">Italic</string>
+    <string name="action_strikethrough">Strikethrough</string>
+    <string name="action_heading">Heading</string>
+    <string name="action_quote">Quote</string>
+    <string name="action_code">Code</string>
+    <string name="action_checklist">Checklist</string>
+    <string name="action_bulletlist">Bulletlist</string>
+    <string name="action_numberlist">Numberlist</string>
+    <string name="action_horizontal_rule">Horizontal rule</string>
+    <string name="action_clipboard">Copy to clipboard</string>
+
+    <!-- view -->
+
+    <plurals name="tb_title_note_list_selection">
+        <item quantity="one">%d note</item>
+        <item quantity="other">%d notes</item>
+    </plurals>
+    <string name="et_hint_note_detail_title">note.txt</string>
+    <string name="et_hint_note_detail_body">Note</string>
+    <string name="tv_note_list_empty_title">Welcome to Markana!</string>
+    <string name="tv_note_list_empty_message">Create your first note with +</string>
+    <string name="tv_fab_create">Create note</string>
+    <string name="tv_fab_link">Link file</string>
+
+    <!-- preference titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- messages preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- sync preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+</resources>

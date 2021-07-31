@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- appbar -->
+
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?android:colorBackground</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:theme">@style/AppbarTheme</item>
+
+        <item name="elevation">@dimen/elev_ab</item>
+        <item name="titleTextColor">?android:textColorPrimary</item>
+        <item name="popupTheme">@style/Theme.Markana.PopupOverlay</item>
+    </style>
+
+    <style name="AppbarTheme">
+        <!-- built-in action buttons, e.g. home/up -->
+        <!--<item name="colorControlNormal">?attr/colorOnBackground</item>-->
+        <!-- custom action buttons -->
+        <item name="iconTint">?attr/colorControlActivated</item>
+    </style>
+
+    <!-- fab -->
+
+    <style name="Fab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:elevation">@dimen/elev_fab</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+
+        <item name="fabSize">normal</item>
+        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="iconTint">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="Fab.Mini">
+        <item name="fabSize">mini</item>
+    </style>
+
+    <!-- edittext -->
+
+    <style name="EditText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/type_note_body</item>
+        <item name="android:focusedByDefault">false</item>
+        <!--<item name="android:textColorHint">?android:textColorSecondary</item>-->
+    </style>
+
+    <style name="EditText.Note">
+        <item name="android:backgroundTint">@color/trans</item>
+    </style>
+
+    <style name="EditText.Note.Title">
+        <item name="android:textSize">@dimen/type_note_title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- textview -->
+
+    <style name="TextView" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="TextView.Heading1">
+        <item name="android:textSize">@dimen/type_heading1</item>
+    </style>
+
+    <style name="TextView.Body">
+        <item name="android:textSize">@dimen/type_body</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="TextView.Body.FabTitle">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

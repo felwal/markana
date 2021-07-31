@@ -1,0 +1,68 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.felwal.markana.ui.notelist.NoteListActivity">
+
+    <item
+        android:id="@+id/action_heading"
+        android:title="@string/action_heading"
+        android:icon="@drawable/ic_heading"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_bold"
+        android:title="@string/action_bold"
+        android:icon="@drawable/ic_bold"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_italic"
+        android:title="@string/action_italic"
+        android:icon="@drawable/ic_italic"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_strikethrough"
+        android:title="@string/action_strikethrough"
+        android:icon="@drawable/ic_strikethrough"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_quote"
+        android:title="@string/action_quote"
+        android:icon="@drawable/ic_quote"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_code"
+        android:title="@string/action_code"
+        android:icon="@drawable/ic_code"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_bulletlist"
+        android:title="@string/action_bulletlist"
+        android:icon="@drawable/ic_list_bullet"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_numberlist"
+        android:title="@string/action_numberlist"
+        android:icon="@drawable/ic_list_number"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_checklist"
+        android:title="@string/action_checklist"
+        android:icon="@drawable/ic_checkbox"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_scenebreak"
+        android:title="@string/action_horizontal_rule"
+        android:icon="@drawable/ic_horizontal_rule"
+        app:showAsAction="always" />
+
+</menu>
