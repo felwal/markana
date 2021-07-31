@@ -41,6 +41,13 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
+    fun linkFolder(resultLauncher: ActivityResultLauncher<Uri>) {
+        viewModelScope.launch {
+            repo.linkFolder(resultLauncher)
+            loadNotes()
+        }
+    }
+
     fun unlinkNotes(notes: List<Note>) {
         viewModelScope.launch {
             repo.unlinkNotes(notes.map { it.uri })
@@ -58,6 +65,13 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     fun handleCreatedNote(uri: Uri) {
         viewModelScope.launch {
             repo.handleOpenedDocument(uri)
+            loadNotes()
+        }
+    }
+
+    fun handleOpenedTree(uri: Uri) {
+        viewModelScope.launch {
+            repo.handleOpenedDocumentTree(uri)
             loadNotes()
         }
     }

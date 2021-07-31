@@ -19,11 +19,16 @@ interface NoteDao {
 
     fun addOrUpdateNote(note: Note) = if (doesNoteExist(note.uri)) updateNote(note) else addNote(note)
 
+    fun addOrUpdateNotes(notes: List<Note>) = notes.forEach { addOrUpdateNote(it) }
+
     @Delete
     fun deleteNote(vararg notes: Note)
 
     @Delete
     fun deleteNotes(notes: List<Note>)
+
+    @Query("DELETE FROM notes WHERE treeId = :treeId")
+    fun deleteNotes(treeId: Int)
 
     @Query("DELETE FROM notes WHERE id = :id")
     fun deleteNote(id: Int);

@@ -115,6 +115,39 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_fabs_link_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/spacing_diminutive"
+            android:paddingBottom="@dimen/spacing_small"
+            android:paddingEnd="@dimen/spacing_diminutive"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            android:clipToPadding="false"
+            tools:visibility="visible">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_link_folder"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_folder_add"
+                style="@style/Fab.Mini" />
+
+            <TextView
+                android:id="@+id/tv_fabs_link_folder"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:text="@string/tv_fab_link_folder"
+                app:layout_constraintBottom_toBottomOf="@+id/fab_link_folder"
+                app:layout_constraintEnd_toStartOf="@+id/fab_link_folder"
+                app:layout_constraintTop_toTopOf="@+id/fab_link_folder"
+                app:layout_constraintVertical_bias="0.4"
+                style="@style/TextView.Body.FabTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_fabs_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

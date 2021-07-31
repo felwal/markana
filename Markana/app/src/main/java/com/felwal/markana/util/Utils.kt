@@ -10,6 +10,11 @@ fun <E> MutableList<E>.replace(oldElement: E, newElement: E) =
 
 fun <E> MutableCollection<E>.empty() = removeAll(this)
 
+inline fun <reified E> MutableList<E>.nullable(): MutableList<E?> = mutableListOf(*toTypedArray())
+
+fun <E> MutableCollection<E?>.fillUp(value: E?, toSize: Int) =
+    repeat(toSize - size) { add(value) }
+
 // any
 
 fun <T, O> T.unless(equals: T, block: (it: T) -> O): O? = if (this != equals) block(this) else null
@@ -34,6 +39,7 @@ inline infix fun <reified T> T.defaults(that: Any?): T = if (that is T) that els
 
 /**
  * Returns [that] if [this] isn't of that type.
+ * If only checking for null, use elvis operator instead.
  *
  * Useful in `when`s when you don't want to return at every branch:
  * `when (...) {...} default true`

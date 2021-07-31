@@ -17,6 +17,9 @@ class NoteRepository(
     // read
 
     suspend fun getAllNotes(): List<Note> = withIO {
+        // TODO: extract somewhere else
+        extractAllTreesUris()
+
         val uris = db.noteDao().getAllUris()
         return@withIO uris.mapNotNull { saf.readFile(it.toUri()) }
     }
@@ -31,6 +34,10 @@ class NoteRepository(
         saf.openFile(resultLauncher)
     }
 
+    suspend fun linkFolder(resultLauncher: ActivityResultLauncher<Uri>) = withIO {
+        saf.openTree(resultLauncher, null)
+    }
+
     suspend fun createNote(resultLauncher: ActivityResultLauncher<String>) = withIO {
         saf.createFile(resultLauncher, "")
     }
@@ -42,13 +49,26 @@ class NoteRepository(
     }
 
     suspend fun unlinkNote(uri: String) = withIO {
-        db.noteDao().deleteNote(uri)
+        val note = db.noteDao().getNote(uri)
+
+        note?.let {
+            // temp: also unlink whole tree if note from tree
+            // TODO: use a sort of archive in that case
+            it.treeId?.let { unlinkTree(it) }
+
+            db.noteDao().deleteNote(uri)
+        }
     }
 
     suspend fun unlinkNotes(uris: List<String>) = withIO {
         for (uri in uris) {
             unlinkNote(uri)
         }
+    }
+
+    suspend fun unlinkTree(id: Int) = withIO {
+        db.treeDao().deleteTree(id)
+        db.noteDao().deleteNotes(id)
     }
 
     suspend fun deleteNote(uri: String) = withIO {
@@ -63,13 +83,13 @@ class NoteRepository(
         }
     }
 
-    //
+    // permissions
 
     suspend fun persistPermissions(uri: Uri) = withIO {
         saf.persistPermissions(uri)
     }
 
-    //
+    // launcher results
 
     suspend fun handleOpenedDocument(uri: Uri) = withIO {
         saf.persistPermissions(uri)
@@ -83,4 +103,28 @@ class NoteRepository(
         }
         else applicationContext.coToast("Note already linked")
     }
+
+    suspend fun handleOpenedDocumentTree(uri: Uri) = withIO {
+        saf.persistPermissions(uri)
+
+        // save tree uri and sync
+        db.treeDao().addTreeIfNotExists(Tree(uri.toString()))
+        val tree = db.treeDao().getTree(uri.toString())
+        tree?.let { extractTreeUris(it) }
+    }
+
+    // sync daos
+
+    private suspend fun extractTreeUris(tree: Tree) = withIO {
+        // TODO: persist permissions?
+
+        val notes = saf.readTree(tree)
+        db.noteDao().addOrUpdateNotes(notes)
+    }
+
+    /**
+     * Syncs files in saved trees to notes
+     */
+    private suspend fun extractAllTreesUris() =
+        db.treeDao().getAllTrees().forEach { extractTreeUris(it) }
 }

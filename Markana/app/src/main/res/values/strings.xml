@@ -38,6 +38,7 @@
     <string name="tv_note_list_empty_message">Create your first note with +</string>
     <string name="tv_fab_create">Create note</string>
     <string name="tv_fab_link">Link file</string>
+    <string name="tv_fab_link_folder">Link folder</string>
 
     <!-- preference titles -->
     <string name="messages_header">Messages</string>

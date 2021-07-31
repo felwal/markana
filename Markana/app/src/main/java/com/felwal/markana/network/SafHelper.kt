@@ -7,18 +7,26 @@ import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.documentfile.provider.DocumentFile
 import com.felwal.markana.data.AppDatabase
 import com.felwal.markana.data.Note
+import com.felwal.markana.data.Tree
+import com.felwal.markana.util.coToast
 import com.felwal.markana.util.coToastLog
+import com.felwal.markana.util.default
+import com.felwal.markana.util.isMime
+import com.felwal.markana.util.tryToastLog
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 
 private const val LOG_TAG = "Saf"
+private const val MIME_TEXT_TYPE = "text"
 private const val MIME_TEXT = "text/*"
 private const val MIME_TEXT_PLAIN = "text/plain"
 
@@ -43,8 +51,11 @@ class SafHelper(private val applicationContext: Context) {
     fun openFile(openDocumentResultLauncher: ActivityResultLauncher<Array<String>>) =
         openDocumentResultLauncher.launch(arrayOf(MIME_TEXT))
 
+    fun openTree(openDocuementTreeLauncher: ActivityResultLauncher<Uri>, initialUri: Uri?) =
+        openDocuementTreeLauncher.launch(initialUri)
+
     suspend fun readFile(uri: Uri): Note? {
-        if (!hasReadPermission(uri.toString())) {
+        if (false && !hasReadPermission(uri.toString())) {
             // this also fires if the file has been moved/deleted
             // and in the case of DropBox, when renamed
             applicationContext
@@ -52,6 +63,7 @@ class SafHelper(private val applicationContext: Context) {
 
             // TODO: get option to relink
 
+            // no sense in keeping what we can't read; unlink
             val db = AppDatabase.getInstance(applicationContext)
             db.noteDao().deleteNote(uri.toString())
             return null
@@ -87,10 +99,55 @@ class SafHelper(private val applicationContext: Context) {
             return Note(filename, content, uri.toString())
         }
         catch (e: SecurityException) {
-            applicationContext.coToastLog(LOG_TAG, "Permissions denied for note", e)
+            applicationContext.coToastLog(LOG_TAG, "Read permission denied for note", e)
         }
 
         return null
+    }
+
+    suspend fun readTree(tree: Tree): List<Note> {
+        val notes = mutableListOf<Note>()
+
+        val docDir = DocumentFile.fromTreeUri(applicationContext, tree.uri.toUri())
+        val docFiles = readDocumentFile(docDir)
+
+        var wrongMimeCount = 0
+
+        for (file in docFiles) {
+            // check mime
+            if (file.type?.isMime(MIME_TEXT_TYPE) == true) {
+                readFile(file.uri)?.let { note ->
+                    //persistPermissions(note.uri.toUri()) // TODO: not working / not neccessary?
+                    note.treeId = tree.id
+                    notes.add(note)
+                }
+            }
+            else wrongMimeCount++
+        }
+
+        if (wrongMimeCount > 0) {
+            //applicationContext.coToast("$wrongMimeCount files were not linked due to wrong format")
+            Log.i(LOG_TAG,"$wrongMimeCount files were not linked due to wrong format")
+        }
+
+        return notes
+    }
+
+    /**
+     * Recursively gets all files in a documentFile directory
+     */
+    private fun readDocumentFile(document: DocumentFile?): List<DocumentFile> {
+        document ?: return listOf()
+        if (!document.isDirectory) return listOf(document)
+
+        val docs = mutableListOf<List<DocumentFile>>()
+
+        for (doc in document.listFiles()) {
+            // go one dir deeper
+            docs.add(readDocumentFile(doc))
+        }
+
+        return docs.flatten()
     }
 
     // write
@@ -99,7 +156,7 @@ class SafHelper(private val applicationContext: Context) {
         createDocumentResultLauncher.launch(filename)
 
     suspend fun writeFile(note: Note) {
-        if (!hasWritePermission(note.uri)) {
+        if (false && !hasWritePermission(note.uri)) {
             applicationContext.coToastLog(LOG_TAG, "Provider not found or permission to write not persisted")
 
             // TODO: save edits in db and suggest saving copy?
@@ -115,7 +172,10 @@ class SafHelper(private val applicationContext: Context) {
             }
         }
         catch (e: FileNotFoundException) {
-            applicationContext.coToastLog(LOG_TAG, "File note found", e)
+            applicationContext.coToastLog(LOG_TAG, "File was not found", e)
+        }
+        catch (e: SecurityException) {
+            applicationContext.coToastLog(LOG_TAG, "Write permission denied for note", e)
         }
     }
 
@@ -128,7 +188,7 @@ class SafHelper(private val applicationContext: Context) {
         }
         catch (e: IllegalStateException) {
             applicationContext
-                .coToastLog(LOG_TAG,"Could not rename file; '$filename' already exists at the given location", e)
+                .coToastLog(LOG_TAG, "Could not rename file; '$filename' already exists at the given location", e)
         }
     }
 
@@ -137,14 +197,19 @@ class SafHelper(private val applicationContext: Context) {
             DocumentsContract.deleteDocument(resolver, uri)
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.coToastLog(LOG_TAG, "Provider does not support delete", e)
+            applicationContext.coToastLog(LOG_TAG, "Provider does not support delete. Unlinking ...", e)
         }
     }
 
     // persist permissions
 
     fun persistPermissions(uri: Uri) {
-        return resolver.takePersistableUriPermission(uri, persistPermissionsFlags)
+        try {
+            return resolver.takePersistableUriPermission(uri, persistPermissionsFlags)
+        }
+        catch (e: SecurityException) {
+            applicationContext.tryToastLog(LOG_TAG, "Could not persist permissions for file", e)
+        }
     }
 
     private fun releasePermissions(uri: Uri) {

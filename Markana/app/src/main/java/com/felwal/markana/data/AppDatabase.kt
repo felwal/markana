@@ -6,10 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.felwal.markana.util.DATABASE_NAME
 
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [Note::class, Tree::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
+
+    abstract fun treeDao(): TreeDao
 
     companion object {
 

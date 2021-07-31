@@ -49,6 +49,13 @@ class NoteListActivity : AppCompatActivity() {
         model.handleCreatedNote(uri)
     }
 
+    private val openDocumentTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        uri ?: return@registerForActivityResult
+        Log.i(LOG_TAG, "open document tree uri result: $uri")
+
+        model.handleOpenedTree(uri)
+    }
+
     private var isFabMenuOpen: Boolean = false
 
     // Activity
@@ -191,6 +198,12 @@ class NoteListActivity : AppCompatActivity() {
             model.linkNote(openDocument)
         }
 
+        // link folder; launch Storage Access Framework
+        binding.fabLinkFolder.setOnClickListener {
+            emptySelection()
+            model.linkFolder(openDocumentTree)
+        }
+
         // close fab menu
         binding.vOverlay.setOnClickListener { closeFabMenu() }
     }
@@ -199,9 +212,11 @@ class NoteListActivity : AppCompatActivity() {
         animateFab()
         binding.fabCreate.show()
         binding.fabLink.show()
+        binding.fabLinkFolder.show()
 
         binding.clFabsCreate.crossfadeIn()
         binding.clFabsLink.crossfadeIn()
+        binding.clFabsLinkFolder.crossfadeIn()
         binding.vOverlay.crossfadeIn(OVERLAY_ALPHA)
 
         isFabMenuOpen = true
@@ -209,9 +224,11 @@ class NoteListActivity : AppCompatActivity() {
 
     private fun closeFabMenu() {
         animateFab()
+        binding.fabLinkFolder.hide()
         binding.fabLink.hide()
         binding.fabCreate.hide()
 
+        binding.clFabsLinkFolder.crossfadeOut()
         binding.clFabsLink.crossfadeOut()
         binding.clFabsCreate.crossfadeOut()
         binding.vOverlay.crossfadeOut()

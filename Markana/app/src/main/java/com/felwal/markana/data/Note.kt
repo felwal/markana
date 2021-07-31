@@ -13,6 +13,7 @@ data class Note(
     @ColumnInfo(name = "filename") var filename: String = "", // TODO: remove from db?
     @ColumnInfo(name = "content") var content: String = "", // TODO: remove from db?
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
+    @ColumnInfo(name = "treeId") var treeId: Int? = null,
     @PrimaryKey(autoGenerate = true) var id: Int = NO_ID
 ) {
 
