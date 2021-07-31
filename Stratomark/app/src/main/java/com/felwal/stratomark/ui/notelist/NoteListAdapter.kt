@@ -13,7 +13,7 @@ import com.felwal.stratomark.R
 import com.felwal.stratomark.data.Note
 import com.felwal.stratomark.databinding.ItemNoteBinding
 
-class NoteAdapter(
+class NoteListAdapter(
     private val onClick: (Note) -> Unit,
     private val onLongClick: (Note) -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteDiffCallback()) {

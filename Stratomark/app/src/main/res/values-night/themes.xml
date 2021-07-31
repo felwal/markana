@@ -11,7 +11,7 @@
         <item name="android:colorBackground">@color/grey2</item>
 
         <!-- surface -->
-        <item name="colorSurface">@color/grey1</item>
+        <item name="colorSurface">@color/grey4</item>
         <item name="colorOnSurface">@color/white</item>
     </style>
 

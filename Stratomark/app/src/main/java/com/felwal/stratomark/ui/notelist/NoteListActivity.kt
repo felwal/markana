@@ -29,12 +29,13 @@ import com.felwal.stratomark.util.visibleOrGone
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
-const val OVERLAY_ALPHA = 0.96f
+const val OVERLAY_ALPHA = 0.95f
 
 class NoteListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteListBinding
-    private lateinit var adapter: NoteAdapter
+    private lateinit var adapter: NoteListAdapter
+
     private lateinit var model: NoteListViewModel
 
     private val selectionCount: Int get() = model.selectionIndices.size
@@ -95,7 +96,7 @@ class NoteListActivity : AppCompatActivity() {
         when (selectionCount) {
             0 -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_tb_note_list, menu)
+                menuInflater.inflate(R.menu.menu_note_list_tb, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
                 // change scroll flags: scroll and snap tb
@@ -104,7 +105,7 @@ class NoteListActivity : AppCompatActivity() {
             }
             1 -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_tb_note_list_selection_single, menu)
+                menuInflater.inflate(R.menu.menu_note_list_tb_selection_single, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
                 // change scroll flags: don't scroll tb
@@ -112,7 +113,7 @@ class NoteListActivity : AppCompatActivity() {
                 binding.ab.setExpanded(true, false) // anim is not smooth
             }
             else -> {
-                menuInflater.inflate(R.menu.menu_tb_note_list_selection_multi, menu)
+                menuInflater.inflate(R.menu.menu_note_list_tb_selection_multi, menu)
             }
         }
 
@@ -150,7 +151,7 @@ class NoteListActivity : AppCompatActivity() {
     // recycler
 
     private fun initRecycler() {
-        adapter = NoteAdapter(
+        adapter = NoteListAdapter(
             onClick = {
                 if (selectionMode) selectNote(it)
                 else NoteDetailActivity.startActivity(this, it.uri)
