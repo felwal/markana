@@ -73,18 +73,3 @@ fun View.crossfadeOut() {
             }
         })
 }
-
-fun FloatingActionButton.animateFab(@ColorInt fromColor: Int, @ColorInt toColor: Int, toIcon: Drawable?) {
-    @SuppressLint("ObjectAnimatorBinding")
-    val colorFade = ObjectAnimator.ofInt(this, "backgroundTint", fromColor, toColor)
-    colorFade.duration = ANIM_DURATION.toLong()
-    colorFade.setEvaluator(ArgbEvaluator())
-
-    colorFade.addUpdateListener { animation: ValueAnimator ->
-        val animatedValue = animation.animatedValue as Int
-        backgroundTintList = ColorStateList.valueOf(animatedValue)
-    }
-    colorFade.start()
-
-    setImageDrawable(toIcon)
-}

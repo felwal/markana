@@ -1,13 +1,11 @@
 package com.felwal.markana.ui.notelist
 
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -17,19 +15,17 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ActivityNoteListBinding
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
-import com.felwal.markana.util.animateFab
-import com.felwal.markana.util.crossfadeIn
-import com.felwal.markana.util.crossfadeOut
 import com.felwal.markana.util.defaults
 import com.felwal.markana.util.empty
 import com.felwal.markana.util.getAttrColor
+import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.visibleOrGone
+import com.felwal.markana.view.FabMenu
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
-const val OVERLAY_ALPHA = 0.95f
 
 class NoteListActivity : AppCompatActivity() {
 
@@ -56,6 +52,8 @@ class NoteListActivity : AppCompatActivity() {
         model.handleOpenedTree(uri)
     }
 
+    private lateinit var fabMenu: FabMenu
+
     private var isFabMenuOpen: Boolean = false
 
     // Activity
@@ -73,17 +71,6 @@ class NoteListActivity : AppCompatActivity() {
         homeIcon?.let {
             it.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
             supportActionBar?.setHomeAsUpIndicator(it)
-        }
-
-        // animate tb and fab on scroll
-        binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            // animate tb
-            binding.ab.isSelected = binding.rv.canScrollVertically(-1)
-
-            // show/hide fab
-            val dy = scrollY - oldScrollY
-            if (binding.fab.isOrWillBeShown && dy > 0) binding.fab.hide()
-            else if (binding.fab.isOrWillBeHidden && dy < 0) binding.fab.show()
         }
 
         initFabMenu()
@@ -145,12 +132,12 @@ class NoteListActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         model.loadNotes()
-        if (isFabMenuOpen) closeFabMenu()
+        fabMenu.closeMenuIfOpen()
     }
 
 
     override fun onBackPressed() = when {
-        isFabMenuOpen -> closeFabMenu()
+        fabMenu.closeMenuIfOpen() -> {}
         selectionMode -> emptySelection()
         else -> super.onBackPressed()
     }
@@ -158,6 +145,16 @@ class NoteListActivity : AppCompatActivity() {
     // recycler
 
     private fun initRecycler() {
+        // animate tb and fab on scroll
+        binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            // animate tb
+            binding.ab.isSelected = binding.rv.canScrollVertically(-1)
+
+            // show/hide fab
+            fabMenu.showHideOnScroll(scrollY - oldScrollY)
+        }
+
+        // adapter
         adapter = NoteListAdapter(
             onClick = {
                 if (selectionMode) selectNote(it)
@@ -168,7 +165,8 @@ class NoteListActivity : AppCompatActivity() {
             }
         )
         binding.rv.adapter = adapter
-        binding.rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        val spanCount = if (isPortrait) 2 else 3
+        binding.rv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
     }
 
     private fun submitItems(items: List<Note>) {
@@ -181,85 +179,34 @@ class NoteListActivity : AppCompatActivity() {
     // fab
 
     private fun initFabMenu() {
-        // open/close fab menu
-        binding.fab.setOnClickListener {
-            if (isFabMenuOpen) closeFabMenu() else openFabMenu()
-        }
+        fabMenu = FabMenu(this, layoutInflater, binding.root)
 
-        // create note; launch NoteDetailActivity
-        binding.fabCreate.setOnClickListener {
+        // create note
+        fabMenu.addItem(
+            getString(R.string.tv_fab_create),
+            ContextCompat.getDrawable(this, R.drawable.ic_create)
+        ) {
             emptySelection()
             NoteDetailActivity.startActivity(this)
         }
 
-        // link note; launch Storage Access Framework
-        binding.fabLink.setOnClickListener {
+        // link note
+        fabMenu.addItem(
+            getString(R.string.tv_fab_link),
+            ContextCompat.getDrawable(this, R.drawable.ic_link)
+        ) {
             emptySelection()
             model.linkNote(openDocument)
         }
 
-        // link folder; launch Storage Access Framework
-        binding.fabLinkFolder.setOnClickListener {
+        // link folder
+        fabMenu.addItem(
+            getString(R.string.tv_fab_link_folder),
+            ContextCompat.getDrawable(this, R.drawable.ic_folder_add)
+        ) {
             emptySelection()
             model.linkFolder(openDocumentTree)
         }
-
-        // close fab menu
-        binding.vOverlay.setOnClickListener { closeFabMenu() }
-    }
-
-    private fun openFabMenu() {
-        animateFab()
-        binding.fabCreate.show()
-        binding.fabLink.show()
-        binding.fabLinkFolder.show()
-
-        binding.clFabsCreate.crossfadeIn()
-        binding.clFabsLink.crossfadeIn()
-        binding.clFabsLinkFolder.crossfadeIn()
-        binding.vOverlay.crossfadeIn(OVERLAY_ALPHA)
-
-        isFabMenuOpen = true
-    }
-
-    private fun closeFabMenu() {
-        animateFab()
-        binding.fabLinkFolder.hide()
-        binding.fabLink.hide()
-        binding.fabCreate.hide()
-
-        binding.clFabsLinkFolder.crossfadeOut()
-        binding.clFabsLink.crossfadeOut()
-        binding.clFabsCreate.crossfadeOut()
-        binding.vOverlay.crossfadeOut()
-
-        isFabMenuOpen = false
-    }
-
-    private fun animateFab() {
-        @ColorInt val closedColor: Int = getAttrColor(R.attr.colorSecondary)
-        @ColorInt val openColor: Int = getAttrColor(R.attr.colorSurface)
-
-        @ColorInt val fromColor: Int
-        @ColorInt val toColor: Int
-        val toIcon: Drawable?
-
-        // animate to closed menu
-        if (isFabMenuOpen) {
-            fromColor = openColor
-            toColor = closedColor
-            toIcon = ContextCompat.getDrawable(this, R.drawable.ic_add)?.mutate()
-            toIcon?.setColorFilter(getAttrColor(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
-        }
-        // animate to open menu
-        else {
-            fromColor = closedColor
-            toColor = openColor
-            toIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear)?.mutate()
-            toIcon?.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
-        }
-
-        binding.fab.animateFab(fromColor, toColor, toIcon)
     }
 
     // toolbar

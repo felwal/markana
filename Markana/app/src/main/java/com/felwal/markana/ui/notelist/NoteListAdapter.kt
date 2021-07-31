@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.databinding.ItemNoteBinding
+import com.felwal.markana.databinding.ItemRecyclerNoteBinding
 
 class NoteListAdapter(
     private val onClick: (Note) -> Unit,
@@ -20,7 +20,7 @@ class NoteListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemNoteBinding.inflate(inflater)
+        val binding = ItemRecyclerNoteBinding.inflate(inflater)
 
         return NoteViewHolder(parent.context, binding, onClick, onLongClick)
     }
@@ -32,7 +32,7 @@ class NoteListAdapter(
 
     class NoteViewHolder(
         private val c: Context,
-        binding: ItemNoteBinding,
+        binding: ItemRecyclerNoteBinding,
         val onClick: (Note) -> Unit,
         val onLongClick: (Note) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
