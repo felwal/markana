@@ -42,6 +42,28 @@
     <string name="tv_fab_link">Link file</string>
     <string name="tv_fab_link_folder">Link folder</string>
 
+    <!-- preferences -->
+
+    <!-- header -->
+    <string name="tv_settings_header_appearance">Appearance</string>
+    <string name="tv_settings_header_markdown">Markdown</string>
+
+    <!-- key -->
+    <string name="key_prefs_theme">theme</string>
+    <string name="key_prefs_md_symbol_bulletlist">md_symbol_bulletlist</string>
+    <string name="key_prefs_md_symbol_horizontal_rule">md_symbol_horizontal_rule</string>
+    <string name="key_prefs_md_symbol_italic">md_symbol_italic</string>
+    <string name="key_prefs_md_symbol_bold">md_symbol_bold</string>
+    <string name="key_prefs_md_checkbox_space">md_checkbox_space</string>
+
+    <!-- title -->
+    <string name="tv_settings_title_theme">theme</string>
+    <string name="tv_settings_title_md_symbol_bulletlist">md_symbol_bulletlist</string>
+    <string name="tv_settings_title_md_symbol_horizontal_rule">md_symbol_horizontal_rule</string>
+    <string name="tv_settings_title_md_symbol_italic">md_symbol_italic</string>
+    <string name="tv_settings_title_md_symbol_bold">md_symbol_bold</string>
+    <string name="tv_settings_title_md_checkbox_space">md_checkbox_space</string>
+
     <!-- preference titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>

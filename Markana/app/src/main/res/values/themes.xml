@@ -20,6 +20,9 @@
 
         <!-- surface -->
         <item name="colorSurface">@color/grey7</item>
+
+        <!-- menu -->
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="Theme.Markana" parent="Theme.Default">

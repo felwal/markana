@@ -1,6 +1,8 @@
 <resources>
 
-    <!-- base spacing -->
+    <!-- spacing -->
+
+    <!-- general -->
     <dimen name="spacing_huge">48dp</dimen>
     <dimen name="spacing_large">32dp</dimen>
     <dimen name="spacing_medium">24dp</dimen>
@@ -8,20 +10,32 @@
     <dimen name="spacing_tiny">8dp</dimen>
     <dimen name="spacing_diminutive">4dp</dimen>
 
-    <!-- spacing -->
+    <!-- specific -->
     <dimen name="spacing_fab">16dp</dimen>
 
+    <!-- dialog -->
+    <dimen name="spacing_dialog_top">8dp</dimen>
+    <dimen name="spacing_dialog_side">24dp</dimen>
+    <dimen name="spacing_dialog_side_20dp">20dp</dimen>
+
     <!-- layout -->
+
+    <!-- corner -->
     <dimen name="corner_radius_medium">10dp</dimen>
+    <dimen name="corner_radius_dialog">8dp</dimen>
+
+    <!-- stroke -->
     <dimen name="stroke_width_small">1dp</dimen>
 
     <!-- icon size -->
+
     <dimen name="icon_size">24dp</dimen>
     <dimen name="icon_viewport_size">24.0</dimen>
     <dimen name="icon_launcher_size">108dp</dimen>
     <dimen name="icon_launcher_viewport_size">108</dimen>
 
     <!-- elevation -->
+
     <dimen name="elev_ab">4dp</dimen>
     <dimen name="elev_nb">8dp</dimen>
     <dimen name="elev_fab">6dp</dimen>
@@ -29,18 +43,27 @@
     <dimen name="elev_fabmenu">10dp</dimen>
 
     <!-- type -->
-    <dimen name="type_note_title">24sp</dimen>
-    <dimen name="type_note_body">16sp</dimen>
 
+    <!-- general -->
     <dimen name="type_headline1">36sp</dimen>
     <dimen name="type_headline2">28sp</dimen>
     <dimen name="type_title_toolbar">18sp</dimen>
     <dimen name="type_title_tab">16sp</dimen>
     <dimen name="type_heading1">18sp</dimen>
-    <dimen name="type_heading_setting">16dp</dimen>
     <dimen name="type_heading2">14sp</dimen>
     <dimen name="type_body">14sp</dimen>
     <dimen name="type_caption">12sp</dimen>
     <dimen name="type_overline">12sp</dimen>
+
+    <!-- dialog -->
+    <dimen name="type_dialog_title">17sp</dimen>
+    <dimen name="type_dialog_message">16sp</dimen>
+
+    <!-- settings -->
+    <dimen name="type_heading_setting">16dp</dimen>
+
+    <!-- note detail -->
+    <dimen name="type_note_title">24sp</dimen>
+    <dimen name="type_note_body">16sp</dimen>
 
 </resources>

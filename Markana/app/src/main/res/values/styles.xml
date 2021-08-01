@@ -80,4 +80,18 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TextView.DialogTitle">
+        <item name="android:textSize">@dimen/type_dialog_title</item>
+        <!--<item name="android:textStyle">bold</item>-->
+    </style>
+
+    <style name="TextView.DialogMessageLone">
+        <item name="android:textSize">@dimen/type_dialog_title</item>
+    </style>
+
+    <style name="TextView.DialogMessage">
+        <item name="android:textSize">@dimen/type_dialog_message</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
 </resources>

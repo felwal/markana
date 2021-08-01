@@ -14,6 +14,9 @@ import com.felwal.markana.MainApplication
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ActivityNoteListBinding
+import com.felwal.markana.dialog.BinaryDialog
+import com.felwal.markana.dialog.NO_RES
+import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
@@ -28,7 +31,10 @@ import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
 
-class NoteListActivity : AppCompatActivity() {
+private const val DIALOG_DELETE = "deleteNotes"
+private const val DIALOG_UNLINK = "unlinkNotes"
+
+class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private lateinit var binding: ActivityNoteListBinding
     private lateinit var adapter: NoteListAdapter
@@ -284,9 +290,19 @@ class NoteListActivity : AppCompatActivity() {
 
     private fun copySelection() = copyNote(selectedNote)
 
-    private fun deleteSelection() = deleteNotes(model.selectedNotes)
+    private fun deleteSelection() = binaryDialog(
+        titleRes = R.string.dialog_title_delete_notes,
+        messageRes = R.string.dialog_msg_delete_notes,
+        posBtnTxtRes = R.string.dialog_btn_delete,
+        tag = DIALOG_DELETE
+    ).show(supportFragmentManager)
 
-    private fun unlinkSelection() = unlinkNotes(model.selectedNotes)
+    private fun unlinkSelection() = binaryDialog(
+        titleRes = R.string.dialog_title_unlink_notes,
+        messageRes = R.string.dialog_msg_unlink_notes,
+        posBtnTxtRes = R.string.dialog_btn_unlink,
+        tag = DIALOG_UNLINK
+    ).show(supportFragmentManager)
 
     // selection
 
@@ -317,5 +333,14 @@ class NoteListActivity : AppCompatActivity() {
         // sync tb
         invalidateOptionsMenu()
         updateToolbarTitle()
+    }
+
+    // dialog
+
+    override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
+        when (tag) {
+            DIALOG_DELETE -> deleteNotes(model.selectedNotes)
+            DIALOG_UNLINK -> unlinkNotes(model.selectedNotes)
+        }
     }
 }

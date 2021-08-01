@@ -14,6 +14,8 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.URI_DEFAULT
 import com.felwal.markana.databinding.ActivityNoteDetailBinding
+import com.felwal.markana.dialog.BinaryDialog
+import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.network.CreateTextDocument
 import com.felwal.markana.util.copy
 import com.felwal.markana.util.copyToClipboard
@@ -25,10 +27,13 @@ import com.felwal.markana.util.string
 import com.felwal.markana.util.then
 
 private const val LOG_TAG = "NoteDetail"
+
 private const val EXTRA_NOTE_URI = "uri"
 private const val EXTRA_NOTE_ID = "id"
 
-class NoteDetailActivity : AppCompatActivity() {
+private const val DIALOG_DELETE = "deleteNotes"
+
+class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private lateinit var binding: ActivityNoteDetailBinding
 
@@ -118,7 +123,11 @@ class NoteDetailActivity : AppCompatActivity() {
         R.id.action_undo -> {} // TODO
         R.id.action_redo -> {} // TODO
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
-        R.id.action_delete -> model.deleteNote() then finish() then true
+        R.id.action_delete -> binaryDialog(
+            titleRes = R.string.dialog_title_delete_note,
+            posBtnTxtRes = R.string.dialog_btn_delete,
+            tag = DIALOG_DELETE
+        ).show(supportFragmentManager)
 
         // bab
         R.id.action_bold -> etCurrentFocus?.bold()
@@ -253,6 +262,14 @@ class NoteDetailActivity : AppCompatActivity() {
     private fun EditText.checklist() = markSelectedLines { "- [] " }
 
     private fun EditText.horizontalRule() = insertAtCursor("* * *")
+
+    // dialog
+
+    override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
+        when (tag) {
+            DIALOG_DELETE -> model.deleteNote() then finish()
+        }
+    }
 
     //
 
