@@ -1,5 +1,7 @@
 package com.felwal.markana.util
 
+// string
+
 fun CharSequence.split(vararg delimiters: String, lowerLimit: Int, ignoreCase: Boolean = false): List<String?> {
     return split(*delimiters, ignoreCase = ignoreCase)
         .toMutableList()
@@ -14,5 +16,5 @@ fun String.isMime(type: String): Boolean {
 
 fun String.isMime(type: String, subType: String): Boolean {
     val (thisType, thisSubtype) = split("/", lowerLimit = 2)
-    return thisType == type && thisSubtype == subType
+    return thisType == type && (thisSubtype == subType || subType == "*")
 }

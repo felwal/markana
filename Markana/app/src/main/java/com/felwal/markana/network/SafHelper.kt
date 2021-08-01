@@ -114,8 +114,8 @@ class SafHelper(private val applicationContext: Context) {
         var wrongMimeCount = 0
 
         for (file in docFiles) {
-            // check mime
-            if (file.type?.isMime(MIME_TEXT_TYPE) == true) {
+            // check mime TODO: markdown isn't recognized as text
+            if (true || file.type?.isMime(MIME_TEXT_TYPE) == true) {
                 readFile(file.uri)?.let { note ->
                     //persistPermissions(note.uri.toUri()) // TODO: not working / not neccessary?
                     note.treeId = tree.id

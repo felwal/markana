@@ -25,6 +25,8 @@
     <string name="action_numberlist">Numberlist</string>
     <string name="action_horizontal_rule">Horizontal rule</string>
     <string name="action_clipboard">Copy to clipboard</string>
+    <string name="action_view_list">View as list</string>
+    <string name="action_view_grid">View as grid</string>
 
     <!-- view -->
 

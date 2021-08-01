@@ -12,56 +12,52 @@
         android:id="@+id/cl_note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_item_note">
+        android:background="@drawable/shape_list_note_bg">
 
-        <TextView
-            android:id="@+id/tv_uri"
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_tiny"
-            android:layout_marginStart="@dimen/spacing_tiny"
-            android:layout_marginEnd="@dimen/spacing_tiny"
-            android:textSize="9sp"
-            android:textStyle="normal"
-            android:singleLine="true"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/spacing_small"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="url" />
+            app:srcCompat="@drawable/ic_text"
+            app:tint="?attr/colorControlActivated" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_tiny"
+            android:layout_marginStart="@dimen/spacing_small"
             android:layout_marginEnd="@dimen/spacing_tiny"
-            android:layout_marginTop="@dimen/spacing_diminutive"
-            android:textColor="?android:colorAccent"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             android:textStyle="normal"
             android:ellipsize="end"
             android:maxLines="3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uri"
+            app:layout_constraintStart_toEndOf="@+id/iv_icon"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="note.md" />
 
         <TextView
-            android:id="@+id/tv_body"
+            android:id="@+id/tv_modified"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_diminutive"
-            android:layout_marginStart="@dimen/spacing_tiny"
+            android:layout_marginStart="@dimen/spacing_small"
             android:layout_marginEnd="@dimen/spacing_tiny"
+            android:layout_marginTop="@dimen/spacing_diminutive"
             android:layout_marginBottom="@dimen/spacing_tiny"
+            android:textSize="@dimen/type_caption"
             android:maxLines="12"
             android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_icon"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
-            tools:text="Body text text text text ... text text ..." />
+            tools:text="Modified ..." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

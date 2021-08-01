@@ -17,18 +17,20 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     val selectionIndices: MutableList<Int> = mutableListOf()
 
     val items: List<Note> get() = itemsData.value ?: listOf()
-    val selectedNotes: List<Note> get() = items.filter { it.selected }
+    val selectedNotes: List<Note> get() = items.filter { it.isSelected }
 
     // read
 
     fun loadNotes() {
         viewModelScope.launch {
-            itemsData.postValue(repo.getAllNotes().toMutableList())
+            val notes = repo.getAllNotes()
+                .toMutableList()
+                .onEachIndexed { index, note ->
+                    // sync with selection
+                    note.isSelected = index in selectionIndices
+                }
 
-            // sync with selection
-            itemsData.value?.onEachIndexed { index, note ->
-                note.selected = index in selectionIndices
-            }
+            itemsData.postValue(notes)
         }
     }
 

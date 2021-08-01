@@ -9,38 +9,58 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.databinding.ItemRecyclerNoteBinding
+import com.felwal.markana.databinding.ItemRecyclerGridNoteBinding
+import com.felwal.markana.databinding.ItemRecyclerListNoteBinding
 
 class NoteListAdapter(
     private val onClick: (Note) -> Unit,
     private val onLongClick: (Note) -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteDiffCallback()) {
 
+    // TODO: pref
+    var gridView: Boolean = true
+        private set
+
+    fun invertViewType() {
+        gridView = !gridView
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemRecyclerNoteBinding.inflate(inflater)
 
-        return NoteViewHolder(parent.context, binding, onClick, onLongClick)
+        return if (gridView) {
+            val binding = ItemRecyclerGridNoteBinding.inflate(inflater)
+            GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
+        }
+        else {
+            val binding = ItemRecyclerListNoteBinding.inflate(inflater)
+            ListNoteViewHolder(parent.context, binding, onClick, onLongClick)
+        }
+
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val note = getItem(position)
-        (holder as NoteViewHolder).bind(note)
+        if (holder is GridNoteViewHolder) holder.bind(note)
+        else if (holder is ListNoteViewHolder) holder.bind(note)
     }
 
-    class NoteViewHolder(
-        private val c: Context,
-        binding: ItemRecyclerNoteBinding,
+    // viewholder
+
+    class GridNoteViewHolder(
+        c: Context,
+        binding: ItemRecyclerGridNoteBinding,
         val onClick: (Note) -> Unit,
         val onLongClick: (Note) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
+    ) : SelectableViewHolder(c, binding, binding.clNote) {
 
         private val tvUri: TextView = binding.tvUri
         private val tvTitle: TextView = binding.tvTitle
         private val tvBody: TextView = binding.tvBody
-        private val clBackground: ConstraintLayout = binding.clNote
         private var currentNote: Note? = null
 
         init {
@@ -60,10 +80,51 @@ class NoteListAdapter(
             tvTitle.text = note.filename
             tvBody.text = note.content.trim()
 
-            // mark selected
-            clBackground.background.setTintMode(PorterDuff.Mode.SRC_OVER)
-            if (note.selected) clBackground.background.setTint(c.getColor(R.color.red_light_trans))
-            else clBackground.background.setTint(c.getColor(R.color.trans))
+            markSelection(note.isSelected)
+        }
+    }
+
+    class ListNoteViewHolder(
+        c: Context,
+        binding: ItemRecyclerListNoteBinding,
+        val onClick: (Note) -> Unit,
+        val onLongClick: (Note) -> Unit
+    ) : SelectableViewHolder(c, binding, binding.clNote) {
+
+        private val tvTitle: TextView = binding.tvTitle
+        private val tvModified: TextView = binding.tvModified
+        private var currentNote: Note? = null
+
+        init {
+            binding.clNote.setOnClickListener {
+                currentNote?.let { onClick(it) }
+            }
+            binding.clNote.setOnLongClickListener {
+                currentNote?.let { onLongClick(it) }
+                return@setOnLongClickListener true
+            }
+        }
+
+        fun bind(note: Note) {
+            currentNote = note
+
+            tvTitle.text = note.filename
+            tvModified.text = "Modified"
+
+            markSelection(note.isSelected)
+        }
+    }
+
+    abstract class SelectableViewHolder(
+        private val c: Context,
+        binding: ViewBinding,
+        private var selectableBackground: ConstraintLayout
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        protected fun markSelection(selected: Boolean) {
+            selectableBackground.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+            if (selected) selectableBackground.background.setTint(c.getColor(R.color.red_light_trans))
+            else selectableBackground.background.setTint(c.getColor(R.color.trans))
         }
     }
 }
@@ -74,5 +135,5 @@ private class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
         oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
-        oldItem == newItem && oldItem.selected == newItem.selected
+        oldItem == newItem && oldItem.isSelected == newItem.isSelected
 }

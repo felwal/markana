@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.felwal.markana.MainApplication
 import com.felwal.markana.R
@@ -44,7 +45,6 @@ class NoteListActivity : AppCompatActivity() {
 
         model.handleCreatedNote(uri)
     }
-
     private val openDocumentTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         uri ?: return@registerForActivityResult
         Log.i(LOG_TAG, "open document tree uri result: $uri")
@@ -53,8 +53,6 @@ class NoteListActivity : AppCompatActivity() {
     }
 
     private lateinit var fabMenu: FabMenu
-
-    private var isFabMenuOpen: Boolean = false
 
     // Activity
 
@@ -84,6 +82,21 @@ class NoteListActivity : AppCompatActivity() {
             submitItems(items)
         }
         model.loadNotes()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.let {
+            // toggle item view
+            val viewToggleItem = menu.findItem(R.id.action_view_toggle)
+            viewToggleItem?.let {
+                viewToggleItem.isChecked = adapter.gridView
+                if (adapter.gridView) viewToggleItem.setIcon(R.drawable.ic_view_list).setTitle(R.string
+                    .action_view_list)
+                else viewToggleItem.setIcon(R.drawable.ic_view_grid).setTitle(R.string.action_view_grid)
+            }
+        }
+
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -117,7 +130,12 @@ class NoteListActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
         // normal tb
         R.id.action_settings -> launchActivity<SettingsActivity>()
-        +
+        R.id.action_view_toggle -> {
+            adapter.invertViewType()
+            setAdapterAndManager()
+            invalidateOptionsMenu()
+        }
+
         // single selection tb
         R.id.action_copy -> copySelection()
 
@@ -164,8 +182,15 @@ class NoteListActivity : AppCompatActivity() {
                 selectNote(it)
             }
         )
+        setAdapterAndManager()
+    }
+
+    private fun setAdapterAndManager() {
+        // set adapter
         binding.rv.adapter = adapter
-        val spanCount = if (isPortrait) 2 else 3
+
+        // set manager
+        val spanCount = if (!adapter.gridView) 1 else if (isPortrait) 2 else 3
         binding.rv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
     }
 
@@ -266,7 +291,7 @@ class NoteListActivity : AppCompatActivity() {
     // selection
 
     private fun selectNote(note: Note) {
-        note.selected = !note.selected
+        note.isSelected = !note.isSelected
 
         // sync with data and adapter
         val index = model.items.indexOf(note)
@@ -281,7 +306,7 @@ class NoteListActivity : AppCompatActivity() {
 
     private fun emptySelection() {
         for (note in model.selectedNotes) {
-            note.selected = false
+            note.isSelected = false
 
             val index = model.items.indexOf(note)
             model.itemsData.value?.set(index, note)

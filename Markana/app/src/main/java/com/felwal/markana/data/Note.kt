@@ -19,7 +19,7 @@ data class Note(
 
     //@ColumnInfo var type: String = "txt"
 
-    var selected: Boolean = false
+    var isSelected: Boolean = false
 
     init {
         //val splits = filename.split(".")
