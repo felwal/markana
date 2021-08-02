@@ -3,12 +3,10 @@ package com.felwal.markana.dialog
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import androidx.annotation.StringRes
 import com.felwal.markana.R
-import java.util.*
+import com.felwal.markana.databinding.DialogRadioBinding
 import kotlin.collections.ArrayList
 
 private const val BUNDLE_RADIO_TEXTS = "radioTexts"
@@ -52,24 +50,23 @@ class RadioDialog : BaseDialog() {
     }
 
     override fun buildDialog(): AlertDialog {
-        val view: View = inflater.inflate(R.layout.dialog_radio, null)
-        val group = view.findViewById<RadioGroup>(R.id.rg_dialog_radio)
+        val binding = DialogRadioBinding.inflate(inflater)
 
         builder
-            .setView(view)
+            .setView(binding.root)
             .setTitle(title)
             .setCancelButton(negBtnTxtRes)
 
         // inflate radio buttons
         for (i in radioTexts.indices) {
-            val btn = inflater.inflate(R.layout.item_dialog_radio, group, false) as RadioButton
+            val btn = inflater.inflate(R.layout.item_dialog_radio, binding.rg, false) as RadioButton
             btn.text = radioTexts[i]
-            group.addView(btn)
+            binding.rg.addView(btn)
 
             btn.isChecked = i == selectedIndex
 
             // click
-            btn.setOnClickListener { _ ->
+            btn.setOnClickListener {
                 dialog?.cancel()
                 listener.onRadioDialogClick(i, dialogTag)
             }
@@ -85,14 +82,14 @@ class RadioDialog : BaseDialog() {
 }
 
 fun radioDialog(
-    @StringRes titleRes: Int = NO_RES,
-    @StringRes messageRes: Int = NO_RES,
+    title: String,
+    message: String = "",
     radioButtonTexts: List<String>,
     selectedIndex: Int,
     tag: String
 ): RadioDialog {
     val instance = RadioDialog()
-    val bundle: Bundle = putBaseBundle(titleRes, messageRes, NO_RES, tag)
+    val bundle: Bundle = putBaseBundle(title, message, NO_RES, tag)
 
     bundle.putStringArrayList(BUNDLE_RADIO_TEXTS, ArrayList(radioButtonTexts))
     bundle.putInt(BUNDLE_SELECTED_INDEX, selectedIndex)

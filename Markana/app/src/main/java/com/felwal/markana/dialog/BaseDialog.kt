@@ -13,10 +13,9 @@ import androidx.fragment.app.FragmentManager
 import com.felwal.markana.R
 
 const val NO_RES = -1
-const val NO_FLOAT_TEXT = -1f
 
-const val BUNDLE_TITLE_RES = "title"
-const val BUNDLE_MESSAGE_RES = "message"
+const val BUNDLE_TITLE = "title"
+const val BUNDLE_MESSAGE = "message"
 const val BUNDLE_POSITIVE_BUTTON_RES = "positiveButtonText"
 const val BUNDLE_NEGATIVE_BUTTON_RES = "negativeButtonText"
 const val BUNDLE_TAG = "tag"
@@ -47,21 +46,23 @@ abstract class BaseDialog : DialogFragment() {
 
     // bundle
 
+    /**
+     * Call [unpackBaseBundle] here
+     */
     protected abstract fun unpackBundle()
 
+    /**
+     * Call this from [unpackBundle]
+     */
     protected fun unpackBaseBundle(defaultTag: String): Bundle? {
         val bundle: Bundle? = arguments
 
         bundle?.apply {
-            val titleRes = getInt(BUNDLE_TITLE_RES, NO_RES)
-            val messageRes = getInt(BUNDLE_MESSAGE_RES, NO_RES)
+            title = getString(BUNDLE_TITLE, "")
+            message = getString(BUNDLE_MESSAGE, "")
             posBtnTxtRes = getInt(BUNDLE_POSITIVE_BUTTON_RES, posBtnTxtRes)
             negBtnTxtRes = getInt(BUNDLE_NEGATIVE_BUTTON_RES, negBtnTxtRes)
             dialogTag = getString(BUNDLE_TAG, defaultTag)
-
-            // convert from res
-            title = if (titleRes == NO_RES) "" else getString(titleRes)
-            message = if (messageRes == NO_RES) "" else getString(messageRes)
         }
 
         return bundle
@@ -93,15 +94,15 @@ abstract class BaseDialog : DialogFragment() {
 }
 
 fun putBaseBundle(
-    @StringRes titleRes: Int,
-    @StringRes messageRes: Int,
+    title: String,
+    message: String,
     @StringRes posBtnTxtRes: Int,
     tag: String
 ): Bundle {
     val bundle = Bundle()
 
-    bundle.putInt(BUNDLE_TITLE_RES, titleRes)
-    bundle.putInt(BUNDLE_MESSAGE_RES, messageRes)
+    bundle.putString(BUNDLE_TITLE, title)
+    bundle.putString(BUNDLE_MESSAGE, message)
     bundle.putInt(BUNDLE_POSITIVE_BUTTON_RES, posBtnTxtRes)
     bundle.putString(BUNDLE_TAG, tag)
 

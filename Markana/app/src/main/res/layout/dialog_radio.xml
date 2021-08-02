@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/spacing_tiny">
 
     <RadioGroup
-        android:id="@+id/rg_dialog_radio"
+        android:id="@+id/rg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/spacing_small" />

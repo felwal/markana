@@ -62,7 +62,7 @@
                     android:id="@+id/et_note_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/et_hint_note_detail_title"
+                    android:hint="@string/et_notedetail_title_hint"
                     android:inputType="text"
                     android:textColor="?attr/colorAccent"
                     android:imeOptions="flagNoExtractUi"
@@ -74,7 +74,7 @@
                 <com.felwal.markana.view.TimidEditText
                     android:id="@+id/et_note_body"
                     android:layout_width="match_parent"
-                    android:hint="@string/et_hint_note_detail_body"
+                    android:hint="@string/et_notedetail_body_hint"
                     android:singleLine="false"
                     android:inputType="textMultiLine|textCapSentences"
                     android:imeOptions="flagNoExtractUi"

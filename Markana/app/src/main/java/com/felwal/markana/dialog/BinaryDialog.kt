@@ -61,14 +61,14 @@ class BinaryDialog : BaseDialog() {
 }
 
 fun binaryDialog(
-    @StringRes titleRes: Int = R.string.dialog_title_continue,
-    @StringRes messageRes: Int = NO_RES,
-    @StringRes posBtnTxtRes: Int = R.string.dialog_btn_continue,
+    title: String,
+    message: String = "",
+    @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     tag: String,
     passValue: String? = null
 ): BinaryDialog {
     val instance = BinaryDialog()
-    val bundle: Bundle = putBaseBundle(titleRes, messageRes, posBtnTxtRes, tag)
+    val bundle: Bundle = putBaseBundle(title, message, posBtnTxtRes, tag)
 
     bundle.putString(BUNDLE_PASS_VALUE, passValue)
 

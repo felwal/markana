@@ -60,14 +60,14 @@ class UnaryDialog : BaseDialog() {
 }
 
 fun unaryDialog(
-    @StringRes titleRes: Int = R.string.dialog_title_continue,
-    @StringRes messageRes: Int = NO_RES,
-    @StringRes btnTxtRes: Int = R.string.dialog_btn_continue,
+    title: String,
+    message: String = "",
+    @StringRes btnTxtRes: Int = R.string.dialog_btn_ok,
     tag: String,
     passValue: String? = null
 ): UnaryDialog {
     val instance = UnaryDialog()
-    val bundle: Bundle = putBaseBundle(titleRes, messageRes, btnTxtRes, tag)
+    val bundle: Bundle = putBaseBundle(title, message, btnTxtRes, tag)
 
     bundle.putString(BUNDLE_PASS_VALUE, passValue)
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.annotation.StringRes
 import com.felwal.markana.R
+import com.felwal.markana.databinding.DialogTextBinding
 import com.felwal.markana.util.string
 
 private const val BUNDLE_TEXT = "text"
@@ -46,19 +47,18 @@ class TextDialog : BaseDialog() {
     }
 
     override fun buildDialog(): AlertDialog {
-        val vDialog: View = inflater.inflate(R.layout.dialog_text, null)
-        val et = vDialog.findViewById<EditText>(R.id.et_dialog_text)
+        val binding = DialogTextBinding.inflate(inflater)
 
-        et.setText(text)
-        et.hint = hint
+        binding.et.setText(text)
+        binding.et.hint = hint
 
         if (!message.equals("")) builder.setMessage(message)
 
         builder
-            .setView(vDialog)
+            .setView(binding.root)
             .setTitle(title)
             .setPositiveButton(posBtnTxtRes) { _, _ ->
-                val input = et.string.trim { it <= ' ' }
+                val input = binding.et.string.trim { it <= ' ' }
                 listener.onTextDialogPositiveClick(input, dialogTag)
             }
             .setCancelButton(negBtnTxtRes)
@@ -74,15 +74,15 @@ class TextDialog : BaseDialog() {
 }
 
 fun textDialog(
-    @StringRes titleRes: Int = NO_RES,
-    @StringRes messageRes: Int = NO_RES,
+    title: String,
+    message: String = "",
     text: String = "",
     hint: String = "",
     @StringRes posBtnTxtRes: Int,
     tag: String
 ): TextDialog {
     val instance = TextDialog()
-    val bundle: Bundle = putBaseBundle(titleRes, messageRes, posBtnTxtRes, tag)
+    val bundle: Bundle = putBaseBundle(title, message, posBtnTxtRes, tag)
 
     bundle.putString(BUNDLE_TEXT, text)
     bundle.putString(BUNDLE_HINT, hint)

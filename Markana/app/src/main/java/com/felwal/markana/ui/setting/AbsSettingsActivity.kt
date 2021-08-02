@@ -195,65 +195,61 @@ abstract class AbsSettingsActivity(
 
     protected inner class StringItem(
         title: String,
+        val desc: String = "",
         val value: String,
-        val dialogHint: String,
+        val hint: String,
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogTitleRes: Int,
-        @StringRes val dialogMsgRes: Int = NO_RES,
         val tag: String
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, value, hideDivider, iconRes,
-                textDialog(dialogTitleRes, dialogMsgRes, value, dialogHint, R.string.dialog_btn_set, tag)
+                textDialog(title, desc, value, hint, R.string.dialog_btn_set, tag)
             )
         }
     }
 
     protected inner class FloatItem(
         title: String,
+        val desc: String = "",
         val value: Float,
-        val dialogHint: String,
+        val hint: String,
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogTitleRes: Int,
-        @StringRes val dialogMsgRes: Int = NO_RES,
         val tag: String
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, value.toString(), hideDivider, iconRes,
-                decimalDialog(dialogTitleRes, dialogMsgRes, value, dialogHint, R.string.dialog_btn_set, tag)
+                decimalDialog(title, desc, value, hint, R.string.dialog_btn_set, tag)
             )
         }
     }
 
     protected inner class SingleSelectionItem(
         title: String,
-        val list: List<String>,
+        val desc: String = "",
+        val values: List<String>,
         val selectedIndex: Int,
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogTitleRes: Int,
-        @StringRes val dialogMsgRes: Int = NO_RES,
         val tag: String
     ) : SettingItem(title, iconRes) {
 
-        val value: String get() = list[selectedIndex]
+        val value: String get() = values[selectedIndex]
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, value, hideDivider, iconRes,
-                radioDialog(dialogTitleRes, dialogMsgRes, list, selectedIndex, tag)
+                radioDialog(title, desc, values, selectedIndex, tag)
             )
         }
     }
 
     protected inner class ActionItem(
         title: String,
+        val desc: String = "",
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogTitleRes: Int,
-        @StringRes val dialogMsgRes: Int = NO_RES,
         @StringRes val dialogPosBtnRes: Int,
         val tag: String
     ) : SettingItem(title, iconRes) {
@@ -261,16 +257,15 @@ abstract class AbsSettingsActivity(
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, "", hideDivider, iconRes,
-                binaryDialog(dialogTitleRes, dialogMsgRes, dialogPosBtnRes, tag)
+                binaryDialog(title, desc, dialogPosBtnRes, tag)
             )
         }
     }
 
     protected inner class InfoItem(
         title: String,
+        val desc: String = "",
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogTitleRes: Int,
-        @StringRes val dialogMsgRes: Int = NO_RES,
         @StringRes val dialogBtnRes: Int,
         val tag: String
     ) : SettingItem(title, iconRes) {
@@ -278,18 +273,19 @@ abstract class AbsSettingsActivity(
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, "", hideDivider, iconRes,
-                unaryDialog(dialogTitleRes, dialogMsgRes, dialogBtnRes, tag)
+                unaryDialog(title, desc, dialogBtnRes, tag)
             )
         }
     }
 
     protected inner class SubSettingsItem(
         title: String,
+        val desc: String = "",
         @DrawableRes iconRes: Int = NO_RES,
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
-            inflateClickItem(title, "...", hideDivider, iconRes) {
+            inflateClickItem(title, desc, hideDivider, iconRes) {
                 //launchActivity<>()
             }
         }

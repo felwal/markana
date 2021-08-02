@@ -8,14 +8,12 @@ import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.felwal.markana.MainApplication
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ActivityNoteListBinding
 import com.felwal.markana.dialog.BinaryDialog
-import com.felwal.markana.dialog.NO_RES
 import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
@@ -26,7 +24,6 @@ import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.showOrRemove
 import com.felwal.markana.util.toggleInclusion
-import com.felwal.markana.util.visibleOrGone
 import com.felwal.markana.view.FabMenu
 import com.google.android.material.appbar.AppBarLayout
 
@@ -249,7 +246,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         }
         else {
             supportActionBar?.title =
-                resources.getQuantityString(R.plurals.tb_title_note_list_selection, selectionCount, selectionCount)
+                resources.getQuantityString(R.plurals.tb_notelist_title_selection, selectionCount, selectionCount)
         }
     }
 
@@ -292,15 +289,15 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     private fun copySelection() = copyNote(selectedNote)
 
     private fun deleteSelection() = binaryDialog(
-        titleRes = R.string.dialog_title_delete_notes,
-        messageRes = R.string.dialog_msg_delete_notes,
+        title = getString(R.string.tv_settings_item_title_delete_notes),
+        message = getString(R.string.dialog_msg_delete_notes),
         posBtnTxtRes = R.string.dialog_btn_delete,
         tag = DIALOG_DELETE
     ).show(supportFragmentManager)
 
     private fun unlinkSelection() = binaryDialog(
-        titleRes = R.string.dialog_title_unlink_notes,
-        messageRes = R.string.dialog_msg_unlink_notes,
+        title = getString(R.string.tv_settings_item_title_unlink_notes),
+        message = getString(R.string.dialog_msg_unlink_notes),
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK
     ).show(supportFragmentManager)

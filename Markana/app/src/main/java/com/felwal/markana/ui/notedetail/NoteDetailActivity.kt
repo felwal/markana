@@ -124,7 +124,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         R.id.action_redo -> {} // TODO
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
         R.id.action_delete -> binaryDialog(
-            titleRes = R.string.dialog_title_delete_note,
+            title = getString(R.string.tv_settings_item_title_delete_note),
             posBtnTxtRes = R.string.dialog_btn_delete,
             tag = DIALOG_DELETE
         ).show(supportFragmentManager)

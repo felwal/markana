@@ -9,7 +9,7 @@
     android:paddingEnd="@dimen/spacing_dialog_side_20dp">
 
     <EditText
-        android:id="@+id/et_dialog_text"
+        android:id="@+id/et"
         android:layout_width="match_parent"
         android:inputType="text"
         style="@style/EditText" />
