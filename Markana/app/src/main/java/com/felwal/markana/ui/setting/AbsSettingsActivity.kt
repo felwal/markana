@@ -18,12 +18,12 @@ import com.felwal.markana.dialog.radioDialog
 import com.felwal.markana.dialog.textDialog
 import com.felwal.markana.dialog.unaryDialog
 import com.felwal.markana.util.enableRipple
+import com.felwal.markana.util.hideOrRemove
 import com.felwal.markana.util.remove
 import com.felwal.markana.util.setTextRemoveIfEmpty
 import com.felwal.markana.util.showOrHide
 
 abstract class AbsSettingsActivity(
-    private val dividerMode: DividerMode
 ) : AppCompatActivity() {
 
     enum class DividerMode {
@@ -75,18 +75,24 @@ abstract class AbsSettingsActivity(
 
     protected fun inflateSwitchItem(
         title: String,
-        desc: String = "",
+        descOn: String,
+        descOff: String,
         checked: Boolean,
         hideDivider: Boolean,
         @DrawableRes iconRes: Int,
         onSwitch: (checked: Boolean) -> Unit
     ) {
+        val desc = if (checked) descOn else descOff
         val itemBinding = inflateSwitchView(title, desc, hideDivider, iconRes)
         itemBinding.sw.isChecked = checked
 
         itemBinding.root.setOnClickListener {
             itemBinding.sw.isChecked = !itemBinding.sw.isChecked
             onSwitch(itemBinding.sw.isChecked)
+
+            // update desc
+            val newDesc = if (itemBinding.sw.isChecked) descOn else descOff
+            itemBinding.tvDesc.setTextRemoveIfEmpty(newDesc)
         }
     }
 
@@ -131,7 +137,7 @@ abstract class AbsSettingsActivity(
 
     private fun inflateSwitchView(
         title: String,
-        desc: String = "",
+        desc: String,
         hideDivider: Boolean,
         @DrawableRes iconRes: Int
     ): ItemSettingsSwitchBinding {
@@ -182,14 +188,15 @@ abstract class AbsSettingsActivity(
 
     protected inner class BooleanItem(
         title: String,
-        val desc: String = "",
+        val descOn: String = "",
+        val descOff: String = descOn,
         val value: Boolean,
         @DrawableRes iconRes: Int = NO_RES,
         val onSwitch: (checked: Boolean) -> Unit
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
-            inflateSwitchItem(title, desc, value, hideDivider, iconRes, onSwitch)
+            inflateSwitchItem(title, descOn, descOff, value, hideDivider, iconRes, onSwitch)
         }
     }
 

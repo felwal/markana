@@ -2,15 +2,36 @@ package com.felwal.markana.ui.setting
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceFragmentCompat
+import android.widget.LinearLayout
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ActivitySettingsBinding
-import com.felwal.markana.util.close
+import com.felwal.markana.dialog.BinaryDialog
+import com.felwal.markana.dialog.RadioDialog
+import com.felwal.markana.dialog.TextDialog
+import com.felwal.markana.dialog.UnaryDialog
+import com.felwal.markana.prefs
+import com.felwal.markana.prefs.bulletlistSymbolNames
+import com.felwal.markana.prefs.emphSymbolNames
+import com.felwal.markana.prefs.themeNames
+import com.felwal.markana.util.then
 
-class SettingsActivity : AppCompatActivity() {
+private const val DIALOG_THEME = "themeDialog"
+private const val DIALOG_ITALIC = "italicDialog"
+private const val DIALOG_BOLD = "boldDialog"
+private const val DIALOG_BULLETLIST = "bulletlistDialog"
+private const val DIALOG_HR = "hrDialog"
+
+open class SettingsActivity : AbsSettingsActivity(
+    dividerMode = DividerMode.IN_SECTION,
+),
+    RadioDialog.DialogListener,
+    TextDialog.DialogListener,
+    UnaryDialog.DialogListener
+{
 
     private lateinit var binding: ActivitySettingsBinding
+
+    override val ll: LinearLayout get() = binding.ll
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,24 +41,96 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(binding.tb)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fl, SettingsFragment())
-                .commit()
+        // animate tb elevation on scroll
+        binding.nsv.setOnScrollChangeListener { _, _, _, _, _ ->
+            binding.ab.isSelected = binding.nsv.canScrollVertically(-1)
         }
+
+        inflateViews()
     }
+
+    // Activity
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            android.R.id.home -> close()
+            android.R.id.home -> finish() then true
+
             else -> super.onOptionsItemSelected(item)
         }
 
-    class SettingsFragment : PreferenceFragmentCompat() {
+    //
 
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        }
+    override fun inflateViews() {
+        inflateSections(
+            ItemSection(getString(R.string.tv_settings_header_appearance),
+                SingleSelectionItem(getString(R.string.tv_settings_item_title_theme),
+                    values = themeNames,
+                    selectedIndex = prefs.themeInt,
+                    tag = DIALOG_THEME
+                ),
+            ),
+            ItemSection(getString(R.string.tv_settings_header_markdown),
+                SingleSelectionItem(getString(R.string.tv_settings_item_title_italic_symbol),
+                    values = emphSymbolNames,
+                    selectedIndex = prefs.italicSymbolInt,
+                    iconRes = R.drawable.ic_italic,
+                    tag = DIALOG_ITALIC
+                ),
+                SingleSelectionItem(getString(R.string.tv_settings_item_title_bold_symbol),
+                    values = emphSymbolNames,
+                    selectedIndex = prefs.boldSymbolInt,
+                    iconRes = R.drawable.ic_bold,
+                    tag = DIALOG_BOLD
+                ),
+                SingleSelectionItem(getString(R.string.tv_settings_item_title_bulletlist_symbol),
+                    values = bulletlistSymbolNames,
+                    selectedIndex = prefs.bulletlistSymbolInt,
+                    iconRes = R.drawable.ic_list_bullet,
+                    tag = DIALOG_BULLETLIST
+                ),
+                StringItem(getString(R.string.tv_settings_item_title_hr_symbol),
+                    value = prefs.hrSymbol,
+                    hint = "3 or more of *, -, or _",
+                    iconRes = R.drawable.ic_horizontal_rule,
+                    tag = DIALOG_HR
+                ),
+                BooleanItem(getString(R.string.tv_settings_item_title_checkbox_space),
+                    value = prefs.checkboxSpace,
+                    iconRes = R.drawable.ic_checkbox_blank,
+                    onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
+                ),
+            ),
+            ItemSection("About and other",
+                InfoItem(getString(R.string.tv_settings_item_title_about),
+                    desc = getString(R.string.tv_settings_item_msg_about),
+                    dialogBtnRes = R.string.dialog_btn_ok,
+                    tag = "aboutDialog"
+                )
+            )
+        )
     }
+
+    // dialog
+
+    override fun onRadioDialogClick(index: Int, tag: String) {
+        when (tag) {
+            DIALOG_THEME -> {
+                prefs.themeInt = index
+                recreate()
+            }
+            DIALOG_ITALIC -> prefs.italicSymbolInt = index
+            DIALOG_BOLD -> prefs.boldSymbolInt = index
+            DIALOG_BULLETLIST -> prefs.bulletlistSymbolInt = index
+        }
+        reflateViews()
+    }
+
+    override fun onTextDialogPositiveClick(input: String, tag: String) {
+        when (tag) {
+            DIALOG_HR -> prefs.hrSymbol = input
+        }
+        reflateViews()
+    }
+
+    override fun onUnaryDialogClick(passValue: String?, tag: String) {}
 }

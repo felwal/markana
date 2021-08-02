@@ -17,6 +17,7 @@ import com.felwal.markana.databinding.ActivityNoteDetailBinding
 import com.felwal.markana.dialog.BinaryDialog
 import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.network.CreateTextDocument
+import com.felwal.markana.prefs
 import com.felwal.markana.util.copy
 import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
@@ -243,9 +244,9 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     // typography bar specifics
 
-    private fun EditText.italic() = markSelectedText("_")
+    private fun EditText.italic() = markSelectedText(prefs.italicSymbol)
 
-    private fun EditText.bold() = markSelectedText("**")
+    private fun EditText.bold() = markSelectedText("${prefs.boldSymbol}${prefs.boldSymbol}")
 
     private fun EditText.strikethrough() = markSelectedText("~~")
 
@@ -255,13 +256,13 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private fun EditText.quote() = markSelectedLines { "> " }
 
-    private fun EditText.bulletlist() = markSelectedLines { "* " }
+    private fun EditText.bulletlist() = markSelectedLines { "${prefs.bulletlistSymbol} " }
 
     private fun EditText.numberlist() = markSelectedLines { "${it + 1}. " }
 
-    private fun EditText.checklist() = markSelectedLines { "- [] " }
+    private fun EditText.checklist() = markSelectedLines { if(prefs.checkboxSpace) "- [ ] " else "- [] " }
 
-    private fun EditText.horizontalRule() = insertAtCursor("* * *")
+    private fun EditText.horizontalRule() = insertAtCursor(prefs.hrSymbol)
 
     // dialog
 
