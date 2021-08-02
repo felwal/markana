@@ -5,8 +5,9 @@ import android.content.SharedPreferences
 
 const val FILENAME_PREFS = "com.felwal.markana.prefs"
 
-const val KEY_THEME = "theme"
+private const val KEY_GRID_VIEW = "grid_view"
 
+const val KEY_THEME = "theme"
 private const val KEY_MD_SYMBOL_ITALIC = "italic"
 private const val KEY_MD_SYMBOL_BOLD = "bold"
 private const val KEY_MD_SYMBOL_BULLETLIST = "bulletlist"
@@ -24,13 +25,17 @@ class Prefs(c: Context) {
 
     private val sp: SharedPreferences = c.getSharedPreferences(FILENAME_PREFS, Context.MODE_PRIVATE);
 
-    // appearance
+    //
+
+    var gridView: Boolean
+        get() = sp.getBoolean(KEY_GRID_VIEW, true)
+        set(value) = sp.putBoolean(KEY_GRID_VIEW, value)
+
+    // settings
 
     var themeInt: Int
         get() = sp.getInt(KEY_THEME, 0)
         set(value) = sp.putInt(KEY_THEME, value)
-
-    // markdown
 
     val italicSymbol: String get() = emphSymbols[italicSymbolInt]
     var italicSymbolInt: Int

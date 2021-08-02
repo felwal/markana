@@ -14,25 +14,22 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ItemRecyclerGridNoteBinding
 import com.felwal.markana.databinding.ItemRecyclerListNoteBinding
+import com.felwal.markana.prefs
 
 class NoteListAdapter(
     private val onClick: (Note) -> Unit,
     private val onLongClick: (Note) -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteDiffCallback()) {
 
-    // TODO: pref
-    var gridView: Boolean = true
-        private set
-
     fun invertViewType() {
-        gridView = !gridView
+        prefs.gridView = !prefs.gridView
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
-        return if (gridView) {
+        return if (prefs.gridView) {
             val binding = ItemRecyclerGridNoteBinding.inflate(inflater)
             GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
         }
