@@ -9,6 +9,7 @@ import android.widget.RadioGroup
 import androidx.annotation.StringRes
 import com.felwal.markana.R
 import java.util.*
+import kotlin.collections.ArrayList
 
 private const val BUNDLE_RADIO_TEXTS = "radioTexts"
 private const val BUNDLE_SELECTED_INDEX = "selectedIndex"
@@ -86,14 +87,14 @@ class RadioDialog : BaseDialog() {
 fun radioDialog(
     @StringRes titleRes: Int = NO_RES,
     @StringRes messageRes: Int = NO_RES,
-    radioButtonTexts: ArrayList<String>,
+    radioButtonTexts: List<String>,
     selectedIndex: Int,
     tag: String
 ): RadioDialog {
     val instance = RadioDialog()
     val bundle: Bundle = putBaseBundle(titleRes, messageRes, NO_RES, tag)
 
-    bundle.putStringArrayList(BUNDLE_RADIO_TEXTS, radioButtonTexts)
+    bundle.putStringArrayList(BUNDLE_RADIO_TEXTS, ArrayList(radioButtonTexts))
     bundle.putInt(BUNDLE_SELECTED_INDEX, selectedIndex)
 
     instance.arguments = bundle

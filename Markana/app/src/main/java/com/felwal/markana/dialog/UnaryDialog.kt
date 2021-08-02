@@ -45,7 +45,7 @@ class UnaryDialog : BaseDialog() {
 
         builder
             .setTitle(title)
-            .setNeutralButton(posBtnTxtRes) { _, _ ->
+            .setPositiveButton(posBtnTxtRes) { _, _ ->
                 listener.onUnaryDialogClick(passValue, dialogTag)
             }
 
@@ -65,8 +65,8 @@ fun unaryDialog(
     @StringRes btnTxtRes: Int = R.string.dialog_btn_continue,
     tag: String,
     passValue: String? = null
-): BinaryDialog {
-    val instance = BinaryDialog()
+): UnaryDialog {
+    val instance = UnaryDialog()
     val bundle: Bundle = putBaseBundle(titleRes, messageRes, btnTxtRes, tag)
 
     bundle.putString(BUNDLE_PASS_VALUE, passValue)

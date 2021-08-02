@@ -11,7 +11,10 @@
     <dimen name="spacing_diminutive">4dp</dimen>
 
     <!-- specific -->
-    <dimen name="spacing_fab">16dp</dimen>
+    <dimen name="spacing_fab">@dimen/spacing_small</dimen>
+    <dimen name="spacing_settings_first_header_top">@dimen/spacing_tiny</dimen>
+    <dimen name="spacing_settings_item_horizontal">@dimen/spacing_small</dimen>
+    <dimen name="spacing_settings_item_vertical">@dimen/spacing_small</dimen>
 
     <!-- dialog -->
     <dimen name="spacing_dialog_top">8dp</dimen>
@@ -20,12 +23,15 @@
 
     <!-- layout -->
 
-    <!-- corner -->
+    <!-- settings item -->
+    <dimen name="height_settings_item">50dp</dimen>
+    <dimen name="height_settings_header">30dp</dimen>
+
+    <!-- misc -->
     <dimen name="corner_radius_medium">10dp</dimen>
     <dimen name="corner_radius_dialog">8dp</dimen>
-
-    <!-- stroke -->
     <dimen name="stroke_width_small">1dp</dimen>
+    <dimen name="height_divider">1dp</dimen>
 
     <!-- icon size -->
 

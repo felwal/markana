@@ -24,6 +24,7 @@ import com.felwal.markana.util.empty
 import com.felwal.markana.util.getAttrColor
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
+import com.felwal.markana.util.showOrRemove
 import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.visibleOrGone
 import com.felwal.markana.view.FabMenu
@@ -204,7 +205,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         adapter.submitList(items)
 
         // toggle empty page
-        binding.clEmpty.visibility = visibleOrGone(items.isEmpty())
+        binding.clEmpty.showOrRemove(items.isEmpty())
     }
 
     // fab

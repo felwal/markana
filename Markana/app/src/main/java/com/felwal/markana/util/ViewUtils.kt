@@ -2,27 +2,49 @@ package com.felwal.markana.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
+import android.content.Context
 import android.text.Editable
 import android.text.Layout
 import android.view.View
 import android.widget.EditText
-import androidx.annotation.ColorInt
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import android.widget.TextView
+import com.felwal.markana.R
 import com.google.android.material.snackbar.Snackbar
 
 const val ANIM_DURATION = 100
 
 // visibility
 
-fun visibleOrGone(visible: Boolean) = if (visible) View.VISIBLE else View.GONE
+fun visibleOrNot(visible: Boolean): Int = if (visible) View.VISIBLE else View.INVISIBLE
 
-fun visibleOrNot(visible: Boolean) = if (visible) View.VISIBLE else View.INVISIBLE
+fun visibleOrGone(visible: Boolean): Int = if (visible) View.VISIBLE else View.GONE
+
+fun View.show() {
+    visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    visibility = View.INVISIBLE
+}
+
+fun View.remove() {
+    visibility = View.GONE
+}
+
+fun View.showOrHide(show: Boolean) {
+    visibility = visibleOrNot(show)
+}
+
+fun View.showOrRemove(show: Boolean) {
+    visibility = visibleOrGone(show)
+}
+
+fun TextView.removeIfEmpty() = showOrRemove(text != "")
+
+fun TextView.setTextRemoveIfEmpty(value: String) {
+    text = value
+    removeIfEmpty()
+}
 
 // snackbar
 
@@ -48,7 +70,17 @@ fun EditText.makeMultilinePreventEnter() = apply {
     maxLines = 100 // allow expanding
 }
 
+//
+
 fun Layout.getStartOfLine(index: Int): Int = getLineStart(getLineForOffset(index))
+
+fun View.enableRipple(c: Context) {
+    val attrs = intArrayOf(R.attr.selectableItemBackground)
+    val typedArray = c.obtainStyledAttributes(attrs)
+    val backgroundResource = typedArray.getResourceId(0, 0)
+    setBackgroundResource(backgroundResource)
+    typedArray.recycle()
+}
 
 // anim
 
