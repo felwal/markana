@@ -19,6 +19,8 @@ fun visibleOrNot(visible: Boolean): Int = if (visible) View.VISIBLE else View.IN
 
 fun visibleOrGone(visible: Boolean): Int = if (visible) View.VISIBLE else View.GONE
 
+fun invisibleOrGone(invisible: Boolean): Int = if (invisible) View.INVISIBLE else View.GONE
+
 fun View.show() {
     visibility = View.VISIBLE
 }
@@ -37,6 +39,10 @@ fun View.showOrHide(show: Boolean) {
 
 fun View.showOrRemove(show: Boolean) {
     visibility = visibleOrGone(show)
+}
+
+fun View.hideOrRemove(hide: Boolean) {
+    visibility = invisibleOrGone(hide)
 }
 
 fun TextView.removeIfEmpty() = showOrRemove(text != "")

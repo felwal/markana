@@ -7,6 +7,11 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.felwal.markana.displayDensity
+
+// screen
+
+val Int.dp: Int get() = (this * displayDensity!! + 0.5f).toInt()
 
 // keyboard
 

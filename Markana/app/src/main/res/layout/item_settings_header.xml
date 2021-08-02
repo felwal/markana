@@ -4,12 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/height_settings_header"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/spacing_small"
+    android:paddingTop="@dimen/spacing_small"
+    android:paddingBottom="@dimen/spacing_tiny"
     style="SettingCl">
 
     <TextView
-        android:id="@+id/tv_settings_item_header_title"
-        android:layout_height="0dp"
+        android:id="@+id/tv"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

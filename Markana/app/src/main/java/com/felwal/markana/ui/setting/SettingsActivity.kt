@@ -23,6 +23,7 @@ private const val DIALOG_HR = "hrDialog"
 
 open class SettingsActivity : AbsSettingsActivity(
     dividerMode = DividerMode.IN_SECTION,
+    indentEverything = false
 ),
     RadioDialog.DialogListener,
     TextDialog.DialogListener,

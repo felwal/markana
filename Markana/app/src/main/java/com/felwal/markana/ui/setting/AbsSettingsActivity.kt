@@ -1,11 +1,15 @@
 package com.felwal.markana.ui.setting
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginStart
+import androidx.core.view.updateLayoutParams
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemSettingsHeaderBinding
 import com.felwal.markana.databinding.ItemSettingsSwitchBinding
@@ -17,13 +21,15 @@ import com.felwal.markana.dialog.decimalDialog
 import com.felwal.markana.dialog.radioDialog
 import com.felwal.markana.dialog.textDialog
 import com.felwal.markana.dialog.unaryDialog
+import com.felwal.markana.util.dp
 import com.felwal.markana.util.enableRipple
 import com.felwal.markana.util.hideOrRemove
-import com.felwal.markana.util.remove
 import com.felwal.markana.util.setTextRemoveIfEmpty
 import com.felwal.markana.util.showOrHide
 
 abstract class AbsSettingsActivity(
+    private val dividerMode: DividerMode,
+    private val indentEverything: Boolean
 ) : AppCompatActivity() {
 
     enum class DividerMode {
@@ -57,7 +63,16 @@ abstract class AbsSettingsActivity(
 
     private fun inflateHeader(title: String) {
         val itemBinding = ItemSettingsHeaderBinding.inflate(layoutInflater, ll, true)
-        itemBinding.tvSettingsItemHeaderTitle.text = title
+        itemBinding.tv.text = title
+
+        // set params depending on [indentEverything]
+        if (indentEverything) {
+            itemBinding.tv.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                // parent to iv + iv width + iv to tv
+                marginStart = resources.getDimension(R.dimen.spacing_small).toInt() + 24 +
+                    resources.getDimension(R.dimen.spacing_large).toInt()
+            }
+        }
     }
 
     protected fun inflateDialogItem(
@@ -130,7 +145,7 @@ abstract class AbsSettingsActivity(
             val icon = AppCompatResources.getDrawable(this, iconRes)
             itemBinding.ivIcon.setImageDrawable(icon)
         }
-        else itemBinding.ivIcon.remove()
+        else itemBinding.ivIcon.hideOrRemove(indentEverything)
 
         return itemBinding
     }
@@ -156,7 +171,7 @@ abstract class AbsSettingsActivity(
             val icon = AppCompatResources.getDrawable(this, iconRes)
             itemBinding.ivIcon.setImageDrawable(icon)
         }
-        else itemBinding.ivIcon.remove()
+        else itemBinding.ivIcon.hideOrRemove(indentEverything)
 
         return itemBinding
     }
