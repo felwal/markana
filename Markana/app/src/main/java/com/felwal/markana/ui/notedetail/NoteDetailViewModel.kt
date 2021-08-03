@@ -14,6 +14,8 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
     val noteData: MutableLiveData<Note> by lazy {
         MutableLiveData<Note>()
     }
+    val note: Note get() = noteData.value!!
+
     var noteUri: String? = null
 
     // read
@@ -29,11 +31,11 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
     // write
 
     /**
-     * [loadNote] should be called in [resultLauncher]
+     * [createDocumentLauncher] should call [loadNote].
      */
-    fun createNote(resultLauncher: ActivityResultLauncher<String>) {
+    fun createNote(createDocumentLauncher: ActivityResultLauncher<String>) {
         viewModelScope.launch {
-            repo.createNote(resultLauncher)
+            repo.createNote(createDocumentLauncher)
         }
     }
 

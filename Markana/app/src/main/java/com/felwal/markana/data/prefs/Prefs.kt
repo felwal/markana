@@ -1,9 +1,9 @@
-package com.felwal.markana.prefs
+package com.felwal.markana.data.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
 
-private const val FILENAME = "com.felwal.markana.prefs"
+private const val FILENAME = "com.felwal.markana.data.prefs"
 
 private const val KEY_SORT_BY = "sort_by"
 private const val KEY_SORT_ORDER = "sort_order"

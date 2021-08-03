@@ -1,29 +1,34 @@
-package com.felwal.markana.dialog
+package com.felwal.markana.widget.dialog
 
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
-import com.felwal.markana.databinding.DialogTextBinding
+import com.felwal.markana.R
+import com.felwal.markana.databinding.DialogDecimalBinding
 import com.felwal.markana.util.string
+import com.felwal.markana.util.toast
+
+const val NO_FLOAT_TEXT = -1f
 
 private const val ARG_TEXT = "text"
 private const val ARG_HINT = "hint"
 
-private const val TAG_DEFAULT = "textDialog"
+private const val TAG_DEFAULT = "decimalDialog"
 
-class TextDialog : BaseDialog() {
+class DecimalDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
     // args
-    private lateinit var text: String
+    private var text = 0f
     private lateinit var hint: String
 
     // DialogFragment
 
     override fun onAttach(c: Context) {
         super.onAttach(c)
+
         listener = try {
             c as DialogListener
         }
@@ -36,16 +41,16 @@ class TextDialog : BaseDialog() {
 
     override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
-            text = getString(ARG_TEXT, "")
+            text = getFloat(ARG_TEXT, 0f)
             hint = getString(ARG_HINT, "")
         }
     }
 
     override fun buildDialog(): AlertDialog {
-        val binding = DialogTextBinding.inflate(inflater)
+        val binding = DialogDecimalBinding.inflate(inflater)
 
-        binding.et.setText(text)
         binding.et.hint = hint
+        if (text != NO_FLOAT_TEXT) binding.et.setText(text.toString())
 
         return builder.run {
             setView(binding.root)
@@ -53,8 +58,13 @@ class TextDialog : BaseDialog() {
             if (!message.equals("")) setMessage(message)
 
             setPositiveButton(posBtnTxtRes) { _, _ ->
-                val input = binding.et.string.trim { it <= ' ' }
-                listener.onTextDialogPositiveClick(input, dialogTag)
+                try {
+                    val input = binding.et.string.toFloat()
+                    listener.onDecimalDialogPositiveClick(input, tag)
+                }
+                catch (e: NumberFormatException) {
+                    activity?.toast(getString(R.string.toast_err_no_input))
+                }
             }
             setCancelButton(negBtnTxtRes)
 
@@ -65,18 +75,18 @@ class TextDialog : BaseDialog() {
     //
 
     interface DialogListener {
-        fun onTextDialogPositiveClick(input: String, tag: String)
+        fun onDecimalDialogPositiveClick(input: Float, tag: String?)
     }
 }
 
-fun textDialog(
+fun decimalDialog(
     title: String, message: String = "",
-    text: String = "", hint: String = "",
+    text: Float = NO_FLOAT_TEXT, hint: String = "",
     @StringRes posBtnTxtRes: Int,
     tag: String
-): TextDialog = TextDialog().apply {
+): DecimalDialog = DecimalDialog().apply {
     arguments = putBaseBundle(title, message, posBtnTxtRes, tag).apply {
-        putString(ARG_TEXT, text)
+        putFloat(ARG_TEXT, text)
         putString(ARG_HINT, hint)
     }
 }

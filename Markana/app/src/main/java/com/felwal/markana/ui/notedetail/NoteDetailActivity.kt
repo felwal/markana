@@ -9,14 +9,13 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.felwal.markana.AppContainer
-import com.felwal.markana.MainApplication
+import com.felwal.markana.App
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.data.URI_DEFAULT
 import com.felwal.markana.databinding.ActivityNotedetailBinding
-import com.felwal.markana.dialog.BinaryDialog
-import com.felwal.markana.dialog.binaryDialog
-import com.felwal.markana.network.CreateTextDocument
+import com.felwal.markana.widget.dialog.BinaryDialog
+import com.felwal.markana.widget.dialog.binaryDialog
+import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.prefs
 import com.felwal.markana.util.copy
 import com.felwal.markana.util.copyToClipboard
@@ -32,7 +31,6 @@ import java.time.LocalDateTime
 private const val LOG_TAG = "NoteDetail"
 
 private const val EXTRA_NOTE_URI = "uri"
-private const val EXTRA_NOTE_ID = "id"
 
 private const val DIALOG_DELETE = "deleteNotes"
 
@@ -43,10 +41,6 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     private lateinit var appContainer: AppContainer
     private lateinit var model: NoteDetailViewModel
 
-    private var initialTitle = ""
-    private var initialBody = ""
-    private var lastModified: Long? = null
-
     private val etCurrentFocus: EditText?
         get() = if (currentFocus is EditText) currentFocus as EditText else null
 
@@ -54,7 +48,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         get() = binding.etNoteTitle.hasFocus() || binding.etNoteBody.hasFocus()
 
     private val haveChangesBeenMade: Boolean
-        get() = binding.etNoteTitle.string != initialTitle || binding.etNoteBody.string != initialBody
+        get() = binding.etNoteTitle.string != model.note.filename || binding.etNoteBody.string != model.note.content
 
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
         Log.i(LOG_TAG, "create document uri result: $uri")
@@ -65,7 +59,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
             return@registerForActivityResult
         }
 
-        // the file has been created
+        // the file has been created; now load it
         model.persistNotePermissions(uri)
         model.noteUri = uri.toString()
         model.loadNote()
@@ -95,7 +89,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         }
 
         // data
-        appContainer = (application as MainApplication).appContainer
+        appContainer = (application as App).appContainer
         appContainer.noteDetailContainer = NoteDetailContainer(appContainer.noteRepository)
         model = appContainer.noteDetailContainer!!.noteDetailViewModel
 
@@ -174,10 +168,6 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     private fun loadContent(note: Note) {
         binding.etNoteTitle.setText(note.filename)
         binding.etNoteBody.setText(note.content)
-
-        initialTitle = note.filename
-        initialBody = note.content
-        lastModified = note.modified
     }
 
     // data
@@ -186,12 +176,12 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string
         val now = LocalDateTime.now().toEpochSecond()
-        val modified = if (haveChangesBeenMade) now else lastModified
-        val note = Note(title, body, modified, now, model.noteUri ?: URI_DEFAULT)
+        val modified = if (haveChangesBeenMade) now else model.note.modified
+        val note = model.note.copy(filename = title, content = body, modified = modified, opened = now)
+
+        model.saveNote(note, title != model.note.filename)
 
         Log.i(LOG_TAG, "note saved: $note")
-
-        model.saveNote(note, title != initialTitle)
     }
 
     // typography bar generals

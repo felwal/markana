@@ -58,7 +58,7 @@
                 android:paddingStart="@dimen/spacing_small"
                 android:paddingEnd="@dimen/spacing_small">
 
-                <com.felwal.markana.view.TimidEditText
+                <com.felwal.markana.widget.TimidEditText
                     android:id="@+id/et_note_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     style="@style/EditText.Note.Title" />
 
-                <com.felwal.markana.view.TimidEditText
+                <com.felwal.markana.widget.TimidEditText
                     android:id="@+id/et_note_body"
                     android:layout_width="match_parent"
                     android:hint="@string/et_notedetail_body_hint"

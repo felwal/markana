@@ -4,48 +4,69 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.net.toUri
-import com.felwal.markana.network.SafHelper
+import com.felwal.markana.data.db.DbDataSource
+import com.felwal.markana.data.network.SafDataSource
 import com.felwal.markana.prefs
 import com.felwal.markana.util.coToast
 import com.felwal.markana.util.withIO
 
 class NoteRepository(
     private val applicationContext: Context,
-    private val db: AppDatabase,
-    private val saf: SafHelper
+    private val db: DbDataSource,
+    private val saf: SafDataSource
 ) {
 
     // read
 
-    suspend fun getAllNotes(): List<Note> = withIO {
-        // TODO: download in pull to refresh
-        //extractAllTreesUris()
-        //val uris = db.noteDao().getAllUris(prefs.sortBy, prefs.ascending)
-        //return@withIO uris.mapNotNull { saf.readFile(it.toUri()) }
-
-        return@withIO db.noteDao().getAllNotes(prefs.sortBy, prefs.ascending)
+    suspend fun getNotes(): List<Note> = withIO {
+        return@withIO db.noteDao().getNotes(prefs.sortBy, prefs.ascending)
     }
 
     suspend fun getNote(uri: String): Note? = withIO {
-        // TODO: update flow
-        return@withIO saf.readFile(uri.toUri())?.apply {
-            modified = db.noteDao().getModified(uri)
-            opened = db.noteDao().getOpened(uri)
+        db.noteDao().getNote(uri)
+    }
+
+    // sync: download from saf to db
+
+    suspend fun syncNotes() = withIO {
+        db.noteDao().getUris().forEach {
+            syncNote(it)
         }
+    }
+
+    private suspend fun syncNote(uri: String) = withIO {
+        saf.readFile(uri.toUri())?.let {
+            db.noteDao().updateNote(uri, it.filename, it.content)
+        }
+    }
+
+    // extract: save tree notes to db
+
+    private suspend fun extractAllTrees() = withIO {
+        db.treeDao().getTrees().forEach { extractTree(it) }
+    }
+
+    private suspend fun extractTree(tree: Tree) = withIO {
+        // TODO: persist permissions?
+
+        val notes = saf.readTree(tree)
+        db.noteDao().addNoteIfNotExists(*notes.toTypedArray())
     }
 
     // write
 
-    suspend fun linkNote(resultLauncher: ActivityResultLauncher<Array<String>>) = withIO {
-        saf.openFile(resultLauncher)
+    suspend fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) = withIO {
+        saf.openFile(openDocumentLauncher)
+        /** Saving to db is done in [handleOpenedDocument], which should be called from [openDocumentLauncher]. */
     }
 
-    suspend fun linkFolder(resultLauncher: ActivityResultLauncher<Uri>) = withIO {
-        saf.openTree(resultLauncher, null)
+    suspend fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) = withIO {
+        saf.openTree(openTreeLauncher, null)
+        /** Saving to db is done in [handleOpenedDocumentTree], which should be called from [openTreeLauncher]. */
     }
 
-    suspend fun createNote(resultLauncher: ActivityResultLauncher<String>) = withIO {
-        saf.createFile(resultLauncher, "")
+    suspend fun createNote(createDocumentLauncher: ActivityResultLauncher<String>) = withIO {
+        saf.createFile(createDocumentLauncher, "")
     }
 
     suspend fun saveNote(note: Note, rename: Boolean) = withIO {
@@ -54,7 +75,13 @@ class NoteRepository(
         if (rename) saf.renameFile(note.uri.toUri(), note.filename)
     }
 
-    suspend fun unlinkNote(uri: String) = withIO {
+    suspend fun unlinkNotes(uris: List<String>) = withIO {
+        for (uri in uris) {
+            unlinkNote(uri)
+        }
+    }
+
+    private suspend fun unlinkNote(uri: String) = withIO {
         val note = db.noteDao().getNote(uri)
 
         note?.let {
@@ -66,20 +93,9 @@ class NoteRepository(
         }
     }
 
-    suspend fun unlinkNotes(uris: List<String>) = withIO {
-        for (uri in uris) {
-            unlinkNote(uri)
-        }
-    }
-
     suspend fun unlinkTree(id: Int) = withIO {
         db.treeDao().deleteTree(id)
         db.noteDao().deleteNotes(id)
-    }
-
-    suspend fun deleteNote(uri: String) = withIO {
-        saf.deleteFile(uri.toUri())
-        unlinkNote(uri) // TODO: dont unlink all of same folder
     }
 
     suspend fun deleteNotes(uris: List<String>) = withIO {
@@ -89,10 +105,9 @@ class NoteRepository(
         }
     }
 
-    // permissions
-
-    suspend fun persistPermissions(uri: Uri) = withIO {
-        saf.persistPermissions(uri)
+    suspend fun deleteNote(uri: String) = withIO {
+        saf.deleteFile(uri.toUri())
+        unlinkNote(uri) // TODO: dont unlink all of same folder
     }
 
     // launcher results
@@ -116,21 +131,12 @@ class NoteRepository(
         // save tree uri and sync
         db.treeDao().addTreeIfNotExists(Tree(uri.toString()))
         val tree = db.treeDao().getTree(uri.toString())
-        tree?.let { extractTreeUris(it) }
+        tree?.let { extractTree(it) }
     }
 
-    // sync daos
+    // permissions
 
-    private suspend fun extractTreeUris(tree: Tree) = withIO {
-        // TODO: persist permissions?
-
-        val notes = saf.readTree(tree)
-        db.noteDao().addOrUpdateNotes(notes)
+    suspend fun persistPermissions(uri: Uri) = withIO {
+        saf.persistPermissions(uri)
     }
-
-    /**
-     * Syncs files in saved trees to notes
-     */
-    private suspend fun extractAllTreesUris() =
-        db.treeDao().getAllTrees().forEach { extractTreeUris(it) }
 }

@@ -23,7 +23,7 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
     fun loadNotes() {
         viewModelScope.launch {
-            val notes = repo.getAllNotes()
+            val notes = repo.getNotes()
                 .toMutableList()
                 .onEachIndexed { index, note ->
                     // sync with selection
@@ -34,18 +34,25 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
-    // write
-
-    fun linkNote(resultLauncher: ActivityResultLauncher<Array<String>>) {
+    fun syncNotes() {
         viewModelScope.launch {
-            repo.linkNote(resultLauncher)
+            repo.syncNotes()
             loadNotes()
         }
     }
 
-    fun linkFolder(resultLauncher: ActivityResultLauncher<Uri>) {
+    // write
+
+    fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) {
         viewModelScope.launch {
-            repo.linkFolder(resultLauncher)
+            repo.linkNote(openDocumentLauncher)
+            loadNotes()
+        }
+    }
+
+    fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) {
+        viewModelScope.launch {
+            repo.linkFolder(openTreeLauncher)
             loadNotes()
         }
     }

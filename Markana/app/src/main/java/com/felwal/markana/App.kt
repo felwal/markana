@@ -1,7 +1,7 @@
 package com.felwal.markana
 
 import android.app.Application
-import com.felwal.markana.prefs.Prefs
+import com.felwal.markana.data.prefs.Prefs
 
 var displayDensity: Float? = null
     private set
@@ -9,7 +9,7 @@ var displayDensity: Float? = null
 lateinit var prefs: Prefs
     private set
 
-class MainApplication : Application() {
+class App : Application() {
 
     lateinit var appContainer: AppContainer
 

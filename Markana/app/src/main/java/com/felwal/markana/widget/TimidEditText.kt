@@ -1,4 +1,4 @@
-package com.felwal.markana.view
+package com.felwal.markana.widget
 
 import android.content.Context
 import android.util.AttributeSet

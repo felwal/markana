@@ -9,14 +9,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.felwal.markana.MainApplication
+import com.felwal.markana.App
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ActivityNotelistBinding
-import com.felwal.markana.dialog.BinaryDialog
-import com.felwal.markana.dialog.binaryDialog
+import com.felwal.markana.widget.dialog.BinaryDialog
+import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.prefs
-import com.felwal.markana.prefs.SortBy
+import com.felwal.markana.data.prefs.SortBy
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
@@ -26,7 +26,7 @@ import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.showOrRemove
 import com.felwal.markana.util.toggleInclusion
-import com.felwal.markana.view.FabMenu
+import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
@@ -81,13 +81,12 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         initRecycler()
 
         // data
-        val container = (application as MainApplication).appContainer
+        val container = (application as App).appContainer
         model = container.noteListViewModel
 
         model.itemsData.observe(this) { items ->
             submitItems(items)
         }
-        model.loadNotes()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -180,8 +179,13 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     override fun onRestart() {
         super.onRestart()
-        model.loadNotes()
         fabMenu.closeMenuIfOpen()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        model.loadNotes()
+        model.syncNotes()
     }
 
     override fun onBackPressed() = when {

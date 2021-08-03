@@ -1,4 +1,4 @@
-package com.felwal.markana.network
+package com.felwal.markana.data.network
 
 import android.content.Context
 import android.content.Intent
@@ -12,12 +12,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import com.felwal.markana.data.AppDatabase
+import com.felwal.markana.data.db.DbDataSource
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.Tree
-import com.felwal.markana.util.coToast
 import com.felwal.markana.util.coToastLog
-import com.felwal.markana.util.default
 import com.felwal.markana.util.isMime
 import com.felwal.markana.util.tryToastLog
 import java.io.BufferedReader
@@ -31,7 +29,7 @@ private const val MIME_TEXT_TYPE = "text"
 private const val MIME_TEXT = "text/*"
 private const val MIME_TEXT_PLAIN = "text/plain"
 
-class SafHelper(private val applicationContext: Context) {
+class SafDataSource(private val applicationContext: Context) {
 
     private val resolver = applicationContext.contentResolver
 
@@ -65,7 +63,7 @@ class SafHelper(private val applicationContext: Context) {
             // TODO: get option to relink
 
             // no sense in keeping what we can't read; unlink
-            val db = AppDatabase.getInstance(applicationContext)
+            val db = DbDataSource.getInstance(applicationContext)
             db.noteDao().deleteNote(uri.toString())
             return null
 

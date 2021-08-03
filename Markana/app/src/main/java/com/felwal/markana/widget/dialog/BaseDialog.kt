@@ -1,4 +1,4 @@
-package com.felwal.markana.dialog
+package com.felwal.markana.widget.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog

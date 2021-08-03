@@ -1,4 +1,4 @@
-package com.felwal.markana.view
+package com.felwal.markana.widget
 
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator

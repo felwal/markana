@@ -15,7 +15,7 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ItemRecyclerGridNoteBinding
 import com.felwal.markana.databinding.ItemRecyclerListNoteBinding
 import com.felwal.markana.prefs
-import com.felwal.markana.prefs.SortBy
+import com.felwal.markana.data.prefs.SortBy
 import com.felwal.markana.util.FORMATTER_EARLIER
 import com.felwal.markana.util.FORMATTER_THIS_YEAR
 import com.felwal.markana.util.FORMATTER_TODAY
@@ -83,7 +83,7 @@ class NoteListAdapter(
 
             tvUri.text = note.uri
             tvTitle.text = note.filename
-            tvBody.text = note.content.trim()
+            tvBody.text = note.content.trim() // TODO: dont get the full string
 
             markSelection(note.isSelected)
         }

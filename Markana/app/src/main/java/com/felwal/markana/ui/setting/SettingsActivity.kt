@@ -5,14 +5,13 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ActivitySettingsBinding
-import com.felwal.markana.dialog.BinaryDialog
-import com.felwal.markana.dialog.RadioDialog
-import com.felwal.markana.dialog.TextDialog
-import com.felwal.markana.dialog.UnaryDialog
+import com.felwal.markana.widget.dialog.RadioDialog
+import com.felwal.markana.widget.dialog.TextDialog
+import com.felwal.markana.widget.dialog.UnaryDialog
 import com.felwal.markana.prefs
-import com.felwal.markana.prefs.bulletlistSymbolNames
-import com.felwal.markana.prefs.emphSymbolNames
-import com.felwal.markana.prefs.themeNames
+import com.felwal.markana.data.prefs.bulletlistSymbolNames
+import com.felwal.markana.data.prefs.emphSymbolNames
+import com.felwal.markana.data.prefs.themeNames
 import com.felwal.markana.util.then
 
 private const val DIALOG_THEME = "themeDialog"
