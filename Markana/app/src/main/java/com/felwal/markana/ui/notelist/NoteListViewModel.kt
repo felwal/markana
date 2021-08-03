@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
+import com.felwal.markana.util.withUI
 import kotlinx.coroutines.launch
 
 class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
@@ -34,10 +35,13 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
-    fun syncNotes() {
+    fun syncNotes(onFinished: () -> Unit) {
         viewModelScope.launch {
             repo.syncNotes()
             loadNotes()
+            withUI {
+                onFinished()
+            }
         }
     }
 

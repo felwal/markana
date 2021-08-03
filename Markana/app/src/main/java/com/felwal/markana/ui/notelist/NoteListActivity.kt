@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.felwal.markana.App
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
@@ -34,7 +35,7 @@ private const val LOG_TAG = "NoteList"
 private const val DIALOG_DELETE = "deleteNotes"
 private const val DIALOG_UNLINK = "unlinkNotes"
 
-class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
+class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: ActivityNotelistBinding
     private lateinit var adapter: NoteListAdapter
@@ -79,6 +80,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
         initFabMenu()
         initRecycler()
+        initRefreshLayout()
 
         // data
         val container = (application as App).appContainer
@@ -185,7 +187,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     override fun onStart() {
         super.onStart()
         model.loadNotes()
-        model.syncNotes()
+        onRefresh()
     }
 
     override fun onBackPressed() = when {
@@ -201,6 +203,20 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         item.isChecked = true
         model.loadNotes()
         adapter.notifyDataSetChanged() // rebind to update modified/opened tv
+    }
+
+    // SwipeRefreshLayout
+
+    private fun initRefreshLayout() {
+        binding.srl.setOnRefreshListener(this)
+        binding.srl.setProgressBackgroundColorSchemeColor(getAttrColor(android.R.attr.colorBackground))
+        binding.srl.setColorSchemeColors(getAttrColor(R.attr.colorControlActivated))
+    }
+
+    override fun onRefresh() {
+        model.syncNotes {
+            binding.srl.isRefreshing = false
+        }
     }
 
     // recycler
