@@ -13,7 +13,7 @@ import com.felwal.markana.MainApplication
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.URI_DEFAULT
-import com.felwal.markana.databinding.ActivityNoteDetailBinding
+import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.dialog.BinaryDialog
 import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.network.CreateTextDocument
@@ -36,7 +36,7 @@ private const val DIALOG_DELETE = "deleteNotes"
 
 class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
-    private lateinit var binding: ActivityNoteDetailBinding
+    private lateinit var binding: ActivityNotedetailBinding
 
     private lateinit var appContainer: AppContainer
     private lateinit var model: NoteDetailViewModel
@@ -74,7 +74,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         super.onCreate(savedInstanceState)
 
         // binding
-        binding = ActivityNoteDetailBinding.inflate(layoutInflater)
+        binding = ActivityNotedetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
 
@@ -114,7 +114,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_note_detail_tb, menu)
+        menuInflater.inflate(R.menu.menu_notedetail_tb, menu)
         return true
     }
 
@@ -125,7 +125,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         R.id.action_redo -> {} // TODO
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
         R.id.action_delete -> binaryDialog(
-            title = getString(R.string.tv_settings_item_title_delete_note),
+            title = getString(R.string.dialog_title_delete_note),
+            message = getString(R.string.dialog_msg_delete_notes),
             posBtnTxtRes = R.string.dialog_btn_delete,
             tag = DIALOG_DELETE
         ).show(supportFragmentManager)

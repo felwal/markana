@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.felwal.markana.MainApplication
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.databinding.ActivityNoteListBinding
+import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.dialog.BinaryDialog
 import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.prefs
@@ -35,7 +35,7 @@ private const val DIALOG_UNLINK = "unlinkNotes"
 
 class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
-    private lateinit var binding: ActivityNoteListBinding
+    private lateinit var binding: ActivityNotelistBinding
     private lateinit var adapter: NoteListAdapter
 
     private lateinit var model: NoteListViewModel
@@ -65,7 +65,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         super.onCreate(savedInstanceState)
 
         // binding
-        binding = ActivityNoteListBinding.inflate(layoutInflater)
+        binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tb)
 
@@ -108,7 +108,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         when (selectionCount) {
             0 -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_note_list_tb, menu)
+                menuInflater.inflate(R.menu.menu_notelist_tb, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
                 // change scroll flags: scroll and snap tb
@@ -117,7 +117,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
             }
             1 -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_note_list_tb_selection_single, menu)
+                menuInflater.inflate(R.menu.menu_notelist_tb_selection_single, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
                 // change scroll flags: don't scroll tb
@@ -125,7 +125,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
                 binding.ab.setExpanded(true, false) // anim is not smooth
             }
             else -> {
-                menuInflater.inflate(R.menu.menu_note_list_tb_selection_multi, menu)
+                menuInflater.inflate(R.menu.menu_notelist_tb_selection_multi, menu)
             }
         }
 
@@ -243,7 +243,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private fun updateToolbarTitle() {
         if (selectionCount == 0) {
-            supportActionBar?.title = getString(R.string.title_activity_note_list)
+            supportActionBar?.title = getString(R.string.title_activity_notelist)
         }
         else {
             supportActionBar?.title =

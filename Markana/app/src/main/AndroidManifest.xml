@@ -14,7 +14,7 @@
 
         <activity
             android:name="com.felwal.markana.ui.notelist.NoteListActivity"
-            android:label="@string/title_activity_note_list"
+            android:label="@string/title_activity_notelist"
             android:theme="@style/Theme.Markana.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
         <activity
             android:name="com.felwal.markana.ui.notedetail.NoteDetailActivity"
             android:parentActivityName="com.felwal.markana.ui.notelist.NoteListActivity"
-            android:label="@string/title_activity_note_detail"
+            android:label="@string/title_activity_notedetail"
             android:theme="@style/Theme.Markana.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 

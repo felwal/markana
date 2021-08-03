@@ -28,6 +28,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible"
             tools:text="url" />
 
         <TextView
@@ -36,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_tiny"
             android:layout_marginEnd="@dimen/spacing_tiny"
-            android:layout_marginTop="@dimen/spacing_diminutive"
+            android:layout_marginTop="@dimen/spacing_tiny"
             android:textColor="?android:colorAccent"
             android:textSize="16sp"
             android:textStyle="normal"

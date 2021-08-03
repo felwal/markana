@@ -32,7 +32,7 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/tb"
-                    app:menu="@menu/menu_note_detail_tb"
+                    app:menu="@menu/menu_notedetail_tb"
                     style="@style/Toolbar" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -118,7 +118,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:menu="@menu/menu_note_detail_bab" />
+                app:menu="@menu/menu_notedetail_bab" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

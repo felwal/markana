@@ -25,8 +25,8 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tb"
-                tools:menu="@menu/menu_note_list_tb"
-                tools:title="@string/title_activity_note_list"
+                tools:menu="@menu/menu_notelist_tb"
+                tools:title="@string/title_activity_notelist"
                 style="@style/Toolbar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_medium"
-            android:background="@drawable/ic_note"
+            android:background="@drawable/ic_file"
             android:backgroundTint="?attr/colorSecondary"
             app:layout_constraintBottom_toTopOf="@+id/tv_empty_title"
             app:layout_constraintEnd_toEndOf="parent"

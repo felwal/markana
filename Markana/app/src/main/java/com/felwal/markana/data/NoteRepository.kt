@@ -73,13 +73,13 @@ class NoteRepository(
 
     suspend fun deleteNote(uri: String) = withIO {
         saf.deleteFile(uri.toUri())
-        unlinkNote(uri)
+        unlinkNote(uri) // TODO: dont unlink all of same folder
     }
 
     suspend fun deleteNotes(uris: List<String>) = withIO {
         for (uri in uris) {
             saf.deleteFile(uri.toUri())
-            unlinkNote(uri)
+            unlinkNote(uri) // TODO: dont unlink all of same folder
         }
     }
 

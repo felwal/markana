@@ -24,6 +24,7 @@ import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStreamReader
+import java.lang.IllegalArgumentException
 
 private const val LOG_TAG = "Saf"
 private const val MIME_TEXT_TYPE = "text"
@@ -57,7 +58,7 @@ class SafHelper(private val applicationContext: Context) {
     suspend fun readFile(uri: Uri): Note? {
         if (false && !hasReadPermission(uri.toString())) {
             // this also fires if the file has been moved/deleted
-            // and in the case of DropBox, when renamed
+            // and in the case of Dropbox, when renamed
             applicationContext
                 .coToastLog(LOG_TAG, "Provider not found or permission to read not persisted, unlinking note ...")
 
@@ -100,6 +101,10 @@ class SafHelper(private val applicationContext: Context) {
         }
         catch (e: SecurityException) {
             applicationContext.coToastLog(LOG_TAG, "Read permission denied for note", e)
+        }
+        catch (e: IllegalArgumentException) {
+            // Failed to determine if home:Markana/notes/h.txt is child of home:Markana/notes
+            applicationContext.coToastLog(LOG_TAG, "Cannot find file", e)
         }
 
         return null

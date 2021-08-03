@@ -67,6 +67,7 @@ open class SettingsActivity : AbsSettingsActivity(
                 SingleSelectionItem(getString(R.string.tv_settings_item_title_theme),
                     values = themeNames,
                     selectedIndex = prefs.themeInt,
+                    iconRes = R.drawable.ic_theme,
                     tag = DIALOG_THEME
                 ),
             ),

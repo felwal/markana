@@ -26,8 +26,8 @@ abstract class BaseDialog : DialogFragment() {
     protected lateinit var inflater: LayoutInflater
 
     // args
-    protected var title: String? = null
-    protected var message: String? = null
+    protected lateinit var title: String
+    protected lateinit var message: String
     protected var dialogTag: String = "baseDialog"
 
     @StringRes protected var posBtnTxtRes: Int = R.string.dialog_btn_ok

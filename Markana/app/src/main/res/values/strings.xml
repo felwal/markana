@@ -4,8 +4,8 @@
 
     <!-- activity -->
 
-    <string name="title_activity_note_list">@string/app_name</string>
-    <string name="title_activity_note_detail">Note</string>
+    <string name="title_activity_notelist">@string/app_name</string>
+    <string name="title_activity_notedetail">Note</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- action -->
@@ -49,10 +49,7 @@
     <!-- settings -->
     <string name="tv_settings_header_appearance">Appearance</string>
     <string name="tv_settings_header_markdown">Markdown</string>
-     <string name="tv_settings_item_title_continue">Continue?</string>
-    <string name="tv_settings_item_title_delete_note">Delete note?</string>
-    <string name="tv_settings_item_title_delete_notes">Delete notes?</string>
-    <string name="tv_settings_item_title_unlink_notes">Unlink notes?</string>
+    <string name="tv_settings_item_title_continue">Continue?</string>
     <string name="tv_settings_item_title_theme">Theme</string>
     <string name="tv_settings_item_title_bulletlist_symbol">Bulletlist symbol</string>
     <string name="tv_settings_item_title_italic_symbol">Italic symbol</string>
@@ -63,6 +60,11 @@
     <string name="tv_settings_item_msg_about">Made by Felix Wallin</string>
 
     <!-- dialog -->
+
+    <!-- title -->
+    <string name="dialog_title_delete_note">Delete note?</string>
+    <string name="dialog_title_delete_notes">Delete notes?</string>
+    <string name="dialog_title_unlink_notes">Unlink notes?</string>
 
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>
