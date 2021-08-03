@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import com.felwal.markana.R
 
-private const val BUNDLE_PASS_VALUE = "passValue"
+private const val ARG_PASS_VALUE = "passValue"
 
 private const val TAG_DEFAULT = "binaryDialog"
 
@@ -14,7 +14,7 @@ class UnaryDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
-    // arguments
+    // args
     private var passValue: String? = null
 
     // DialogFragment
@@ -32,24 +32,21 @@ class UnaryDialog : BaseDialog() {
 
     // BaseDialog
 
-    override fun unpackBundle() {
-        val bundle: Bundle? = unpackBaseBundle(TAG_DEFAULT)
-
+    override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
-            passValue = getString(BUNDLE_PASS_VALUE, null)
+            passValue = getString(ARG_PASS_VALUE, null)
         }
     }
 
-    override fun buildDialog(): AlertDialog {
-        if (message != "") builder.setMessage(message)
+    override fun buildDialog(): AlertDialog = builder.run {
+        setTitle(title)
+        if (message != "") setMessage(message)
 
-        builder
-            .setTitle(title)
-            .setPositiveButton(posBtnTxtRes) { _, _ ->
-                listener.onUnaryDialogClick(passValue, dialogTag)
-            }
+        setPositiveButton(posBtnTxtRes) { _, _ ->
+            listener.onUnaryDialogClick(passValue, dialogTag)
+        }
 
-        return builder.show()
+        show()
     }
 
     //
@@ -60,17 +57,12 @@ class UnaryDialog : BaseDialog() {
 }
 
 fun unaryDialog(
-    title: String,
-    message: String = "",
+    title: String, message: String = "",
     @StringRes btnTxtRes: Int = R.string.dialog_btn_ok,
     tag: String,
     passValue: String? = null
-): UnaryDialog {
-    val instance = UnaryDialog()
-    val bundle: Bundle = putBaseBundle(title, message, btnTxtRes, tag)
-
-    bundle.putString(BUNDLE_PASS_VALUE, passValue)
-
-    instance.arguments = bundle
-    return instance
+): UnaryDialog = UnaryDialog().apply {
+    arguments = putBaseBundle(title, message, btnTxtRes, tag).apply {
+        putString(ARG_PASS_VALUE, passValue)
+    }
 }

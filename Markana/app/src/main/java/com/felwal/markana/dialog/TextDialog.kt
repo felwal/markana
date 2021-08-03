@@ -3,15 +3,12 @@ package com.felwal.markana.dialog
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.view.View
-import android.widget.EditText
 import androidx.annotation.StringRes
-import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogTextBinding
 import com.felwal.markana.util.string
 
-private const val BUNDLE_TEXT = "text"
-private const val BUNDLE_HINT = "hint"
+private const val ARG_TEXT = "text"
+private const val ARG_HINT = "hint"
 
 private const val TAG_DEFAULT = "textDialog"
 
@@ -19,7 +16,7 @@ class TextDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
-    // arguments
+    // args
     private lateinit var text: String
     private lateinit var hint: String
 
@@ -37,12 +34,10 @@ class TextDialog : BaseDialog() {
 
     // BaseDialog
 
-    override fun unpackBundle() {
-        val bundle: Bundle? = unpackBaseBundle(TAG_DEFAULT)
-
+    override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
-            text = getString(BUNDLE_TEXT, "")
-            hint = getString(BUNDLE_HINT, "")
+            text = getString(ARG_TEXT, "")
+            hint = getString(ARG_HINT, "")
         }
     }
 
@@ -52,18 +47,19 @@ class TextDialog : BaseDialog() {
         binding.et.setText(text)
         binding.et.hint = hint
 
-        if (!message.equals("")) builder.setMessage(message)
+        return builder.run {
+            setView(binding.root)
+            setTitle(title)
+            if (!message.equals("")) setMessage(message)
 
-        builder
-            .setView(binding.root)
-            .setTitle(title)
-            .setPositiveButton(posBtnTxtRes) { _, _ ->
+            setPositiveButton(posBtnTxtRes) { _, _ ->
                 val input = binding.et.string.trim { it <= ' ' }
                 listener.onTextDialogPositiveClick(input, dialogTag)
             }
-            .setCancelButton(negBtnTxtRes)
+            setCancelButton(negBtnTxtRes)
 
-        return builder.show()
+            show()
+        }
     }
 
     //
@@ -74,19 +70,13 @@ class TextDialog : BaseDialog() {
 }
 
 fun textDialog(
-    title: String,
-    message: String = "",
-    text: String = "",
-    hint: String = "",
+    title: String, message: String = "",
+    text: String = "", hint: String = "",
     @StringRes posBtnTxtRes: Int,
     tag: String
-): TextDialog {
-    val instance = TextDialog()
-    val bundle: Bundle = putBaseBundle(title, message, posBtnTxtRes, tag)
-
-    bundle.putString(BUNDLE_TEXT, text)
-    bundle.putString(BUNDLE_HINT, hint)
-
-    instance.arguments = bundle
-    return instance
+): TextDialog = TextDialog().apply {
+    arguments = putBaseBundle(title, message, posBtnTxtRes, tag).apply {
+        putString(ARG_TEXT, text)
+        putString(ARG_HINT, hint)
+    }
 }

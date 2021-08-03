@@ -14,18 +14,18 @@ import com.felwal.markana.R
 
 const val NO_RES = -1
 
-const val BUNDLE_TITLE = "title"
-const val BUNDLE_MESSAGE = "message"
-const val BUNDLE_POSITIVE_BUTTON_RES = "positiveButtonText"
-const val BUNDLE_NEGATIVE_BUTTON_RES = "negativeButtonText"
-const val BUNDLE_TAG = "tag"
+const val ARG_TITLE = "title"
+const val ARG_MESSAGE = "message"
+const val ARG_POSITIVE_BUTTON_RES = "positiveButtonText"
+const val ARG_NEGATIVE_BUTTON_RES = "negativeButtonText"
+const val ARG_TAG = "tag"
 
 abstract class BaseDialog : DialogFragment() {
 
     protected lateinit var builder: AlertDialog.Builder
     protected lateinit var inflater: LayoutInflater
 
-    // arguments
+    // args
     protected var title: String? = null
     protected var message: String? = null
     protected var dialogTag: String = "baseDialog"
@@ -39,51 +39,43 @@ abstract class BaseDialog : DialogFragment() {
         builder = AlertDialog.Builder(activity)
         inflater = requireActivity().layoutInflater
 
-        unpackBundle()
+        unpackBundle(unpackBaseBundle())
 
         return styleDialog(buildDialog())
     }
 
     // bundle
 
-    /**
-     * Call [unpackBaseBundle] here
-     */
-    protected abstract fun unpackBundle()
+    fun putBaseBundle(
+        title: String, message: String,
+        @StringRes posBtnTxtRes: Int,
+        tag: String
+    ): Bundle = Bundle().apply {
+        putString(ARG_TITLE, title)
+        putString(ARG_MESSAGE, message)
+        putInt(ARG_POSITIVE_BUTTON_RES, posBtnTxtRes)
+        putString(ARG_TAG, tag)
+    }
 
-    /**
-     * Call this from [unpackBundle]
-     */
-    protected fun unpackBaseBundle(defaultTag: String): Bundle? {
-        val bundle: Bundle? = arguments
+    protected abstract fun unpackBundle(bundle: Bundle?)
 
-        bundle?.apply {
-            title = getString(BUNDLE_TITLE, "")
-            message = getString(BUNDLE_MESSAGE, "")
-            posBtnTxtRes = getInt(BUNDLE_POSITIVE_BUTTON_RES, posBtnTxtRes)
-            negBtnTxtRes = getInt(BUNDLE_NEGATIVE_BUTTON_RES, negBtnTxtRes)
-            dialogTag = getString(BUNDLE_TAG, defaultTag)
-        }
-
-        return bundle
+    private fun unpackBaseBundle(): Bundle? = arguments?.apply {
+        title = getString(ARG_TITLE, "")
+        message = getString(ARG_MESSAGE, "")
+        posBtnTxtRes = getInt(ARG_POSITIVE_BUTTON_RES, posBtnTxtRes)
+        negBtnTxtRes = getInt(ARG_NEGATIVE_BUTTON_RES, negBtnTxtRes)
+        dialogTag = getString(ARG_TAG, "dialog")
     }
 
     // build
 
-    private fun styleDialog(dialog: AlertDialog): AlertDialog {
-        // title
-        dialog.setTitleTextAppearance(resources, R.style.TextView_DialogTitle)
-
-        // message
-        dialog.setMessageTextAppearance(
+    private fun styleDialog(dialog: AlertDialog): AlertDialog = dialog.apply {
+        setTitleTextAppearance(resources, R.style.TextView_DialogTitle)
+        setMessageTextAppearance(
             if (title == "") R.style.TextView_DialogMessageLone
             else R.style.TextView_DialogMessage
         )
-
-        // bg
-        dialog.window?.setBackgroundDrawableResource(R.drawable.shape_dialog_bg)
-
-        return dialog
+        window?.setBackgroundDrawableResource(R.drawable.shape_dialog_bg)
     }
 
     protected abstract fun buildDialog(): AlertDialog
@@ -93,34 +85,16 @@ abstract class BaseDialog : DialogFragment() {
     }
 }
 
-fun putBaseBundle(
-    title: String,
-    message: String,
-    @StringRes posBtnTxtRes: Int,
-    tag: String
-): Bundle {
-    val bundle = Bundle()
-
-    bundle.putString(BUNDLE_TITLE, title)
-    bundle.putString(BUNDLE_MESSAGE, message)
-    bundle.putInt(BUNDLE_POSITIVE_BUTTON_RES, posBtnTxtRes)
-    bundle.putString(BUNDLE_TAG, tag)
-
-    return bundle
-}
-
 fun AlertDialog.Builder.setCancelButton(@StringRes resId: Int): AlertDialog.Builder =
     setNegativeButton(resId) { dialog, _ ->
         dialog.cancel()
     }
 
 fun AlertDialog.setTitleTextAppearance(res: Resources, @StyleRes resId: Int) {
-    val titleId: Int = res.getIdentifier("alertTitle", "id", "android")
-
-    if (titleId > 0) {
-        val tvTitle = findViewById<TextView>(titleId)
-        tvTitle?.setTextAppearance(resId)
-    }
+    res.getIdentifier("alertTitle", "id", "android")
+        .takeIf { it > 0 }?.let { titleId ->
+            findViewById<TextView>(titleId)?.setTextAppearance(resId)
+        }
 }
 
 fun AlertDialog.setMessageTextAppearance(@StyleRes resId: Int) =

@@ -4,13 +4,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.RadioButton
-import android.widget.RadioGroup
 import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogRadioBinding
-import kotlin.collections.ArrayList
+import com.felwal.markana.util.truncate
 
-private const val BUNDLE_RADIO_TEXTS = "radioTexts"
-private const val BUNDLE_SELECTED_INDEX = "selectedIndex"
+private const val ARG_RADIO_TEXTS = "radioTexts"
+private const val ARG_SELECTED_INDEX = "selectedIndex"
 
 private const val TAG_DEFAULT = "radioDialog"
 
@@ -18,7 +17,7 @@ class RadioDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
-    // arguments
+    // args
     private lateinit var radioTexts: List<String>
     private var selectedIndex = 0
 
@@ -36,42 +35,39 @@ class RadioDialog : BaseDialog() {
 
     // BaseDialog
 
-    override fun unpackBundle() {
-        val bundle: Bundle? = unpackBaseBundle(TAG_DEFAULT)
-
+    override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
-            radioTexts = getStringArrayList(BUNDLE_RADIO_TEXTS) ?: arrayListOf()
-            selectedIndex = getInt(BUNDLE_SELECTED_INDEX, 0)
+            radioTexts = getStringArrayList(ARG_RADIO_TEXTS).orEmpty()
+            selectedIndex = getInt(ARG_SELECTED_INDEX, 0).truncate(0, radioTexts.size)
         }
-
-        // keep in range
-        if (selectedIndex >= radioTexts.size) selectedIndex = radioTexts.size - 1
-        else if (selectedIndex < 0) selectedIndex = 0
     }
 
     override fun buildDialog(): AlertDialog {
         val binding = DialogRadioBinding.inflate(inflater)
 
-        builder
-            .setView(binding.root)
-            .setTitle(title)
-            .setCancelButton(negBtnTxtRes)
+        return builder.run {
+            setView(binding.root)
+            setTitle(title)
 
-        // inflate radio buttons
-        for (i in radioTexts.indices) {
-            val btn = inflater.inflate(R.layout.item_dialog_radio, binding.rg, false) as RadioButton
-            btn.text = radioTexts[i]
-            binding.rg.addView(btn)
+            setCancelButton(negBtnTxtRes)
 
-            btn.isChecked = i == selectedIndex
+            // inflate radio buttons
+            for (i in radioTexts.indices) {
+                val rb = inflater.inflate(R.layout.item_dialog_radio, binding.rg, false) as RadioButton
+                rb.text = radioTexts[i]
+                binding.rg.addView(rb)
 
-            // click
-            btn.setOnClickListener {
-                dialog?.cancel()
-                listener.onRadioDialogClick(i, dialogTag)
+                rb.isChecked = i == selectedIndex
+
+                // click
+                rb.setOnClickListener {
+                    dialog?.cancel()
+                    listener.onRadioDialogClick(i, dialogTag)
+                }
             }
+
+            show()
         }
-        return builder.show()
     }
 
     //
@@ -82,18 +78,12 @@ class RadioDialog : BaseDialog() {
 }
 
 fun radioDialog(
-    title: String,
-    message: String = "",
-    radioButtonTexts: List<String>,
-    selectedIndex: Int,
+    title: String, message: String = "",
+    radioButtonTexts: List<String>, selectedIndex: Int,
     tag: String
-): RadioDialog {
-    val instance = RadioDialog()
-    val bundle: Bundle = putBaseBundle(title, message, NO_RES, tag)
-
-    bundle.putStringArrayList(BUNDLE_RADIO_TEXTS, ArrayList(radioButtonTexts))
-    bundle.putInt(BUNDLE_SELECTED_INDEX, selectedIndex)
-
-    instance.arguments = bundle
-    return instance
+): RadioDialog = RadioDialog().apply {
+    arguments = putBaseBundle(title, message, NO_RES, tag).apply {
+        putStringArrayList(ARG_RADIO_TEXTS, ArrayList(radioButtonTexts))
+        putInt(ARG_SELECTED_INDEX, selectedIndex)
+    }
 }

@@ -65,7 +65,7 @@ abstract class AbsSettingsActivity(
         val itemBinding = ItemSettingsHeaderBinding.inflate(layoutInflater, ll, true)
         itemBinding.tv.text = title
 
-        // set params depending on [indentEverything]
+        // set start margin
         if (indentEverything) {
             itemBinding.tv.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 // parent to iv + iv width + iv to tv
@@ -129,51 +129,46 @@ abstract class AbsSettingsActivity(
         value: String,
         hideDivider: Boolean,
         @DrawableRes iconRes: Int
-    ): ItemSettingsTextBinding {
-        val itemBinding = ItemSettingsTextBinding.inflate(layoutInflater, ll, true)
+    ): ItemSettingsTextBinding =
+        ItemSettingsTextBinding.inflate(layoutInflater, ll, true).apply {
+            // text
+            tvTitle.text = title
+            tvValue.setTextRemoveIfEmpty(value)
 
-        // text
-        itemBinding.tvTitle.text = title
-        itemBinding.tvValue.setTextRemoveIfEmpty(value)
+            // view
+            root.enableRipple(this@AbsSettingsActivity)
+            vDivider.showOrHide(!hideDivider)
 
-        // view
-        itemBinding.root.enableRipple(this)
-        itemBinding.vDivider.showOrHide(!hideDivider)
-
-        // icon
-        if (iconRes != NO_RES) {
-            val icon = AppCompatResources.getDrawable(this, iconRes)
-            itemBinding.ivIcon.setImageDrawable(icon)
+            // icon
+            if (iconRes != NO_RES) {
+                val icon = AppCompatResources.getDrawable(this@AbsSettingsActivity, iconRes)
+                ivIcon.setImageDrawable(icon)
+            }
+            else ivIcon.hideOrRemove(indentEverything)
         }
-        else itemBinding.ivIcon.hideOrRemove(indentEverything)
-
-        return itemBinding
-    }
 
     private fun inflateSwitchView(
         title: String,
         desc: String,
         hideDivider: Boolean,
         @DrawableRes iconRes: Int
-    ): ItemSettingsSwitchBinding {
-        val itemBinding = ItemSettingsSwitchBinding.inflate(layoutInflater, ll, true)
+    ): ItemSettingsSwitchBinding =
+        ItemSettingsSwitchBinding.inflate(layoutInflater, ll, true).apply {
 
         // text
-        itemBinding.tvTitle.text = title
-        itemBinding.tvDesc.setTextRemoveIfEmpty(desc)
+        tvTitle.text = title
+        tvDesc.setTextRemoveIfEmpty(desc)
 
         // view
-        itemBinding.root.enableRipple(this)
-        itemBinding.vDivider.showOrHide(!hideDivider)
+        root.enableRipple(this@AbsSettingsActivity)
+        vDivider.showOrHide(!hideDivider)
 
         // icon
         if (iconRes != NO_RES) {
-            val icon = AppCompatResources.getDrawable(this, iconRes)
-            itemBinding.ivIcon.setImageDrawable(icon)
+            val icon = AppCompatResources.getDrawable(this@AbsSettingsActivity, iconRes)
+            ivIcon.setImageDrawable(icon)
         }
-        else itemBinding.ivIcon.hideOrRemove(indentEverything)
-
-        return itemBinding
+        else ivIcon.hideOrRemove(indentEverything)
     }
 
     // item
@@ -308,7 +303,7 @@ abstract class AbsSettingsActivity(
 
         override fun inflate(hideDivider: Boolean) {
             inflateClickItem(title, desc, hideDivider, iconRes) {
-                //launchActivity<>()
+                //launchActivity<>() // TODO
             }
         }
     }

@@ -6,15 +6,13 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import com.felwal.markana.R
 
-private const val BUNDLE_PASS_VALUE = "passValue"
-
-private const val TAG_DEFAULT = "binaryDialog"
+private const val ARG_PASS_VALUE = "passValue"
 
 class BinaryDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
-    // arguments
+    // args
     private var passValue: String? = null
 
     // DialogFragment
@@ -32,25 +30,22 @@ class BinaryDialog : BaseDialog() {
 
     // BaseDialog
 
-    override fun unpackBundle() {
-        val bundle: Bundle? = unpackBaseBundle(TAG_DEFAULT)
-
+    override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
-            passValue = getString(BUNDLE_PASS_VALUE, null)
+            passValue = getString(ARG_PASS_VALUE, null)
         }
     }
 
-    override fun buildDialog(): AlertDialog {
-        if (message != "") builder.setMessage(message)
+    override fun buildDialog(): AlertDialog = builder.run {
+        setTitle(title)
+        if (message != "") setMessage(message)
 
-        builder
-            .setTitle(title)
-            .setPositiveButton(posBtnTxtRes) { _, _ ->
-                listener.onBinaryDialogPositiveClick(passValue, dialogTag)
-            }
-            .setCancelButton(negBtnTxtRes)
+        setPositiveButton(posBtnTxtRes) { _, _ ->
+            listener.onBinaryDialogPositiveClick(passValue, dialogTag)
+        }
+        setCancelButton(negBtnTxtRes)
 
-        return builder.show()
+        show()
     }
 
     //
@@ -61,17 +56,12 @@ class BinaryDialog : BaseDialog() {
 }
 
 fun binaryDialog(
-    title: String,
-    message: String = "",
+    title: String, message: String = "",
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     tag: String,
     passValue: String? = null
-): BinaryDialog {
-    val instance = BinaryDialog()
-    val bundle: Bundle = putBaseBundle(title, message, posBtnTxtRes, tag)
-
-    bundle.putString(BUNDLE_PASS_VALUE, passValue)
-
-    instance.arguments = bundle
-    return instance
+): BinaryDialog = BinaryDialog().apply {
+    arguments = putBaseBundle(title, message, posBtnTxtRes, tag).apply {
+        putString(ARG_PASS_VALUE, passValue)
+    }
 }
