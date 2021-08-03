@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.net.toUri
 import com.felwal.markana.network.SafHelper
+import com.felwal.markana.prefs
 import com.felwal.markana.util.coToast
 import com.felwal.markana.util.withIO
 
@@ -17,15 +18,20 @@ class NoteRepository(
     // read
 
     suspend fun getAllNotes(): List<Note> = withIO {
-        // TODO: extract somewhere else
-        extractAllTreesUris()
+        // TODO: download in pull to refresh
+        //extractAllTreesUris()
+        //val uris = db.noteDao().getAllUris(prefs.sortBy, prefs.ascending)
+        //return@withIO uris.mapNotNull { saf.readFile(it.toUri()) }
 
-        val uris = db.noteDao().getAllUris()
-        return@withIO uris.mapNotNull { saf.readFile(it.toUri()) }
+        return@withIO db.noteDao().getAllNotes(prefs.sortBy, prefs.ascending)
     }
 
     suspend fun getNote(uri: String): Note? = withIO {
-        return@withIO saf.readFile(uri.toUri())
+        // TODO: update flow
+        return@withIO saf.readFile(uri.toUri())?.apply {
+            modified = db.noteDao().getModified(uri)
+            opened = db.noteDao().getOpened(uri)
+        }
     }
 
     // write

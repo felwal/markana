@@ -4,7 +4,11 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Update
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.felwal.markana.prefs.SortBy
 
 @Dao
 interface NoteDao {
@@ -31,10 +35,10 @@ interface NoteDao {
     fun deleteNotes(treeId: Int)
 
     @Query("DELETE FROM notes WHERE id = :id")
-    fun deleteNote(id: Int);
+    fun deleteNote(id: Int)
 
     @Query("DELETE FROM notes WHERE uri = :uri")
-    fun deleteNote(uri: String);
+    fun deleteNote(uri: String)
 
     // read
 
@@ -44,11 +48,23 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE uri = :uri LIMIT 1")
     fun getNote(uri: String): Note?
 
-    @Query("SELECT * FROM notes")
-    fun getAllNotes(): List<Note>
+    @Query("SELECT modified FROM notes WHERE uri = :uri LIMIT 1")
+    fun getModified(uri: String): Long?
 
-    @Query("SELECT uri FROM notes")
-    fun getAllUris(): List<String>
+    @Query("SELECT opened FROM notes WHERE uri = :uri LIMIT 1")
+    fun getOpened(uri: String): Long?
+
+    @RawQuery
+    fun getNotesQuery(sortQuery: SupportSQLiteQuery?): List<Note>
+
+    fun getAllNotes(sortBy: SortBy, asc: Boolean): List<Note> =
+        getNotesQuery(SimpleSQLiteQuery("SELECT * FROM notes" + orderBy(sortBy, asc)))
+
+    @RawQuery
+    fun getUrisQuery(sortQuery: SupportSQLiteQuery?): List<String>
+
+    fun getAllUris(sortBy: SortBy, asc: Boolean): List<String> =
+        getUrisQuery(SimpleSQLiteQuery("SELECT uri FROM notes" + orderBy(sortBy, asc)))
 
     @Query("SELECT * FROM notes WHERE filename LIKE :filename AND content LIKE :content LIMIT 1")
     fun searchNote(filename: String, content: String): Note
@@ -59,4 +75,12 @@ interface NoteDao {
 
     @Query("SELECT count() FROM notes")
     fun noteCount(): Int
+
+    // tool
+
+    fun orderBy(sortBy: SortBy, asc: Boolean) = " ORDER BY " + when (sortBy) {
+        SortBy.NAME -> "filename"
+        SortBy.MODIFIED -> "modified"
+        SortBy.OPENED -> "opened"
+    } + if (asc) " ASC" else " DESC"
 }

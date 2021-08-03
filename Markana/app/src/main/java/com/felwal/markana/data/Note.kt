@@ -10,8 +10,10 @@ const val URI_DEFAULT = ""
 
 @Entity(tableName = "notes")
 data class Note(
-    @ColumnInfo(name = "filename") var filename: String = "", // TODO: remove from db?
-    @ColumnInfo(name = "content") var content: String = "", // TODO: remove from db?
+    @ColumnInfo(name = "filename") var filename: String = "",
+    @ColumnInfo(name = "content") var content: String = "",
+    @ColumnInfo(name = "modified") var modified: Long? = null,
+    @ColumnInfo(name = "opened") var opened: Long? = modified,
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
     @ColumnInfo(name = "treeId") var treeId: Int? = null,
     @PrimaryKey(autoGenerate = true) var id: Int = NO_ID

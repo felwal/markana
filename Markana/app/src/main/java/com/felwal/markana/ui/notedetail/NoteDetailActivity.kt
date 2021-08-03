@@ -26,6 +26,8 @@ import com.felwal.markana.util.selectEnd
 import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
+import com.felwal.markana.util.toEpochSecond
+import java.time.LocalDateTime
 
 private const val LOG_TAG = "NoteDetail"
 
@@ -43,6 +45,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private var initialTitle = ""
     private var initialBody = ""
+    private var lastModified: Long? = null
 
     private val etCurrentFocus: EditText?
         get() = if (currentFocus is EditText) currentFocus as EditText else null
@@ -100,7 +103,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         model.noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
-            note?.let { setEditTexts(it) }
+            note?.let { loadContent(it) }
         }
         model.noteUri ?: model.createNote(createDocument)
         model.loadNote()
@@ -168,22 +171,23 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     // view
 
-    private fun setEditTexts(note: Note) {
+    private fun loadContent(note: Note) {
         binding.etNoteTitle.setText(note.filename)
         binding.etNoteBody.setText(note.content)
 
         initialTitle = note.filename
         initialBody = note.content
+        lastModified = note.modified
     }
 
     // data
 
     private fun saveNote() {
-        if (!haveChangesBeenMade) return
-
         val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string
-        val note = Note(title, body, model.noteUri ?: URI_DEFAULT)
+        val now = LocalDateTime.now().toEpochSecond()
+        val modified = if (haveChangesBeenMade) now else lastModified
+        val note = Note(title, body, modified, now, model.noteUri ?: URI_DEFAULT)
 
         Log.i(LOG_TAG, "note saved: $note")
 

@@ -7,7 +7,7 @@ import androidx.annotation.StringRes
 import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogDecimalBinding
 import com.felwal.markana.util.string
-import com.felwal.markana.util.uiToast
+import com.felwal.markana.util.toast
 
 const val NO_FLOAT_TEXT = -1f
 
@@ -63,7 +63,7 @@ class DecimalDialog : BaseDialog() {
                     listener.onDecimalDialogPositiveClick(input, tag)
                 }
                 catch (e: NumberFormatException) {
-                    activity?.uiToast(getString(R.string.toast_err_no_input))
+                    activity?.toast(getString(R.string.toast_err_no_input))
                 }
             }
             setCancelButton(negBtnTxtRes)

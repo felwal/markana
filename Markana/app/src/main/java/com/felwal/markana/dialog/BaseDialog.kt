@@ -14,11 +14,11 @@ import com.felwal.markana.R
 
 const val NO_RES = -1
 
-const val ARG_TITLE = "title"
-const val ARG_MESSAGE = "message"
-const val ARG_POSITIVE_BUTTON_RES = "positiveButtonText"
-const val ARG_NEGATIVE_BUTTON_RES = "negativeButtonText"
-const val ARG_TAG = "tag"
+private const val ARG_TITLE = "title"
+private const val ARG_MESSAGE = "message"
+private const val ARG_POSITIVE_BUTTON_RES = "positiveButtonText"
+private const val ARG_NEGATIVE_BUTTON_RES = "negativeButtonText"
+private const val ARG_TAG = "tag"
 
 abstract class BaseDialog : DialogFragment() {
 

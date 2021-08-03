@@ -3,11 +3,13 @@ package com.felwal.markana.prefs
 import android.content.Context
 import android.content.SharedPreferences
 
-const val FILENAME_PREFS = "com.felwal.markana.prefs"
+private const val FILENAME = "com.felwal.markana.prefs"
 
+private const val KEY_SORT_BY = "sort_by"
+private const val KEY_SORT_ORDER = "sort_order"
 private const val KEY_GRID_VIEW = "grid_view"
 
-const val KEY_THEME = "theme"
+private const val KEY_THEME = "theme"
 private const val KEY_MD_SYMBOL_ITALIC = "italic"
 private const val KEY_MD_SYMBOL_BOLD = "bold"
 private const val KEY_MD_SYMBOL_BULLETLIST = "bulletlist"
@@ -15,6 +17,13 @@ private const val KEY_MD_SYMBOL_HR = "horizontal_rule"
 private const val KEY_MD_CHECKBOX_SPACE = "checkbox_space"
 
 // names and values
+
+enum class SortBy {
+    NAME,
+    MODIFIED,
+    OPENED
+}
+
 val themeNames = listOf("System default", "Dark", "Light")
 val emphSymbols = listOf("*", "_")
 val emphSymbolNames = listOf("Asterisk", "Underscore")
@@ -23,9 +32,18 @@ val bulletlistSymbolNames = listOf("Asterisk", "Dash", "Plus")
 
 class Prefs(c: Context) {
 
-    private val sp: SharedPreferences = c.getSharedPreferences(FILENAME_PREFS, Context.MODE_PRIVATE);
+    private val sp: SharedPreferences = c.getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
 
     //
+
+    val sortBy: SortBy get() = SortBy.values()[sortByInt]
+    var sortByInt: Int
+        get() = sp.getInt(KEY_SORT_BY, 0)
+        set(value) = sp.putInt(KEY_SORT_BY, value)
+
+    var ascending: Boolean
+        get() = sp.getBoolean(KEY_SORT_ORDER, true)
+        set(value) = sp.putBoolean(KEY_SORT_ORDER, value)
 
     var gridView: Boolean
         get() = sp.getBoolean(KEY_GRID_VIEW, true)

@@ -97,7 +97,7 @@ class SafHelper(private val applicationContext: Context) {
                 applicationContext.coToastLog(LOG_TAG, "Provider not found or permissions not persisted", e)
             }
 
-            return Note(filename, content, uri.toString())
+            return Note(filename, content, uri = uri.toString())
         }
         catch (e: SecurityException) {
             applicationContext.coToastLog(LOG_TAG, "Read permission denied for note", e)

@@ -5,8 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.util.TypedValue
+import android.view.Menu
+import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.ColorInt
+import androidx.annotation.IdRes
+import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,11 +33,21 @@ fun Activity.close(): Boolean {
 
 // toast
 
+fun Context.toast(text: String, long: Boolean = false) {
+    Toast
+        .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+        .show()
+}
+
+fun Context.toastLog(tag: String, msg: String, e: Exception? = null) {
+    toast(msg, true)
+    Log.d(tag, msg, e)
+    e?.printStackTrace()
+}
+
 fun Context.tryToast(text: String, long: Boolean = false) {
     try {
-        Toast
-            .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
-            .show()
+        toast(text, long)
     }
     catch (e: RuntimeException) {
         Log.e("ContextUtils", "toast message: $text", e)
@@ -46,9 +61,7 @@ fun Context.tryToastLog(tag: String, msg: String, e: Exception? = null) {
 }
 
 suspend fun Context.coToast(text: String, long: Boolean = false) = withUI {
-    Toast
-        .makeText(this@coToast, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
-        .show()
+    toast(text, long)
 }
 
 suspend fun Context.coToastLog(tag: String, msg: String, e: Exception? = null) {
@@ -58,9 +71,7 @@ suspend fun Context.coToastLog(tag: String, msg: String, e: Exception? = null) {
 }
 
 fun Activity.uiToast(text: String, long: Boolean = false) = runOnUiThread {
-    Toast
-        .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
-        .show()
+    toast(text, long)
 }
 
 fun Activity.uiToastLog(tag: String, msg: String, e: Exception? = null) = runOnUiThread {
@@ -68,6 +79,24 @@ fun Activity.uiToastLog(tag: String, msg: String, e: Exception? = null) = runOnU
     Log.d(tag, msg, e)
     e?.printStackTrace()
 }
+
+// popup menu
+
+fun <C> C.popup(
+    @IdRes anchorRes: Int,
+    @MenuRes menuRes: Int
+) where C : AppCompatActivity, C : PopupMenu.OnMenuItemClickListener =
+    popup(findViewById(anchorRes), menuRes)
+
+fun <C> C.popup(
+    anchor: View,
+    @MenuRes menuRes: Int
+) where C : Context, C : PopupMenu.OnMenuItemClickListener =
+    PopupMenu(this, anchor).apply {
+        menuInflater.inflate(menuRes, menu)
+        setOnMenuItemClickListener(this@popup)
+        show()
+    }
 
 // res
 

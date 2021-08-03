@@ -16,6 +16,7 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.dialog.BinaryDialog
 import com.felwal.markana.dialog.binaryDialog
 import com.felwal.markana.prefs
+import com.felwal.markana.prefs.SortBy
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
@@ -90,14 +91,20 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.let {
-            // toggle item view
-            val viewToggleItem = menu.findItem(R.id.action_view_toggle)
-            viewToggleItem?.let {
-                viewToggleItem.isChecked = prefs.gridView
-                if (prefs.gridView) viewToggleItem.setIcon(R.drawable.ic_view_list).setTitle(R.string
-                    .action_view_list)
-                else viewToggleItem.setIcon(R.drawable.ic_view_grid).setTitle(R.string.action_view_grid)
+        menu?.apply {
+            // set sorting
+            findItem(when (prefs.sortBy) {
+                SortBy.NAME -> R.id.action_sort_name
+                SortBy.MODIFIED -> R.id.action_sort_modified
+                SortBy.OPENED -> R.id.action_sort_opened
+            })?.isChecked = true
+            findItem(R.id.action_sort_asc)?.isChecked = prefs.ascending
+
+            // set gridView
+            findItem(R.id.action_view_toggle)?.let {
+                it.isChecked = prefs.gridView
+                if (prefs.gridView) it.setIcon(R.drawable.ic_view_list).setTitle(R.string.action_view_list)
+                else it.setIcon(R.drawable.ic_view_grid).setTitle(R.string.action_view_grid)
             }
         }
 
@@ -138,7 +145,26 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         R.id.action_view_toggle -> {
             adapter.invertViewType()
             setAdapterAndManager()
-            invalidateOptionsMenu()
+            invalidateOptionsMenu() // update icon
+        }
+
+        // normal tb: sort submenu
+        R.id.action_sort_name -> {
+            prefs.sortByInt = SortBy.NAME.ordinal
+            onOptionsRadioItemSelected(item)
+        }
+        R.id.action_sort_modified -> {
+            prefs.sortByInt = SortBy.MODIFIED.ordinal
+            onOptionsRadioItemSelected(item)
+        }
+        R.id.action_sort_opened -> {
+            prefs.sortByInt = SortBy.OPENED.ordinal
+            onOptionsRadioItemSelected(item)
+        }
+        R.id.action_sort_asc -> {
+            item.isChecked = !item.isChecked
+            prefs.ascending = item.isChecked
+            model.loadNotes()
         }
 
         // single selection tb
@@ -158,11 +184,19 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         fabMenu.closeMenuIfOpen()
     }
 
-
     override fun onBackPressed() = when {
-        fabMenu.closeMenuIfOpen() -> {}
+        fabMenu.closeMenuIfOpen() -> {
+        }
         selectionMode -> emptySelection()
         else -> super.onBackPressed()
+    }
+
+    //
+
+    private fun onOptionsRadioItemSelected(item: MenuItem) {
+        item.isChecked = true
+        model.loadNotes()
+        adapter.notifyDataSetChanged() // rebind to update modified/opened tv
     }
 
     // recycler

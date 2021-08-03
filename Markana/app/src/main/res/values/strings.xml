@@ -29,6 +29,7 @@
     <string name="action_clipboard">Copy to clipboard</string>
     <string name="action_view_list">View as list</string>
     <string name="action_view_grid">View as grid</string>
+    <string name="action_sort">Sort</string>
 
     <!-- view -->
 
@@ -36,6 +37,11 @@
         <item quantity="one">%d note</item>
         <item quantity="other">%d notes</item>
     </plurals>
+
+    <string name="action_notedetail_sort_name">Name</string>
+    <string name="action_notedetail_sort_modified">Modified</string>
+    <string name="action_notedetail_sort_opened">Opened</string>
+    <string name="action_notedetail_sort_asc">Ascending</string>
 
     <string name="et_notedetail_title_hint">note.txt</string>
     <string name="et_notedetail_body_hint">Note</string>

@@ -15,6 +15,14 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.ItemRecyclerGridNoteBinding
 import com.felwal.markana.databinding.ItemRecyclerListNoteBinding
 import com.felwal.markana.prefs
+import com.felwal.markana.prefs.SortBy
+import com.felwal.markana.util.FORMATTER_EARLIER
+import com.felwal.markana.util.FORMATTER_THIS_YEAR
+import com.felwal.markana.util.FORMATTER_TODAY
+import com.felwal.markana.util.atStartOfYear
+import com.felwal.markana.util.fromEpochSecond
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class NoteListAdapter(
     private val onClick: (Note) -> Unit,
@@ -106,7 +114,13 @@ class NoteListAdapter(
             currentNote = note
 
             tvTitle.text = note.filename
-            tvModified.text = "Modified"
+            tvModified.text =
+                if (prefs.sortBy == SortBy.OPENED) {
+                    "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
+                }
+                else {
+                    "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
+                }
 
             markSelection(note.isSelected)
         }
@@ -133,4 +147,17 @@ private class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
 
     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
         oldItem == newItem && oldItem.isSelected == newItem.isSelected
+}
+
+private fun LocalDateTime.formatNoteItem(): String {
+    val today = LocalDate.now().atStartOfDay()
+    val thisYear = LocalDate.now().atStartOfYear()
+
+    return format(
+        when {
+            isAfter(today) -> FORMATTER_TODAY
+            isAfter(thisYear) -> FORMATTER_THIS_YEAR
+            else -> FORMATTER_EARLIER
+        }
+    )
 }
