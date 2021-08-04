@@ -10,10 +10,10 @@ private const val KEY_SORT_ORDER = "sort_order"
 private const val KEY_GRID_VIEW = "grid_view"
 
 private const val KEY_THEME = "theme"
-private const val KEY_MD_SYMBOL_ITALIC = "italic"
-private const val KEY_MD_SYMBOL_BOLD = "bold"
+private const val KEY_MD_SYMBOL_EMPH = "italic"
+private const val KEY_MD_SYMBOL_STRONG = "bold"
 private const val KEY_MD_SYMBOL_BULLETLIST = "bulletlist"
-private const val KEY_MD_SYMBOL_HR = "horizontal_rule"
+private const val KEY_MD_SYMBOL_BREAK = "horizontal_rule"
 private const val KEY_MD_CHECKBOX_SPACE = "checkbox_space"
 
 // names and values
@@ -51,7 +51,7 @@ class Prefs(c: Context) {
 
     private val sp: SharedPreferences = c.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
 
-    //
+    // notelist
 
     val sortBy: SortBy get() = SortBy.values()[sortByInt]
     var sortByInt: Int
@@ -66,31 +66,33 @@ class Prefs(c: Context) {
         get() = sp.getBoolean(KEY_GRID_VIEW, true)
         set(value) = sp.putBoolean(KEY_GRID_VIEW, value)
 
-    // settings
+    // settings: appearance
 
     val theme: Theme get() = Theme.values()[themeInt]
     var themeInt: Int
         get() = sp.getInt(KEY_THEME, 0)
         set(value) = sp.putInt(KEY_THEME, value)
 
-    val italicSymbol: String get() = Emph.values()[italicSymbolInt].symbol
-    var italicSymbolInt: Int
-        get() = sp.getInt(KEY_MD_SYMBOL_ITALIC, 0)
-        set(value) = sp.putInt(KEY_MD_SYMBOL_ITALIC, value)
+    // settings: markdown
 
-    val boldSymbol: String get() = Strong.values()[boldSymbolInt].symbol
-    var boldSymbolInt: Int
-        get() = sp.getInt(KEY_MD_SYMBOL_BOLD, 0)
-        set(value) = sp.putInt(KEY_MD_SYMBOL_BOLD, value)
+    val emphSymbol: String get() = Emph.values()[emphSymbolInt].symbol
+    var emphSymbolInt: Int
+        get() = sp.getInt(KEY_MD_SYMBOL_EMPH, 0)
+        set(value) = sp.putInt(KEY_MD_SYMBOL_EMPH, value)
+
+    val strongSymbol: String get() = Strong.values()[strongSymbolInt].symbol
+    var strongSymbolInt: Int
+        get() = sp.getInt(KEY_MD_SYMBOL_STRONG, 0)
+        set(value) = sp.putInt(KEY_MD_SYMBOL_STRONG, value)
 
     val bulletlistSymbol: String get() = Bullet.values()[bulletlistSymbolInt].symbol
     var bulletlistSymbolInt: Int
         get() = sp.getInt(KEY_MD_SYMBOL_BULLETLIST, 0)
         set(value) = sp.putInt(KEY_MD_SYMBOL_BULLETLIST, value)
 
-    var hrSymbol: String
-        get() = sp.getString(KEY_MD_SYMBOL_HR, "***") ?: "***"
-        set(value) = sp.putString(KEY_MD_SYMBOL_HR, value)
+    var breakSymbol: String
+        get() = sp.getString(KEY_MD_SYMBOL_BREAK, "***") ?: "***"
+        set(value) = sp.putString(KEY_MD_SYMBOL_BREAK, value)
 
     var checkboxSpace: Boolean
         get() = sp.getBoolean(KEY_MD_CHECKBOX_SPACE, false)

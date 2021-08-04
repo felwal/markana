@@ -16,13 +16,21 @@ import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.widget.dialog.BinaryDialog
 import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.data.network.CreateTextDocument
-import com.felwal.markana.prefs
-import com.felwal.markana.util.copy
+import com.felwal.markana.util.toggleStrong
+import com.felwal.markana.util.toggleBulletlist
+import com.felwal.markana.util.toggleChecklist
+import com.felwal.markana.util.toggleCode
 import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
+import com.felwal.markana.util.toggleHeader
+import com.felwal.markana.util.insertThematicBreak
+import com.felwal.markana.util.toggleEmph
 import com.felwal.markana.util.makeMultilinePreventEnter
+import com.felwal.markana.util.toggleNumberlist
+import com.felwal.markana.util.toggleQuote
 import com.felwal.markana.util.selectEnd
 import com.felwal.markana.util.showKeyboard
+import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
 import com.felwal.markana.util.toEpochSecond
@@ -129,16 +137,16 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         ).show(supportFragmentManager)
 
         // bab
-        R.id.action_bold -> etCurrentFocus?.bold()
-        R.id.action_italic -> etCurrentFocus?.italic()
-        R.id.action_strikethrough -> etCurrentFocus?.strikethrough()
-        R.id.action_heading -> etCurrentFocus?.header()
-        R.id.action_checklist -> etCurrentFocus?.checklist()
-        R.id.action_quote -> etCurrentFocus?.quote()
-        R.id.action_code -> etCurrentFocus?.code()
-        R.id.action_bulletlist -> etCurrentFocus?.bulletlist()
-        R.id.action_numberlist -> etCurrentFocus?.numberlist()
-        R.id.action_scenebreak -> etCurrentFocus?.horizontalRule()
+        R.id.action_italic -> etCurrentFocus?.toggleEmph()
+        R.id.action_bold -> etCurrentFocus?.toggleStrong()
+        R.id.action_strikethrough -> etCurrentFocus?.toggleStrikethrough()
+        R.id.action_heading -> etCurrentFocus?.toggleHeader()
+        R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
+        R.id.action_quote -> etCurrentFocus?.toggleQuote()
+        R.id.action_code -> etCurrentFocus?.toggleCode()
+        R.id.action_bulletlist -> etCurrentFocus?.toggleBulletlist()
+        R.id.action_numberlist -> etCurrentFocus?.toggleNumberlist()
+        R.id.action_scenebreak -> etCurrentFocus?.insertThematicBreak()
 
         else -> super.onOptionsItemSelected(item)
     }
@@ -156,21 +164,17 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         super.onDestroy()
     }
 
-    // focus
+    //
 
     private fun clearAllFocus() {
         binding.etNoteTitle.clearFocus()
         binding.etNoteBody.clearFocus()
     }
 
-    // view
-
     private fun loadContent(note: Note) {
         binding.etNoteTitle.setText(note.filename)
         binding.etNoteBody.setText(note.content)
     }
-
-    // data
 
     private fun saveNote() {
         val title = binding.etNoteTitle.string
@@ -184,81 +188,6 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         Log.i(LOG_TAG, "note saved: $note")
     }
 
-    // typography bar generals
-
-    private fun EditText.insertAtCursor(marker: String) {
-        val textEdit = text.copy
-        val end = selectionEnd
-
-        textEdit.insert(end, marker)
-
-        text = textEdit
-        setSelection(end + marker.length)
-    }
-
-    private fun EditText.markSelectedText(marker: String) {
-        val textEdit = text.copy
-        val end = selectionEnd
-        val start = selectionStart
-
-        textEdit.insert(end, marker)
-        textEdit.insert(start, marker)
-
-        // TODO: check for empty line
-
-        // TODO: toggle
-
-        // TODO: remove markers symmetrically
-
-        text = textEdit
-        setSelection(start + marker.length, end + marker.length)
-    }
-
-    private fun EditText.markSelectedLines(marker: (Int) -> String) {
-        val textEdit = text.copy
-        val end = selectionEnd
-        val start = selectionStart
-
-        val endLine = layout.getLineForOffset(end)
-        val startLine = layout.getLineForOffset(start)
-
-        var endOffset = 0
-        for (line in endLine downTo startLine) {
-            val lineStart = layout.getLineStart(line)
-            val lineIndex = line - startLine
-
-            textEdit.insert(lineStart, marker(lineIndex))
-            endOffset += marker(lineIndex).length
-        }
-
-        // TODO: toggle (also between different lists)
-
-        text = textEdit
-        setSelection(start + marker(startLine).length, end + endOffset)
-    }
-
-    // typography bar specifics
-
-    private fun EditText.italic() = markSelectedText(prefs.italicSymbol)
-
-    private fun EditText.bold() = markSelectedText(prefs.boldSymbol)
-
-    private fun EditText.strikethrough() = markSelectedText("~~")
-
-    private fun EditText.code() = markSelectedText("`")
-
-    private fun EditText.header() = markSelectedLines { "# " }
-
-    private fun EditText.quote() = markSelectedLines { "> " }
-
-    private fun EditText.bulletlist() = markSelectedLines { "${prefs.bulletlistSymbol} " }
-
-    private fun EditText.numberlist() = markSelectedLines { "${it + 1}. " }
-
-    private fun EditText.checklist() = markSelectedLines { if (prefs.checkboxSpace) "- [ ] " else "- [] " }
-
-    private fun EditText.horizontalRule() = insertAtCursor(prefs.hrSymbol)
-
     // dialog
 
     override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
@@ -270,7 +199,6 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     //
 
     companion object {
-
         fun startActivity(c: Context, uri: String? = null) {
             val intent = Intent(c, NoteDetailActivity::class.java)
             uri?.let { intent.putExtra(EXTRA_NOTE_URI, it); }

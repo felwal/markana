@@ -101,7 +101,8 @@ class SafDataSource(private val applicationContext: Context) {
             applicationContext.coToastLog(LOG_TAG, "Read permission denied for note", e)
         }
         catch (e: IllegalArgumentException) {
-            // Failed to determine if home:Markana/notes/h.txt is child of home:Markana/notes
+            // "Failed to determine if home:Markana/notes/h.txt is child of home:Markana/notes"
+            // gets triggered when a file is gets it's extension changed externally to something Markana cant open
             applicationContext.coToastLog(LOG_TAG, "Cannot find file", e)
         }
 

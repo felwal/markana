@@ -80,14 +80,14 @@ open class SettingsActivity : AbsSettingsActivity(
                 SingleSelectionItem(
                     getString(R.string.tv_settings_item_title_italic_symbol),
                     values = Emph.values().map { it.title },
-                    selectedIndex = prefs.italicSymbolInt,
+                    selectedIndex = prefs.emphSymbolInt,
                     iconRes = R.drawable.ic_italic,
                     tag = DIALOG_ITALIC
                 ),
                 SingleSelectionItem(
                     getString(R.string.tv_settings_item_title_bold_symbol),
                     values = Strong.values().map { it.title },
-                    selectedIndex = prefs.boldSymbolInt,
+                    selectedIndex = prefs.strongSymbolInt,
                     iconRes = R.drawable.ic_bold,
                     tag = DIALOG_BOLD
                 ),
@@ -100,7 +100,7 @@ open class SettingsActivity : AbsSettingsActivity(
                 ),
                 StringItem(
                     getString(R.string.tv_settings_item_title_hr_symbol),
-                    value = prefs.hrSymbol,
+                    value = prefs.breakSymbol,
                     hint = "3 or more of *, -, or _",
                     iconRes = R.drawable.ic_horizontal_rule,
                     tag = DIALOG_HR
@@ -131,8 +131,8 @@ open class SettingsActivity : AbsSettingsActivity(
                 prefs.themeInt = index
                 recreate()
             }
-            DIALOG_ITALIC -> prefs.italicSymbolInt = index
-            DIALOG_BOLD -> prefs.boldSymbolInt = index
+            DIALOG_ITALIC -> prefs.emphSymbolInt = index
+            DIALOG_BOLD -> prefs.strongSymbolInt = index
             DIALOG_BULLETLIST -> prefs.bulletlistSymbolInt = index
         }
         reflateViews()
@@ -140,7 +140,7 @@ open class SettingsActivity : AbsSettingsActivity(
 
     override fun onTextDialogPositiveClick(input: String, tag: String) {
         when (tag) {
-            DIALOG_HR -> prefs.hrSymbol = input
+            DIALOG_HR -> prefs.breakSymbol = input
         }
         reflateViews()
     }
