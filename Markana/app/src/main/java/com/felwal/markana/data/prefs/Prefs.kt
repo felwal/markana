@@ -24,15 +24,32 @@ enum class SortBy {
     OPENED
 }
 
-val themeNames = listOf("System default", "Dark", "Light")
-val emphSymbols = listOf("*", "_")
-val emphSymbolNames = listOf("Asterisk", "Underscore")
-val bulletlistSymbols = listOf("*", "-", "+")
-val bulletlistSymbolNames = listOf("Asterisk", "Dash", "Plus")
+enum class Theme(val title: String) {
+    SYSTEM("Follow system"),
+    LIGHT("Light"),
+    DARK("Dark"),
+    BATTERY("Set by Battery Saver")
+}
+
+enum class Emph(val title: String, val symbol: String) {
+    ASTERISK("Asterisk", "*"),
+    UNDERSCORE("Underscore", "_")
+}
+
+enum class Strong(val title: String, val symbol: String) {
+    ASTERISKS("Asterisks", "**"),
+    UNDERSCORES("Underscores", "__")
+}
+
+enum class Bullet(val title: String, val symbol: String) {
+    ASTERISK("Asterisk", "*"),
+    DASH("Dash", "-"),
+    PLUS("Plus", "+")
+}
 
 class Prefs(c: Context) {
 
-    private val sp: SharedPreferences = c.getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
+    private val sp: SharedPreferences = c.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
 
     //
 
@@ -51,21 +68,22 @@ class Prefs(c: Context) {
 
     // settings
 
+    val theme: Theme get() = Theme.values()[themeInt]
     var themeInt: Int
         get() = sp.getInt(KEY_THEME, 0)
         set(value) = sp.putInt(KEY_THEME, value)
 
-    val italicSymbol: String get() = emphSymbols[italicSymbolInt]
+    val italicSymbol: String get() = Emph.values()[italicSymbolInt].symbol
     var italicSymbolInt: Int
         get() = sp.getInt(KEY_MD_SYMBOL_ITALIC, 0)
         set(value) = sp.putInt(KEY_MD_SYMBOL_ITALIC, value)
 
-    val boldSymbol: String get() = emphSymbols[boldSymbolInt]
+    val boldSymbol: String get() = Strong.values()[boldSymbolInt].symbol
     var boldSymbolInt: Int
         get() = sp.getInt(KEY_MD_SYMBOL_BOLD, 0)
         set(value) = sp.putInt(KEY_MD_SYMBOL_BOLD, value)
 
-    val bulletlistSymbol: String get() = bulletlistSymbols[bulletlistSymbolInt]
+    val bulletlistSymbol: String get() = Bullet.values()[bulletlistSymbolInt].symbol
     var bulletlistSymbolInt: Int
         get() = sp.getInt(KEY_MD_SYMBOL_BULLETLIST, 0)
         set(value) = sp.putInt(KEY_MD_SYMBOL_BULLETLIST, value)

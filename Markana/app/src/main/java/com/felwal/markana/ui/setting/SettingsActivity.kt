@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
 import com.felwal.markana.R
+import com.felwal.markana.data.prefs.Bullet
+import com.felwal.markana.data.prefs.Emph
+import com.felwal.markana.data.prefs.Strong
+import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
+import com.felwal.markana.prefs
+import com.felwal.markana.util.then
 import com.felwal.markana.widget.dialog.RadioDialog
 import com.felwal.markana.widget.dialog.TextDialog
 import com.felwal.markana.widget.dialog.UnaryDialog
-import com.felwal.markana.prefs
-import com.felwal.markana.data.prefs.bulletlistSymbolNames
-import com.felwal.markana.data.prefs.emphSymbolNames
-import com.felwal.markana.data.prefs.themeNames
-import com.felwal.markana.util.then
 
 private const val DIALOG_THEME = "themeDialog"
 private const val DIALOG_ITALIC = "italicDialog"
@@ -26,8 +27,7 @@ open class SettingsActivity : AbsSettingsActivity(
 ),
     RadioDialog.DialogListener,
     TextDialog.DialogListener,
-    UnaryDialog.DialogListener
-{
+    UnaryDialog.DialogListener {
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -35,9 +35,10 @@ open class SettingsActivity : AbsSettingsActivity(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // init tb
         setSupportActionBar(binding.tb)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -62,34 +63,41 @@ open class SettingsActivity : AbsSettingsActivity(
 
     override fun inflateViews() {
         inflateSections(
-            ItemSection(getString(R.string.tv_settings_header_appearance),
-                SingleSelectionItem(getString(R.string.tv_settings_item_title_theme),
-                    values = themeNames,
+            ItemSection(
+                getString(R.string.tv_settings_header_appearance),
+                SingleSelectionItem(
+                    getString(R.string.tv_settings_item_title_theme),
+                    values = Theme.values().map { it.title },
                     selectedIndex = prefs.themeInt,
                     iconRes = R.drawable.ic_theme,
                     tag = DIALOG_THEME
                 ),
             ),
-            ItemSection(getString(R.string.tv_settings_header_markdown),
-                SingleSelectionItem(getString(R.string.tv_settings_item_title_italic_symbol),
-                    values = emphSymbolNames,
+            ItemSection(
+                getString(R.string.tv_settings_header_markdown),
+                SingleSelectionItem(
+                    getString(R.string.tv_settings_item_title_italic_symbol),
+                    values = Emph.values().map { it.title },
                     selectedIndex = prefs.italicSymbolInt,
                     iconRes = R.drawable.ic_italic,
                     tag = DIALOG_ITALIC
                 ),
-                SingleSelectionItem(getString(R.string.tv_settings_item_title_bold_symbol),
-                    values = emphSymbolNames,
+                SingleSelectionItem(
+                    getString(R.string.tv_settings_item_title_bold_symbol),
+                    values = Strong.values().map { it.title },
                     selectedIndex = prefs.boldSymbolInt,
                     iconRes = R.drawable.ic_bold,
                     tag = DIALOG_BOLD
                 ),
-                SingleSelectionItem(getString(R.string.tv_settings_item_title_bulletlist_symbol),
-                    values = bulletlistSymbolNames,
+                SingleSelectionItem(
+                    getString(R.string.tv_settings_item_title_bulletlist_symbol),
+                    values = Bullet.values().map { it.title },
                     selectedIndex = prefs.bulletlistSymbolInt,
                     iconRes = R.drawable.ic_list_bullet,
                     tag = DIALOG_BULLETLIST
                 ),
-                StringItem(getString(R.string.tv_settings_item_title_hr_symbol),
+                StringItem(
+                    getString(R.string.tv_settings_item_title_hr_symbol),
                     value = prefs.hrSymbol,
                     hint = "3 or more of *, -, or _",
                     iconRes = R.drawable.ic_horizontal_rule,
@@ -101,8 +109,10 @@ open class SettingsActivity : AbsSettingsActivity(
                     onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
                 ),
             ),
-            ItemSection("About and other",
-                InfoItem(getString(R.string.tv_settings_item_title_about),
+            ItemSection(
+                "About and other",
+                InfoItem(
+                    getString(R.string.tv_settings_item_title_about),
                     desc = getString(R.string.tv_settings_item_msg_about),
                     dialogBtnRes = R.string.dialog_btn_ok,
                     tag = "aboutDialog"

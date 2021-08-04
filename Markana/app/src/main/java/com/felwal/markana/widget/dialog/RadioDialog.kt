@@ -11,8 +11,6 @@ import com.felwal.markana.util.truncate
 private const val ARG_RADIO_TEXTS = "radioTexts"
 private const val ARG_SELECTED_INDEX = "selectedIndex"
 
-private const val TAG_DEFAULT = "radioDialog"
-
 class RadioDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener

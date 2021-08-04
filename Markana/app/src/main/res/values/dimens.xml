@@ -2,7 +2,7 @@
 
     <!-- spacing -->
 
-    <!-- general -->
+    <!-- palette -->
     <dimen name="spacing_huge">48dp</dimen>
     <dimen name="spacing_large">32dp</dimen>
     <dimen name="spacing_medium">24dp</dimen>

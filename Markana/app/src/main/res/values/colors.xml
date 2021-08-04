@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- palette -->
+
     <!-- main -->
     <color name="red_light">#FF522D</color>
     <color name="red_light_trans">#33FF522D</color>

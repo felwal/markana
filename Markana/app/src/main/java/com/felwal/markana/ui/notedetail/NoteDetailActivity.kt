@@ -69,13 +69,11 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // binding
         binding = ActivityNotedetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.tb)
 
-        // tb: title and home
+        // init tb
+        setSupportActionBar(binding.tb)
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -241,7 +239,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private fun EditText.italic() = markSelectedText(prefs.italicSymbol)
 
-    private fun EditText.bold() = markSelectedText("${prefs.boldSymbol}${prefs.boldSymbol}")
+    private fun EditText.bold() = markSelectedText(prefs.boldSymbol)
 
     private fun EditText.strikethrough() = markSelectedText("~~")
 
@@ -255,7 +253,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
 
     private fun EditText.numberlist() = markSelectedLines { "${it + 1}. " }
 
-    private fun EditText.checklist() = markSelectedLines { if(prefs.checkboxSpace) "- [ ] " else "- [] " }
+    private fun EditText.checklist() = markSelectedLines { if (prefs.checkboxSpace) "- [ ] " else "- [] " }
 
     private fun EditText.horizontalRule() = insertAtCursor(prefs.hrSymbol)
 

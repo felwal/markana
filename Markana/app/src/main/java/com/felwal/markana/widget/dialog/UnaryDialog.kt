@@ -8,8 +8,6 @@ import com.felwal.markana.R
 
 private const val ARG_PASS_VALUE = "passValue"
 
-private const val TAG_DEFAULT = "binaryDialog"
-
 class UnaryDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener

@@ -72,7 +72,7 @@ interface NoteDao {
     // tool
 
     fun orderBy(sortBy: SortBy, asc: Boolean) = " ORDER BY " + when (sortBy) {
-        SortBy.NAME -> "filename"
+        SortBy.NAME -> "lower(filename), filename"
         SortBy.MODIFIED -> "modified"
         SortBy.OPENED -> "opened"
     } + if (asc) " ASC" else " DESC"

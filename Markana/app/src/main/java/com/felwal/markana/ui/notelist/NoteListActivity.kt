@@ -65,13 +65,11 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // binding
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.tb)
 
-        // tb: deselect as home
+        // init tb
+        setSupportActionBar(binding.tb)
         val homeIcon = ContextCompat.getDrawable(this, R.drawable.ic_cancel)?.mutate()
         homeIcon?.let {
             it.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)

@@ -14,8 +14,6 @@ const val NO_FLOAT_TEXT = -1f
 private const val ARG_TEXT = "text"
 private const val ARG_HINT = "hint"
 
-private const val TAG_DEFAULT = "decimalDialog"
-
 class DecimalDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener

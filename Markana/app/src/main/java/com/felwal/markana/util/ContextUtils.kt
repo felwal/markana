@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.util.TypedValue
-import android.view.Menu
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.MenuRes
@@ -16,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
-import java.lang.RuntimeException
 
 // lifecycle
 
@@ -26,18 +24,11 @@ inline fun <reified A : AppCompatActivity> AppCompatActivity.launchActivity() {
     startActivity(intent)
 }
 
-fun Activity.close(): Boolean {
-    finish()
-    return true
-}
-
 // toast
 
-fun Context.toast(text: String, long: Boolean = false) {
-    Toast
-        .makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+fun Context.toast(text: String, long: Boolean = false) =
+    Toast.makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
         .show()
-}
 
 fun Context.toastLog(tag: String, msg: String, e: Exception? = null) {
     toast(msg, true)
@@ -101,9 +92,9 @@ fun <C> C.popup(
 // res
 
 @ColorInt
-fun Context.getAttrColor(resId: Int): Int {
+fun Context.getAttrColor(@AttrRes attrRes: Int): Int {
     val typedValue = TypedValue()
-    theme.resolveAttribute(resId, typedValue, true)
+    theme.resolveAttribute(attrRes, typedValue, true)
     return typedValue.data
 }
 

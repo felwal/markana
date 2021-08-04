@@ -10,8 +10,6 @@ import com.felwal.markana.util.string
 private const val ARG_TEXT = "text"
 private const val ARG_HINT = "hint"
 
-private const val TAG_DEFAULT = "textDialog"
-
 class TextDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
