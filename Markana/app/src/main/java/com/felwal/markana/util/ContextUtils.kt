@@ -13,9 +13,22 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import com.felwal.markana.data.prefs.Theme
+import com.felwal.markana.prefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
+fun updateTheme() = AppCompatDelegate.setDefaultNightMode(
+    // TODO: statusbar icons stay black when transitioning light -> dark
+    when (prefs.theme) {
+        Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+        Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+        Theme.BATTERY -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+    }
+)
 
 // lifecycle
 

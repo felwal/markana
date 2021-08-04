@@ -27,6 +27,7 @@ import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.showOrRemove
 import com.felwal.markana.util.toggleInclusion
+import com.felwal.markana.util.updateTheme
 import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
 
@@ -64,6 +65,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     // Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        updateTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)

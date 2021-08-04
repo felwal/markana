@@ -11,6 +11,7 @@ import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.then
+import com.felwal.markana.util.updateTheme
 import com.felwal.markana.widget.dialog.RadioDialog
 import com.felwal.markana.widget.dialog.TextDialog
 import com.felwal.markana.widget.dialog.UnaryDialog
@@ -34,6 +35,7 @@ open class SettingsActivity : AbsSettingsActivity(
     override val ll: LinearLayout get() = binding.ll
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        updateTheme()
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)

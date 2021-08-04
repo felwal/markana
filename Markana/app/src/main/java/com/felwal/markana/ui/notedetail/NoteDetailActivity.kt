@@ -26,6 +26,7 @@ import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
 import com.felwal.markana.util.toEpochSecond
+import com.felwal.markana.util.updateTheme
 import java.time.LocalDateTime
 
 private const val LOG_TAG = "NoteDetail"
@@ -68,6 +69,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
     // Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        updateTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityNotedetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
