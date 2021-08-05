@@ -22,13 +22,13 @@
                 android:checkableBehavior="single">
                 <item
                     android:id="@+id/action_sort_name"
-                    android:title="@string/action_notedetail_sort_name" />
+                    android:title="@string/action_sort_name" />
                 <item
                     android:id="@+id/action_sort_modified"
-                    android:title="@string/action_notedetail_sort_modified" />
+                    android:title="@string/action_sort_modified" />
                 <item
                     android:id="@+id/action_sort_opened"
-                    android:title="@string/action_notedetail_sort_opened" />
+                    android:title="@string/action_sort_opened" />
             </group>
 
             <group
@@ -36,7 +36,7 @@
                 android:checkableBehavior="all">
                 <item
                     android:id="@+id/action_sort_asc"
-                    android:title="@string/action_notedetail_sort_asc" />
+                    android:title="@string/action_sort_asc" />
             </group>
         </menu>
 

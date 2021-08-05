@@ -31,17 +31,12 @@
     <string name="action_view_grid">Grid view</string>
     <string name="action_sort">Sort</string>
 
+    <string name="action_sort_name">Name</string>
+    <string name="action_sort_modified">Modified</string>
+    <string name="action_sort_opened">Opened</string>
+    <string name="action_sort_asc">Ascending</string>
+
     <!-- view -->
-
-    <plurals name="tb_notelist_title_selection">
-        <item quantity="one">%d note</item>
-        <item quantity="other">%d notes</item>
-    </plurals>
-
-    <string name="action_notedetail_sort_name">Name</string>
-    <string name="action_notedetail_sort_modified">Modified</string>
-    <string name="action_notedetail_sort_opened">Opened</string>
-    <string name="action_notedetail_sort_asc">Ascending</string>
 
     <string name="et_notedetail_title_hint">note.txt</string>
     <string name="et_notedetail_body_hint">Note</string>

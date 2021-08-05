@@ -2,7 +2,7 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/vector_launcher_logo_shadow" />
-    <item android:drawable="@drawable/vector_launcher_logo" />
+    <item android:drawable="@drawable/ic_launcher_logo_shadow" />
+    <item android:drawable="@drawable/ic_launcher_logo" />
 
 </layer-list>
