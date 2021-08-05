@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 fun updateTheme() = AppCompatDelegate.setDefaultNightMode(
-    // TODO: statusbar icons stay black when transitioning light -> dark
     when (prefs.theme) {
         Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO

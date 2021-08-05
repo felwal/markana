@@ -129,7 +129,7 @@ open class SettingsActivity : AbsSettingsActivity(
         when (tag) {
             DIALOG_THEME -> {
                 prefs.themeInt = index
-                recreate()
+                updateTheme()
             }
             DIALOG_ITALIC -> prefs.emphSymbolInt = index
             DIALOG_BOLD -> prefs.strongSymbolInt = index
