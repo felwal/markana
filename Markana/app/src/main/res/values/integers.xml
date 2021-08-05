@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="quantity_notelist_grid_columns_portrait">2</integer>
+    <integer name="quantity_notelist_grid_columns_landscape">3</integer>
+
+    <integer name="quantity_notelist_list_columns">1</integer>
+
+</resources>

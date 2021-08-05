@@ -249,7 +249,9 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         binding.rv.adapter = adapter
 
         // set manager
-        val spanCount = if (!prefs.gridView) 1 else if (isPortrait) 2 else 3
+        val spanCount = if (!prefs.gridView) resources.getInteger(R.integer.quantity_notelist_list_columns)
+        else if (isPortrait) resources.getInteger(R.integer.quantity_notelist_grid_columns_portrait)
+        else resources.getInteger(R.integer.quantity_notelist_grid_columns_landscape)
         binding.rv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
     }
 
