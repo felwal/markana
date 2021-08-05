@@ -25,10 +25,10 @@
     <string name="action_checklist">Checklist</string>
     <string name="action_bulletlist">Bulletlist</string>
     <string name="action_numberlist">Numberlist</string>
-    <string name="action_horizontal_rule">Horizontal rule</string>
+    <string name="action_horizontal_rule">Thematic break</string>
     <string name="action_clipboard">Copy to clipboard</string>
-    <string name="action_view_list">View as list</string>
-    <string name="action_view_grid">View as grid</string>
+    <string name="action_view_list">List view</string>
+    <string name="action_view_grid">Grid view</string>
     <string name="action_sort">Sort</string>
 
     <!-- view -->
@@ -60,7 +60,7 @@
     <string name="tv_settings_item_title_bulletlist_symbol">Bulletlist symbol</string>
     <string name="tv_settings_item_title_italic_symbol">Italic symbol</string>
     <string name="tv_settings_item_title_bold_symbol">Bold symbol</string>
-    <string name="tv_settings_item_title_hr_symbol">Horizontal rule symbol</string>
+    <string name="tv_settings_item_title_hr_symbol">Theme break symbol</string>
     <string name="tv_settings_item_title_checkbox_space">Space in blank checkbox</string>
     <string name="tv_settings_item_title_about">About</string>
     <string name="tv_settings_item_msg_about">Made by Felix Wallin</string>
