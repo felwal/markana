@@ -57,7 +57,7 @@ private fun EditText.formatSelectedText(marker: String) {
     // TODO: mark multi-paragraph, ie **hi**\n\n**by** instead of **hi\n\nby**
 
     // toggle: remove marker outside selection, ie **|hi|**
-    if (removeTextMarker(textCopy, marker,start - marker.length, start, end, end + marker.length)) {
+    if (removeTextMarker(textCopy, marker, start - marker.length, start, end, end + marker.length)) {
         text = textCopy
         setSelection(start - marker.length, end - marker.length)
         return
@@ -104,38 +104,44 @@ private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
     val startLine = layout.getLineForOffset(start)
     val endLine = layout.getLineForOffset(end)
 
+    val removeMarkerActions = mutableListOf<() -> Unit>()
+    val addMarkerActions = mutableListOf<() -> Unit>()
+
     var startOffset = 0
     var endOffset = 0
+
     // go backwards to not alter index of earlier lines
     for (line in endLine downTo startLine) {
         val lineStart = layout.getLineStart(line)
         val lineIndex = line - startLine
 
-        // TODO: check for empty lines, then add marker only there
-
         // TODO: toggle between different list types
 
         // toggle: remove marker
-        if (removeLineMarker(textCopy, marker(lineIndex), lineStart)) {
-            endOffset -= marker(lineIndex).length
-            if (line == startLine) startOffset -= marker(startLine).length
+        if (isLineMarked(textCopy, marker(lineIndex), lineStart)) {
+            removeMarkerActions.add {
+                textCopy.delete(lineStart, lineStart + marker(lineIndex).length)
+                endOffset -= marker(lineIndex).length
+                if (line == startLine) startOffset -= marker(startLine).length
+            }
         }
         // toggle: add marker
         else {
-            textCopy.insert(lineStart, marker(lineIndex))
-            endOffset += marker(lineIndex).length
-            if (line == startLine) startOffset += marker(startLine).length
+            addMarkerActions.add {
+                textCopy.insert(lineStart, marker(lineIndex))
+                endOffset += marker(lineIndex).length
+                if (line == startLine) startOffset += marker(startLine).length
+            }
         }
     }
+
+    // prioritize toggling on unmarked lines before toggling off marked lines
+    if (addMarkerActions.size > 0) addMarkerActions.forEach { it() }
+    else removeMarkerActions.forEach { it() }
 
     text = textCopy
     setSelection(start + startOffset, end + endOffset)
 }
 
-private fun removeLineMarker(editable: Editable, marker: String, lineStart: Int): Boolean {
-    if (editable.substring(lineStart, lineStart + marker.length) == marker) {
-        editable.delete(lineStart, lineStart + marker.length)
-        return true
-    }
-    return false
-}
+private fun isLineMarked(editable: Editable, marker: String, lineStart: Int): Boolean =
+    editable.substring(lineStart, lineStart + marker.length) == marker
