@@ -8,6 +8,7 @@ import android.text.Layout
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.isGone
 import com.felwal.markana.R
 import com.google.android.material.snackbar.Snackbar
 
@@ -15,41 +16,15 @@ const val ANIM_DURATION = 100
 
 // visibility
 
-fun visibleOrNot(visible: Boolean): Int = if (visible) View.VISIBLE else View.INVISIBLE
-
-fun visibleOrGone(visible: Boolean): Int = if (visible) View.VISIBLE else View.GONE
-
 fun invisibleOrGone(invisible: Boolean): Int = if (invisible) View.INVISIBLE else View.GONE
-
-fun View.show() {
-    visibility = View.VISIBLE
-}
-
-fun View.hide() {
-    visibility = View.INVISIBLE
-}
-
-fun View.remove() {
-    visibility = View.GONE
-}
-
-fun View.showOrHide(show: Boolean) {
-    visibility = visibleOrNot(show)
-}
-
-fun View.showOrRemove(show: Boolean) {
-    visibility = visibleOrGone(show)
-}
 
 fun View.hideOrRemove(hide: Boolean) {
     visibility = invisibleOrGone(hide)
 }
 
-fun TextView.removeIfEmpty() = showOrRemove(text != "")
-
 fun TextView.setTextRemoveIfEmpty(value: String) {
     text = value
-    removeIfEmpty()
+    isGone = text == ""
 }
 
 // snackbar

@@ -14,8 +14,9 @@ data class Note(
     @ColumnInfo(name = "content") var content: String = "",
     @ColumnInfo(name = "modified") var modified: Long? = null,
     @ColumnInfo(name = "opened") var opened: Long? = modified,
+    @ColumnInfo(name = "pinned") var isPinned: Boolean = false,
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
-    @ColumnInfo(name = "treeId") var treeId: Int? = null,
+    @ColumnInfo(name = "tree_id") var treeId: Int? = null,
     @PrimaryKey(autoGenerate = true) var id: Int = NO_ID
 ) {
     @Ignore var isSelected: Boolean = false

@@ -7,16 +7,15 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.felwal.markana.App
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.databinding.ActivityNotelistBinding
-import com.felwal.markana.widget.dialog.BinaryDialog
-import com.felwal.markana.widget.dialog.binaryDialog
-import com.felwal.markana.prefs
 import com.felwal.markana.data.prefs.SortBy
+import com.felwal.markana.databinding.ActivityNotelistBinding
+import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
@@ -27,10 +26,11 @@ import com.felwal.markana.util.getInteger
 import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
-import com.felwal.markana.util.showOrRemove
 import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.updateTheme
 import com.felwal.markana.widget.FabMenu
+import com.felwal.markana.widget.dialog.BinaryDialog
+import com.felwal.markana.widget.dialog.binaryDialog
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
@@ -96,11 +96,13 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.apply {
             // set sorting
-            findItem(when (prefs.sortBy) {
-                SortBy.NAME -> R.id.action_sort_name
-                SortBy.MODIFIED -> R.id.action_sort_modified
-                SortBy.OPENED -> R.id.action_sort_opened
-            })?.isChecked = true
+            findItem(
+                when (prefs.sortBy) {
+                    SortBy.NAME -> R.id.action_sort_name
+                    SortBy.MODIFIED -> R.id.action_sort_modified
+                    SortBy.OPENED -> R.id.action_sort_opened
+                }
+            )?.isChecked = true
             findItem(R.id.action_sort_asc)?.isChecked = prefs.ascending
 
             // set gridView
@@ -171,10 +173,11 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         }
 
         // single selection tb
-        R.id.action_copy -> copySelection()
+        //R.id.action_copy -> copySelection()
 
         // multi selection tb
         android.R.id.home -> emptySelection()
+        R.id.action_pin -> pinSelection()
         R.id.action_unlink -> unlinkSelection()
         R.id.action_delete -> deleteSelection()
 
@@ -261,7 +264,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         adapter.submitList(items)
 
         // toggle empty page
-        binding.clEmpty.showOrRemove(items.isEmpty())
+        binding.clEmpty.isGone = items.isNotEmpty()
     }
 
     // fab
@@ -322,6 +325,26 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         binding.ctb.layoutParams = params
     }
 
+    // data: convenience
+
+    private fun copySelection() = copyNote(selectedNote)
+
+    private fun pinSelection() = pinNotes(model.selectedNotes)
+
+    private fun unlinkSelection() = binaryDialog(
+        title = getString(R.string.dialog_title_unlink_notes),
+        message = getString(R.string.dialog_msg_unlink_notes),
+        posBtnTxtRes = R.string.dialog_btn_unlink,
+        tag = DIALOG_UNLINK
+    ).show(supportFragmentManager)
+
+    private fun deleteSelection() = binaryDialog(
+        title = getString(R.string.dialog_title_delete_notes),
+        message = getString(R.string.dialog_msg_delete_notes),
+        posBtnTxtRes = R.string.dialog_btn_delete,
+        tag = DIALOG_DELETE
+    ).show(supportFragmentManager)
+
     // data
 
     private fun copyNote(note: Note?) {
@@ -333,6 +356,11 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         }*/
     }
 
+    private fun pinNotes(notes: List<Note>) {
+        model.pinNotes(notes)
+        emptySelection()
+    }
+
     private fun unlinkNotes(notes: List<Note>) {
         model.unlinkNotes(notes)
         emptySelection()
@@ -342,24 +370,6 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         model.deleteNotes(notes)
         emptySelection()
     }
-
-    // data: convenience
-
-    private fun copySelection() = copyNote(selectedNote)
-
-    private fun deleteSelection() = binaryDialog(
-        title = getString(R.string.dialog_title_delete_notes),
-        message = getString(R.string.dialog_msg_delete_notes),
-        posBtnTxtRes = R.string.dialog_btn_delete,
-        tag = DIALOG_DELETE
-    ).show(supportFragmentManager)
-
-    private fun unlinkSelection() = binaryDialog(
-        title = getString(R.string.dialog_title_unlink_notes),
-        message = getString(R.string.dialog_msg_unlink_notes),
-        posBtnTxtRes = R.string.dialog_btn_unlink,
-        tag = DIALOG_UNLINK
-    ).show(supportFragmentManager)
 
     // selection
 

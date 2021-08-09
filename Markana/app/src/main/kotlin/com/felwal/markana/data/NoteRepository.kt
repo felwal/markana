@@ -36,7 +36,7 @@ class NoteRepository(
 
     private suspend fun syncNote(uri: String) = withIO {
         saf.readFile(uri.toUri())?.let {
-            db.noteDao().updateNote(uri, it.filename, it.content)
+            db.noteDao().updateNoteContent(uri, it.filename, it.content)
         }
     }
 
@@ -56,13 +56,13 @@ class NoteRepository(
     // write
 
     suspend fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) = withIO {
-        saf.openFile(openDocumentLauncher)
         /** Saving to db is done in [handleOpenedDocument], which should be called from [openDocumentLauncher]. */
+        saf.openFile(openDocumentLauncher)
     }
 
     suspend fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) = withIO {
-        saf.openTree(openTreeLauncher, null)
         /** Saving to db is done in [handleOpenedDocumentTree], which should be called from [openTreeLauncher]. */
+        saf.openTree(openTreeLauncher, null)
     }
 
     suspend fun createNote(createDocumentLauncher: ActivityResultLauncher<String>) = withIO {
@@ -73,6 +73,12 @@ class NoteRepository(
         db.noteDao().addOrUpdateNote(note)
         saf.writeFile(note)
         if (rename) saf.renameFile(note.uri.toUri(), note.filename)
+    }
+
+    suspend fun updateNoteMetadata(vararg notes: Note) = withIO {
+        for (note in notes) {
+            db.noteDao().updateNoteMetadata(note.uri, note.isPinned)
+        }
     }
 
     suspend fun unlinkNotes(uris: List<String>) = withIO {

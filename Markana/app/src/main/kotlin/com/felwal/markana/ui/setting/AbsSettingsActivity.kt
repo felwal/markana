@@ -6,11 +6,17 @@ import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.core.view.updateLayoutParams
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemSettingsHeaderBinding
 import com.felwal.markana.databinding.ItemSettingsSwitchBinding
 import com.felwal.markana.databinding.ItemSettingsTextBinding
+import com.felwal.markana.util.enableRipple
+import com.felwal.markana.util.getDimension
+import com.felwal.markana.util.getDrawableCompat
+import com.felwal.markana.util.hideOrRemove
+import com.felwal.markana.util.setTextRemoveIfEmpty
 import com.felwal.markana.widget.dialog.BaseDialog
 import com.felwal.markana.widget.dialog.NO_RES
 import com.felwal.markana.widget.dialog.binaryDialog
@@ -18,12 +24,6 @@ import com.felwal.markana.widget.dialog.decimalDialog
 import com.felwal.markana.widget.dialog.radioDialog
 import com.felwal.markana.widget.dialog.textDialog
 import com.felwal.markana.widget.dialog.unaryDialog
-import com.felwal.markana.util.enableRipple
-import com.felwal.markana.util.getDimension
-import com.felwal.markana.util.getDrawableCompat
-import com.felwal.markana.util.hideOrRemove
-import com.felwal.markana.util.setTextRemoveIfEmpty
-import com.felwal.markana.util.showOrHide
 
 abstract class AbsSettingsActivity(
     private val dividerMode: DividerMode,
@@ -298,7 +298,7 @@ abstract class AbsSettingsActivity(
 
             // view
             root.enableRipple(this@AbsSettingsActivity)
-            vDivider.showOrHide(!hideDivider)
+            vDivider.isInvisible = hideDivider
 
             // icon
             if (iconRes != NO_RES) {
@@ -316,19 +316,19 @@ abstract class AbsSettingsActivity(
     ): ItemSettingsSwitchBinding =
         ItemSettingsSwitchBinding.inflate(layoutInflater, llItemContainer, true).apply {
 
-        // text
-        tvTitle.text = title
-        tvDesc.setTextRemoveIfEmpty(desc)
+            // text
+            tvTitle.text = title
+            tvDesc.setTextRemoveIfEmpty(desc)
 
-        // view
-        root.enableRipple(this@AbsSettingsActivity)
-        vDivider.showOrHide(!hideDivider)
+            // view
+            root.enableRipple(this@AbsSettingsActivity)
+            vDivider.isInvisible = hideDivider
 
-        // icon
-        if (iconRes != NO_RES) {
-            val icon = getDrawableCompat(iconRes)
-            ivIcon.setImageDrawable(icon)
+            // icon
+            if (iconRes != NO_RES) {
+                val icon = getDrawableCompat(iconRes)
+                ivIcon.setImageDrawable(icon)
+            }
+            else ivIcon.hideOrRemove(indentEverything)
         }
-        else ivIcon.hideOrRemove(indentEverything)
-    }
 }

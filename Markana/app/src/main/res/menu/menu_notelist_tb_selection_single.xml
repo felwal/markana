@@ -4,10 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.felwal.markana.ui.notelist.NoteListActivity">
 
+    <!--
     <item
         android:id="@+id/action_copy"
         android:title="@string/action_copy"
         android:icon="@drawable/ic_copy_file"
+        app:showAsAction="ifRoom" />
+    -->
+
+    <item
+        android:id="@+id/action_pin"
+        android:title="@string/action_pin"
+        android:icon="@drawable/ic_pin"
         app:showAsAction="ifRoom" />
 
     <item

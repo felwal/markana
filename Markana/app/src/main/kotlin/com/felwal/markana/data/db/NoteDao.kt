@@ -33,7 +33,10 @@ interface NoteDao {
     fun updateNote(vararg notes: Note)
 
     @Query("UPDATE notes SET filename = :filename, content = :content WHERE uri = :uri")
-    fun updateNote(uri: String, filename: String, content: String)
+    fun updateNoteContent(uri: String, filename: String, content: String)
+
+    @Query("UPDATE notes SET pinned = :isPinned WHERE uri = :uri")
+    fun updateNoteMetadata(uri: String, isPinned: Boolean)
 
     @Delete
     fun deleteNote(vararg notes: Note)
@@ -41,10 +44,12 @@ interface NoteDao {
     @Query("DELETE FROM notes WHERE uri = :uri")
     fun deleteNote(uri: String)
 
-    @Query("DELETE FROM notes WHERE treeId = :treeId")
+    @Query("DELETE FROM notes WHERE tree_id = :treeId")
     fun deleteNotes(treeId: Int)
 
     // read
+
+    fun doesNoteExist(uri: String) = getNote(uri) != null
 
     @Query("SELECT * FROM notes WHERE uri = :uri LIMIT 1")
     fun getNote(uri: String): Note?
@@ -52,13 +57,11 @@ interface NoteDao {
     fun getNotes(sortBy: SortBy, asc: Boolean): List<Note> =
         getNotesQuery(SimpleSQLiteQuery("SELECT * FROM notes" + orderBy(sortBy, asc)))
 
-    @Query("SELECT uri FROM notes")
-    fun getUris(): List<String>
-
-    fun doesNoteExist(uri: String) = getNote(uri) != null
-
     @RawQuery
     fun getNotesQuery(sortQuery: SupportSQLiteQuery?): List<Note>
+
+    @Query("SELECT uri FROM notes")
+    fun getUris(): List<String>
 
     fun getUris(sortBy: SortBy, asc: Boolean): List<String> =
         getUrisQuery(SimpleSQLiteQuery("SELECT uri FROM notes" + orderBy(sortBy, asc)))
@@ -71,9 +74,9 @@ interface NoteDao {
 
     // tool
 
-    fun orderBy(sortBy: SortBy, asc: Boolean) = " ORDER BY " + when (sortBy) {
-        SortBy.NAME -> "lower(filename), filename"
-        SortBy.MODIFIED -> "modified"
-        SortBy.OPENED -> "opened"
+    private fun orderBy(sortBy: SortBy, asc: Boolean) = " ORDER BY " + when (sortBy) {
+        SortBy.NAME -> "pinned DESC, lower(filename), filename"
+        SortBy.MODIFIED -> "pinned DESC, modified"
+        SortBy.OPENED -> "pinned DESC, opened"
     } + if (asc) " ASC" else " DESC"
 }

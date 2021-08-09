@@ -36,9 +36,10 @@
     <!-- icon size -->
 
     <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_launcher">108dp</dimen>
     <dimen name="icon_viewport_size">24.0</dimen>
-    <dimen name="icon_launcher_size">108dp</dimen>
-    <dimen name="icon_launcher_viewport_size">108</dimen>
+    <dimen name="icon_viewport_size_launcher">108</dimen>
 
     <!-- elevation -->
 

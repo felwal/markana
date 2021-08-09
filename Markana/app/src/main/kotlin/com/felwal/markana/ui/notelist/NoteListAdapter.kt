@@ -6,14 +6,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.databinding.ItemRecyclerGridNoteBinding
-import com.felwal.markana.databinding.ItemRecyclerListNoteBinding
+import com.felwal.markana.databinding.ItemNotelistGridNoteBinding
+import com.felwal.markana.databinding.ItemNotelistListNoteBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.data.prefs.SortBy
 import com.felwal.markana.util.FORMATTER_EARLIER
@@ -38,11 +40,11 @@ class NoteListAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return if (prefs.gridView) {
-            val binding = ItemRecyclerGridNoteBinding.inflate(inflater)
+            val binding = ItemNotelistGridNoteBinding.inflate(inflater)
             GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
         }
         else {
-            val binding = ItemRecyclerListNoteBinding.inflate(inflater)
+            val binding = ItemNotelistListNoteBinding.inflate(inflater)
             ListNoteViewHolder(parent.context, binding, onClick, onLongClick)
         }
 
@@ -58,14 +60,11 @@ class NoteListAdapter(
 
     class GridNoteViewHolder(
         c: Context,
-        binding: ItemRecyclerGridNoteBinding,
-        val onClick: (Note) -> Unit,
-        val onLongClick: (Note) -> Unit
+        private val binding: ItemNotelistGridNoteBinding,
+        private val onClick: (Note) -> Unit,
+        private val onLongClick: (Note) -> Unit
     ) : SelectableViewHolder(c, binding, binding.clNote) {
 
-        private val tvUri: TextView = binding.tvUri
-        private val tvTitle: TextView = binding.tvTitle
-        private val tvBody: TextView = binding.tvBody
         private var currentNote: Note? = null
 
         init {
@@ -81,23 +80,23 @@ class NoteListAdapter(
         fun bind(note: Note) {
             currentNote = note
 
-            tvUri.text = note.uri
-            tvTitle.text = note.filename
-            tvBody.text = note.content.trim() // TODO: dont get the full string
+            binding.tvUri.text = note.uri
+            binding.tvTitle.text = note.filename
+            binding.tvBody.text = note.content.trim() // TODO: dont get the full string
 
+            // mark selected and pinned
             markSelection(note.isSelected)
+            binding.ivPin.isInvisible = !note.isPinned
         }
     }
 
     class ListNoteViewHolder(
         c: Context,
-        binding: ItemRecyclerListNoteBinding,
-        val onClick: (Note) -> Unit,
-        val onLongClick: (Note) -> Unit
+        private val binding: ItemNotelistListNoteBinding,
+        private val onClick: (Note) -> Unit,
+        private val onLongClick: (Note) -> Unit
     ) : SelectableViewHolder(c, binding, binding.clNote) {
 
-        private val tvTitle: TextView = binding.tvTitle
-        private val tvModified: TextView = binding.tvModified
         private var currentNote: Note? = null
 
         init {
@@ -113,8 +112,8 @@ class NoteListAdapter(
         fun bind(note: Note) {
             currentNote = note
 
-            tvTitle.text = note.filename
-            tvModified.text =
+            binding.tvTitle.text = note.filename
+            binding.tvModified.text =
                 if (prefs.sortBy == SortBy.OPENED) {
                     "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
                 }
@@ -122,7 +121,9 @@ class NoteListAdapter(
                     "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
                 }
 
+            // mark selected and pinned
             markSelection(note.isSelected)
+            binding.ivPin.isInvisible = !note.isPinned
         }
     }
 

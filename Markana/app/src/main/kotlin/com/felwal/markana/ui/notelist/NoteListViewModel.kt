@@ -61,6 +61,18 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
+    fun pinNotes(notes: List<Note>) {
+        viewModelScope.launch {
+            // determine if to unpin all or pin those not already pinned
+            val unpinAll = notes.all { it.isPinned }
+            // apply
+            for (note in notes) note.isPinned = !unpinAll
+
+            repo.updateNoteMetadata(*notes.toTypedArray())
+            loadNotes()
+        }
+    }
+
     fun unlinkNotes(notes: List<Note>) {
         viewModelScope.launch {
             repo.unlinkNotes(notes.map { it.uri })

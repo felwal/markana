@@ -15,6 +15,7 @@
     <string name="action_redo">Redo</string>
     <string name="action_delete">Delete</string>
     <string name="action_unlink">Unlink</string>
+    <string name="action_pin">Pin/unpin</string>
     <string name="action_copy">Copy</string>
     <string name="action_bold">Bold</string>
     <string name="action_italic">Italic</string>

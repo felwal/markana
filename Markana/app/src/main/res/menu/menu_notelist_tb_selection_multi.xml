@@ -5,6 +5,12 @@
     tools:context="com.felwal.markana.ui.notelist.NoteListActivity">
 
     <item
+        android:id="@+id/action_pin"
+        android:title="@string/action_pin"
+        android:icon="@drawable/ic_pin"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_unlink"
         android:title="@string/action_unlink"
         android:icon="@drawable/ic_unlink"
