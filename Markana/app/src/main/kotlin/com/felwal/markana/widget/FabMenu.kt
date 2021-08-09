@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemFabMenuBinding
 import com.felwal.markana.databinding.ItemFabMenuItemBinding
@@ -20,7 +19,8 @@ import com.felwal.markana.databinding.ItemFabMenuOverlayBinding
 import com.felwal.markana.util.ANIM_DURATION
 import com.felwal.markana.util.crossfadeIn
 import com.felwal.markana.util.crossfadeOut
-import com.felwal.markana.util.getAttrColor
+import com.felwal.markana.util.getColorByAttr
+import com.felwal.markana.util.getDrawableCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 const val OVERLAY_ALPHA = 0.96f
@@ -92,8 +92,8 @@ class FabMenu(
     }
 
     private fun animateFab() {
-        @ColorInt val closedColor: Int = context.getAttrColor(R.attr.colorSecondary)
-        @ColorInt val openColor: Int = context.getAttrColor(R.attr.colorSurface)
+        @ColorInt val closedColor: Int = context.getColorByAttr(R.attr.colorSecondary)
+        @ColorInt val openColor: Int = context.getColorByAttr(R.attr.colorSurface)
 
         @ColorInt val fromColor: Int
         @ColorInt val toColor: Int
@@ -103,15 +103,15 @@ class FabMenu(
         if (isFabMenuOpen) {
             fromColor = openColor
             toColor = closedColor
-            toIcon = ContextCompat.getDrawable(context, R.drawable.ic_add)?.mutate()
-            toIcon?.setColorFilter(context.getAttrColor(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
+            toIcon = context.getDrawableCompat(R.drawable.ic_add)?.mutate()
+            toIcon?.setColorFilter(context.getColorByAttr(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
         }
         // animate to open menu
         else {
             fromColor = closedColor
             toColor = openColor
-            toIcon = ContextCompat.getDrawable(context, R.drawable.ic_clear)?.mutate()
-            toIcon?.setColorFilter(context.getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+            toIcon = context.getDrawableCompat(R.drawable.ic_clear)?.mutate()
+            toIcon?.setColorFilter(context.getColorByAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
         }
 
         binding.fab.animateFab(fromColor, toColor, toIcon)

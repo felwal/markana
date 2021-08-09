@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.felwal.markana.App
@@ -22,7 +21,10 @@ import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
 import com.felwal.markana.util.empty
-import com.felwal.markana.util.getAttrColor
+import com.felwal.markana.util.getColorByAttr
+import com.felwal.markana.util.getDrawableCompat
+import com.felwal.markana.util.getInteger
+import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.showOrRemove
@@ -70,11 +72,11 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // init tb
+        // init t
         setSupportActionBar(binding.tb)
-        val homeIcon = ContextCompat.getDrawable(this, R.drawable.ic_cancel)?.mutate()
+        val homeIcon = getDrawableCompat(R.drawable.ic_cancel)?.mutate()
         homeIcon?.let {
-            it.setColorFilter(getAttrColor(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+            it.setColorFilter(getColorByAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
             supportActionBar?.setHomeAsUpIndicator(it)
         }
 
@@ -209,8 +211,8 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
 
     private fun initRefreshLayout() {
         binding.srl.setOnRefreshListener(this)
-        binding.srl.setProgressBackgroundColorSchemeColor(getAttrColor(android.R.attr.colorBackground))
-        binding.srl.setColorSchemeColors(getAttrColor(R.attr.colorControlActivated))
+        binding.srl.setProgressBackgroundColorSchemeColor(getColorByAttr(android.R.attr.colorBackground))
+        binding.srl.setColorSchemeColors(getColorByAttr(R.attr.colorControlActivated))
     }
 
     override fun onRefresh() {
@@ -249,9 +251,9 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         binding.rv.adapter = adapter
 
         // set manager
-        val spanCount = if (!prefs.gridView) resources.getInteger(R.integer.quantity_notelist_list_columns)
-        else if (isPortrait) resources.getInteger(R.integer.quantity_notelist_grid_columns_portrait)
-        else resources.getInteger(R.integer.quantity_notelist_grid_columns_landscape)
+        val spanCount = if (!prefs.gridView) getInteger(R.integer.quantity_notelist_list_columns)
+        else if (isPortrait) getInteger(R.integer.quantity_notelist_grid_columns_portrait)
+        else getInteger(R.integer.quantity_notelist_grid_columns_landscape)
         binding.rv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
     }
 
@@ -265,33 +267,33 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     // fab
 
     private fun initFabMenu() {
-        fabMenu = FabMenu(this, layoutInflater, binding.root)
+        fabMenu = FabMenu(this, layoutInflater, binding.root).apply {
+            // create note
+            addItem(
+                getString(R.string.tv_fab_create),
+                getDrawableCompat(R.drawable.ic_create)
+            ) {
+                emptySelection()
+                NoteDetailActivity.startActivity(this@NoteListActivity)
+            }
 
-        // create note
-        fabMenu.addItem(
-            getString(R.string.tv_fab_create),
-            ContextCompat.getDrawable(this, R.drawable.ic_create)
-        ) {
-            emptySelection()
-            NoteDetailActivity.startActivity(this)
-        }
+            // link note
+            addItem(
+                getString(R.string.tv_fab_link),
+                getDrawableCompat(R.drawable.ic_link)
+            ) {
+                emptySelection()
+                model.linkNote(openDocument)
+            }
 
-        // link note
-        fabMenu.addItem(
-            getString(R.string.tv_fab_link),
-            ContextCompat.getDrawable(this, R.drawable.ic_link)
-        ) {
-            emptySelection()
-            model.linkNote(openDocument)
-        }
-
-        // link folder
-        fabMenu.addItem(
-            getString(R.string.tv_fab_link_folder),
-            ContextCompat.getDrawable(this, R.drawable.ic_folder_add)
-        ) {
-            emptySelection()
-            model.linkFolder(openDocumentTree)
+            // link folder
+            addItem(
+                getString(R.string.tv_fab_link_folder),
+                getDrawableCompat(R.drawable.ic_folder_add)
+            ) {
+                emptySelection()
+                model.linkFolder(openDocumentTree)
+            }
         }
     }
 
@@ -303,7 +305,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         }
         else {
             supportActionBar?.title =
-                resources.getQuantityString(R.plurals.tb_notelist_title_selection, selectionCount, selectionCount)
+                getQuantityString(R.plurals.tb_notelist_title_selection, selectionCount, selectionCount)
         }
     }
 

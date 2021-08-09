@@ -101,15 +101,6 @@ fun <C> C.popup(
         show()
     }
 
-// res
-
-@ColorInt
-fun Context.getAttrColor(@AttrRes attrRes: Int): Int {
-    val typedValue = TypedValue()
-    theme.resolveAttribute(attrRes, typedValue, true)
-    return typedValue.data
-}
-
 // coroutines
 
 suspend fun <T> withUI(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.Main, block)

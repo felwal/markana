@@ -6,7 +6,6 @@ import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.updateLayoutParams
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemSettingsHeaderBinding
@@ -20,6 +19,8 @@ import com.felwal.markana.widget.dialog.radioDialog
 import com.felwal.markana.widget.dialog.textDialog
 import com.felwal.markana.widget.dialog.unaryDialog
 import com.felwal.markana.util.enableRipple
+import com.felwal.markana.util.getDimension
+import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.hideOrRemove
 import com.felwal.markana.util.setTextRemoveIfEmpty
 import com.felwal.markana.util.showOrHide
@@ -66,8 +67,8 @@ abstract class AbsSettingsActivity(
         if (indentEverything) {
             itemBinding.tv.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 // parent to iv + iv width + iv to tv
-                marginStart = resources.getDimension(R.dimen.spacing_small).toInt() + 24 +
-                    resources.getDimension(R.dimen.spacing_large).toInt()
+                marginStart = getDimension(R.dimen.spacing_small).toInt() + 24 +
+                    getDimension(R.dimen.spacing_large).toInt()
             }
         }
     }
@@ -138,7 +139,7 @@ abstract class AbsSettingsActivity(
 
             // icon
             if (iconRes != NO_RES) {
-                val icon = AppCompatResources.getDrawable(this@AbsSettingsActivity, iconRes)
+                val icon = getDrawableCompat(iconRes)
                 ivIcon.setImageDrawable(icon)
             }
             else ivIcon.hideOrRemove(indentEverything)
@@ -162,7 +163,7 @@ abstract class AbsSettingsActivity(
 
         // icon
         if (iconRes != NO_RES) {
-            val icon = AppCompatResources.getDrawable(this@AbsSettingsActivity, iconRes)
+            val icon = getDrawableCompat(iconRes)
             ivIcon.setImageDrawable(icon)
         }
         else ivIcon.hideOrRemove(indentEverything)
