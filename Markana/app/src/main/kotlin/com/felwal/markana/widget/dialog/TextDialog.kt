@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
+import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogTextBinding
 import com.felwal.markana.util.string
 
@@ -68,12 +69,15 @@ class TextDialog : BaseDialog() {
 }
 
 fun textDialog(
-    title: String, message: String = "",
-    text: String = "", hint: String = "",
-    @StringRes posBtnTxtRes: Int,
+    title: String,
+    message: String = "",
+    text: String = "",
+    hint: String = "",
+    @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+    @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
 ): TextDialog = TextDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, tag).apply {
+    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
         putString(ARG_TEXT, text)
         putString(ARG_HINT, hint)
     }

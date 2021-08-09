@@ -78,12 +78,15 @@ class DecimalDialog : BaseDialog() {
 }
 
 fun decimalDialog(
-    title: String, message: String = "",
-    text: Float = NO_FLOAT_TEXT, hint: String = "",
-    @StringRes posBtnTxtRes: Int,
+    title: String,
+    message: String = "",
+    text: Float = NO_FLOAT_TEXT,
+    hint: String = "",
+    @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+    @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
 ): DecimalDialog = DecimalDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, tag).apply {
+    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
         putFloat(ARG_TEXT, text)
         putString(ARG_HINT, hint)
     }

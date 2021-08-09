@@ -47,13 +47,16 @@ abstract class BaseDialog : DialogFragment() {
     // bundle
 
     fun putBaseBundle(
-        title: String, message: String,
-        @StringRes posBtnTxtRes: Int,
+        title: String,
+        message: String,
+        @StringRes posBtnTxtRes: Int = this.posBtnTxtRes,
+        @StringRes negBtnTxtRes: Int = this.negBtnTxtRes,
         tag: String
     ): Bundle = Bundle().apply {
         putString(ARG_TITLE, title)
         putString(ARG_MESSAGE, message)
         putInt(ARG_POSITIVE_BUTTON_RES, posBtnTxtRes)
+        putInt(ARG_NEGATIVE_BUTTON_RES, negBtnTxtRes)
         putString(ARG_TAG, tag)
     }
 
@@ -90,12 +93,12 @@ fun AlertDialog.Builder.setCancelButton(@StringRes resId: Int): AlertDialog.Buil
         dialog.cancel()
     }
 
-fun AlertDialog.setTitleTextAppearance(res: Resources, @StyleRes resId: Int) {
+fun AlertDialog.setTitleTextAppearance(res: Resources, @StyleRes resId: Int) =
     res.getIdentifier("alertTitle", "id", "android")
-        .takeIf { it > 0 }?.let { titleId ->
+        .takeIf { it > 0 }
+        ?.let { titleId ->
             findViewById<TextView>(titleId)?.setTextAppearance(resId)
         }
-}
 
 fun AlertDialog.setMessageTextAppearance(@StyleRes resId: Int) =
     findViewById<TextView>(android.R.id.message)?.setTextAppearance(resId)

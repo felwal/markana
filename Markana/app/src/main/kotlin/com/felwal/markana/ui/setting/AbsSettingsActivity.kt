@@ -37,7 +37,7 @@ abstract class AbsSettingsActivity(
         IN_SECTION
     }
 
-    abstract val ll: LinearLayout
+    abstract val llItemContainer: LinearLayout
 
     // inflate
 
@@ -47,126 +47,14 @@ abstract class AbsSettingsActivity(
     protected abstract fun inflateViews()
 
     protected fun reflateViews() {
-        ll.removeAllViews()
+        llItemContainer.removeAllViews()
         inflateViews()
     }
 
     protected fun inflateSections(vararg sections: ItemSection) {
         for ((index, section) in sections.withIndex()) {
-            section.inflate(index == sections.size - 1)
+            section.inflate(lastSection = index == sections.size - 1)
         }
-    }
-
-    // inflate item
-
-    private fun inflateHeader(title: String) {
-        val itemBinding = ItemSettingsHeaderBinding.inflate(layoutInflater, ll, true)
-        itemBinding.tv.text = title
-
-        // set start margin
-        if (indentEverything) {
-            itemBinding.tv.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                // parent to iv + iv width + iv to tv
-                marginStart = getDimension(R.dimen.spacing_small).toInt() + 24 +
-                    getDimension(R.dimen.spacing_large).toInt()
-            }
-        }
-    }
-
-    protected fun inflateDialogItem(
-        title: String,
-        value: String,
-        hideDivider: Boolean,
-        @DrawableRes iconRes: Int,
-        dialog: BaseDialog
-    ) {
-        val itemBinding = inflateTextView(title, value, hideDivider, iconRes)
-        itemBinding.root.setOnClickListener {
-            dialog.show(supportFragmentManager)
-        }
-    }
-
-    protected fun inflateSwitchItem(
-        title: String,
-        descOn: String,
-        descOff: String,
-        checked: Boolean,
-        hideDivider: Boolean,
-        @DrawableRes iconRes: Int,
-        onSwitch: (checked: Boolean) -> Unit
-    ) {
-        val desc = if (checked) descOn else descOff
-        val itemBinding = inflateSwitchView(title, desc, hideDivider, iconRes)
-        itemBinding.sw.isChecked = checked
-
-        itemBinding.root.setOnClickListener {
-            itemBinding.sw.isChecked = !itemBinding.sw.isChecked
-            onSwitch(itemBinding.sw.isChecked)
-
-            // update desc
-            val newDesc = if (itemBinding.sw.isChecked) descOn else descOff
-            itemBinding.tvDesc.setTextRemoveIfEmpty(newDesc)
-        }
-    }
-
-    protected fun inflateClickItem(
-        title: String,
-        value: String,
-        hideDivider: Boolean,
-        @DrawableRes iconRes: Int,
-        listener: View.OnClickListener?
-    ) {
-        val itemBinding = inflateTextView(title, value, hideDivider, iconRes)
-        itemBinding.root.setOnClickListener(listener)
-    }
-
-    // inflate view
-
-    private fun inflateTextView(
-        title: String,
-        value: String,
-        hideDivider: Boolean,
-        @DrawableRes iconRes: Int
-    ): ItemSettingsTextBinding =
-        ItemSettingsTextBinding.inflate(layoutInflater, ll, true).apply {
-            // text
-            tvTitle.text = title
-            tvValue.setTextRemoveIfEmpty(value)
-
-            // view
-            root.enableRipple(this@AbsSettingsActivity)
-            vDivider.showOrHide(!hideDivider)
-
-            // icon
-            if (iconRes != NO_RES) {
-                val icon = getDrawableCompat(iconRes)
-                ivIcon.setImageDrawable(icon)
-            }
-            else ivIcon.hideOrRemove(indentEverything)
-        }
-
-    private fun inflateSwitchView(
-        title: String,
-        desc: String,
-        hideDivider: Boolean,
-        @DrawableRes iconRes: Int
-    ): ItemSettingsSwitchBinding =
-        ItemSettingsSwitchBinding.inflate(layoutInflater, ll, true).apply {
-
-        // text
-        tvTitle.text = title
-        tvDesc.setTextRemoveIfEmpty(desc)
-
-        // view
-        root.enableRipple(this@AbsSettingsActivity)
-        vDivider.showOrHide(!hideDivider)
-
-        // icon
-        if (iconRes != NO_RES) {
-            val icon = getDrawableCompat(iconRes)
-            ivIcon.setImageDrawable(icon)
-        }
-        else ivIcon.hideOrRemove(indentEverything)
     }
 
     // item
@@ -196,11 +84,11 @@ abstract class AbsSettingsActivity(
 
     protected inner class BooleanItem(
         title: String,
-        val descOn: String = "",
-        val descOff: String = descOn,
-        val value: Boolean,
+        private val descOn: String = "",
+        private val descOff: String = descOn,
+        private val value: Boolean,
         @DrawableRes iconRes: Int = NO_RES,
-        val onSwitch: (checked: Boolean) -> Unit
+        private val onSwitch: (checked: Boolean) -> Unit
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
@@ -210,45 +98,55 @@ abstract class AbsSettingsActivity(
 
     protected inner class StringItem(
         title: String,
-        val desc: String = "",
-        val value: String,
-        val hint: String,
+        private val desc: String = "",
+        private val value: String,
+        private val hint: String,
         @DrawableRes iconRes: Int = NO_RES,
-        val tag: String
+        private val tag: String
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, value, hideDivider, iconRes,
-                textDialog(title, desc, value, hint, R.string.dialog_btn_set, tag)
+                textDialog(
+                    title = title, message = desc,
+                    text = value, hint = hint,
+                    posBtnTxtRes = R.string.dialog_btn_set,
+                    tag = tag
+                )
             )
         }
     }
 
     protected inner class FloatItem(
         title: String,
-        val desc: String = "",
-        val value: Float,
-        val hint: String,
+        private val desc: String = "",
+        private val value: Float,
+        private val hint: String,
         @DrawableRes iconRes: Int = NO_RES,
-        val tag: String
+        private val tag: String
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, value.toString(), hideDivider, iconRes,
-                decimalDialog(title, desc, value, hint, R.string.dialog_btn_set, tag)
+                decimalDialog(
+                    title = title, message = desc,
+                    text = value, hint = hint,
+                    posBtnTxtRes = R.string.dialog_btn_set,
+                    tag = tag
+                )
             )
         }
     }
 
     protected inner class SingleSelectionItem(
         title: String,
-        val desc: String = "",
-        val values: List<String>,
-        val selectedIndex: Int,
+        private val desc: String = "",
+        private val values: List<String>,
+        private val selectedIndex: Int,
         @DrawableRes iconRes: Int = NO_RES,
-        val tag: String
+        private val tag: String
     ) : SettingItem(title, iconRes) {
 
         val value: String get() = values[selectedIndex]
@@ -256,33 +154,41 @@ abstract class AbsSettingsActivity(
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, value, hideDivider, iconRes,
-                radioDialog(title, desc, values, selectedIndex, tag)
+                radioDialog(
+                    title = title, message = desc,
+                    radioButtonTexts = values, selectedIndex = selectedIndex,
+                    tag = tag
+                )
             )
         }
     }
 
-    protected inner class ActionItem(
+    protected inner class ConfirmationItem(
         title: String,
-        val desc: String = "",
+        private val desc: String = "",
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogPosBtnRes: Int,
-        val tag: String
+        @StringRes private val dialogPosBtnRes: Int,
+        private val tag: String
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, "", hideDivider, iconRes,
-                binaryDialog(title, desc, dialogPosBtnRes, tag)
+                binaryDialog(
+                    title = title, message = desc,
+                    posBtnTxtRes = dialogPosBtnRes,
+                    tag = tag
+                )
             )
         }
     }
 
     protected inner class InfoItem(
         title: String,
-        val desc: String = "",
+        private val desc: String = "",
         @DrawableRes iconRes: Int = NO_RES,
-        @StringRes val dialogBtnRes: Int,
-        val tag: String
+        @StringRes private val dialogBtnRes: Int,
+        private val tag: String
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
@@ -293,15 +199,16 @@ abstract class AbsSettingsActivity(
         }
     }
 
-    protected inner class SubSettingsItem(
+    protected inner class ActionItem(
         title: String,
-        val desc: String = "",
+        private val desc: String = "",
         @DrawableRes iconRes: Int = NO_RES,
+        private val onClick: () -> Unit
     ) : SettingItem(title, iconRes) {
 
         override fun inflate(hideDivider: Boolean) {
             inflateClickItem(title, desc, hideDivider, iconRes) {
-                //launchActivity<>() // TODO
+                onClick()
             }
         }
     }
@@ -311,5 +218,117 @@ abstract class AbsSettingsActivity(
         @DrawableRes val iconRes: Int
     ) {
         abstract fun inflate(hideDivider: Boolean)
+    }
+
+    // inflate item
+
+    private fun inflateHeader(title: String) {
+        val itemBinding = ItemSettingsHeaderBinding.inflate(layoutInflater, llItemContainer, true)
+        itemBinding.tv.text = title
+
+        // set start margin
+        if (indentEverything) {
+            itemBinding.tv.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                // parent to iv + iv width + iv to tv
+                marginStart = getDimension(R.dimen.spacing_small).toInt() + 24 +
+                    getDimension(R.dimen.spacing_large).toInt()
+            }
+        }
+    }
+
+    private fun inflateDialogItem(
+        title: String,
+        value: String,
+        hideDivider: Boolean,
+        @DrawableRes iconRes: Int,
+        dialog: BaseDialog
+    ) {
+        val itemBinding = inflateTextView(title, value, hideDivider, iconRes)
+        itemBinding.root.setOnClickListener {
+            dialog.show(supportFragmentManager)
+        }
+    }
+
+    private fun inflateSwitchItem(
+        title: String,
+        descOn: String,
+        descOff: String,
+        checked: Boolean,
+        hideDivider: Boolean,
+        @DrawableRes iconRes: Int,
+        onSwitch: (checked: Boolean) -> Unit
+    ) {
+        val desc = if (checked) descOn else descOff
+        val itemBinding = inflateSwitchView(title, desc, hideDivider, iconRes)
+        itemBinding.sw.isChecked = checked
+
+        itemBinding.root.setOnClickListener {
+            itemBinding.sw.isChecked = !itemBinding.sw.isChecked
+            onSwitch(itemBinding.sw.isChecked)
+
+            // update desc
+            val newDesc = if (itemBinding.sw.isChecked) descOn else descOff
+            itemBinding.tvDesc.setTextRemoveIfEmpty(newDesc)
+        }
+    }
+
+    private fun inflateClickItem(
+        title: String,
+        value: String,
+        hideDivider: Boolean,
+        @DrawableRes iconRes: Int,
+        listener: View.OnClickListener?
+    ) {
+        val itemBinding = inflateTextView(title, value, hideDivider, iconRes)
+        itemBinding.root.setOnClickListener(listener)
+    }
+
+    // inflate view
+
+    private fun inflateTextView(
+        title: String,
+        value: String,
+        hideDivider: Boolean,
+        @DrawableRes iconRes: Int
+    ): ItemSettingsTextBinding =
+        ItemSettingsTextBinding.inflate(layoutInflater, llItemContainer, true).apply {
+            // text
+            tvTitle.text = title
+            tvValue.setTextRemoveIfEmpty(value)
+
+            // view
+            root.enableRipple(this@AbsSettingsActivity)
+            vDivider.showOrHide(!hideDivider)
+
+            // icon
+            if (iconRes != NO_RES) {
+                val icon = getDrawableCompat(iconRes)
+                ivIcon.setImageDrawable(icon)
+            }
+            else ivIcon.hideOrRemove(indentEverything)
+        }
+
+    private fun inflateSwitchView(
+        title: String,
+        desc: String,
+        hideDivider: Boolean,
+        @DrawableRes iconRes: Int
+    ): ItemSettingsSwitchBinding =
+        ItemSettingsSwitchBinding.inflate(layoutInflater, llItemContainer, true).apply {
+
+        // text
+        tvTitle.text = title
+        tvDesc.setTextRemoveIfEmpty(desc)
+
+        // view
+        root.enableRipple(this@AbsSettingsActivity)
+        vDivider.showOrHide(!hideDivider)
+
+        // icon
+        if (iconRes != NO_RES) {
+            val icon = getDrawableCompat(iconRes)
+            ivIcon.setImageDrawable(icon)
+        }
+        else ivIcon.hideOrRemove(indentEverything)
     }
 }

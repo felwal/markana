@@ -56,12 +56,14 @@ class BinaryDialog : BaseDialog() {
 }
 
 fun binaryDialog(
-    title: String, message: String = "",
+    title: String,
+    message: String = "",
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+    @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String,
     passValue: String? = null
 ): BinaryDialog = BinaryDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, tag).apply {
+    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
         putString(ARG_PASS_VALUE, passValue)
     }
 }

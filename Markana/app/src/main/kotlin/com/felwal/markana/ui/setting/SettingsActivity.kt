@@ -28,11 +28,12 @@ open class SettingsActivity : AbsSettingsActivity(
 ),
     RadioDialog.DialogListener,
     TextDialog.DialogListener,
-    UnaryDialog.DialogListener {
+    UnaryDialog.DialogListener
+{
 
     private lateinit var binding: ActivitySettingsBinding
 
-    override val ll: LinearLayout get() = binding.ll
+    override val llItemContainer: LinearLayout get() = binding.ll
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateTheme()
@@ -66,9 +67,9 @@ open class SettingsActivity : AbsSettingsActivity(
     override fun inflateViews() {
         inflateSections(
             ItemSection(
-                getString(R.string.tv_settings_header_appearance),
+                title = getString(R.string.tv_settings_header_appearance),
                 SingleSelectionItem(
-                    getString(R.string.tv_settings_item_title_theme),
+                    title = getString(R.string.tv_settings_item_title_theme),
                     values = Theme.values().map { it.title },
                     selectedIndex = prefs.themeInt,
                     iconRes = R.drawable.ic_theme,
@@ -76,43 +77,44 @@ open class SettingsActivity : AbsSettingsActivity(
                 ),
             ),
             ItemSection(
-                getString(R.string.tv_settings_header_markdown),
+                title = getString(R.string.tv_settings_header_markdown),
                 SingleSelectionItem(
-                    getString(R.string.tv_settings_item_title_italic_symbol),
+                    title = getString(R.string.tv_settings_item_title_italic_symbol),
                     values = Emph.values().map { it.title },
                     selectedIndex = prefs.emphSymbolInt,
                     iconRes = R.drawable.ic_italic,
                     tag = DIALOG_ITALIC
                 ),
                 SingleSelectionItem(
-                    getString(R.string.tv_settings_item_title_bold_symbol),
+                    title = getString(R.string.tv_settings_item_title_bold_symbol),
                     values = Strong.values().map { it.title },
                     selectedIndex = prefs.strongSymbolInt,
                     iconRes = R.drawable.ic_bold,
                     tag = DIALOG_BOLD
                 ),
                 SingleSelectionItem(
-                    getString(R.string.tv_settings_item_title_bulletlist_symbol),
+                    title = getString(R.string.tv_settings_item_title_bulletlist_symbol),
                     values = Bullet.values().map { it.title },
                     selectedIndex = prefs.bulletlistSymbolInt,
                     iconRes = R.drawable.ic_list_bullet,
                     tag = DIALOG_BULLETLIST
                 ),
                 StringItem(
-                    getString(R.string.tv_settings_item_title_hr_symbol),
+                    title = getString(R.string.tv_settings_item_title_hr_symbol),
                     value = prefs.breakSymbol,
                     hint = "3 or more of *, -, or _",
                     iconRes = R.drawable.ic_horizontal_rule,
                     tag = DIALOG_HR
                 ),
-                BooleanItem(getString(R.string.tv_settings_item_title_checkbox_space),
+                BooleanItem(
+                    title = getString(R.string.tv_settings_item_title_checkbox_space),
                     value = prefs.checkboxSpace,
                     iconRes = R.drawable.ic_checkbox_blank,
                     onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
                 ),
             ),
             ItemSection(
-                "About and other",
+                title = "About and other",
                 InfoItem(
                     getString(R.string.tv_settings_item_title_about),
                     desc = getString(R.string.tv_settings_item_msg_about),
@@ -145,5 +147,5 @@ open class SettingsActivity : AbsSettingsActivity(
         reflateViews()
     }
 
-    override fun onUnaryDialogClick(passValue: String?, tag: String) {}
+    override fun onUnaryDialogClick(tag: String) {}
 }

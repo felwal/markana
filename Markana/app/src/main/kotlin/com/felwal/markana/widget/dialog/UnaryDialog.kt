@@ -12,9 +12,6 @@ class UnaryDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
-    // args
-    private var passValue: String? = null
-
     // DialogFragment
 
     override fun onAttach(c: Context) {
@@ -31,9 +28,7 @@ class UnaryDialog : BaseDialog() {
     // BaseDialog
 
     override fun unpackBundle(bundle: Bundle?) {
-        bundle?.apply {
-            passValue = getString(ARG_PASS_VALUE, null)
-        }
+        // bundle is empty but for base bundle
     }
 
     override fun buildDialog(): AlertDialog = builder.run {
@@ -41,7 +36,7 @@ class UnaryDialog : BaseDialog() {
         if (message != "") setMessage(message)
 
         setPositiveButton(posBtnTxtRes) { _, _ ->
-            listener.onUnaryDialogClick(passValue, dialogTag)
+            listener.onUnaryDialogClick(dialogTag)
         }
 
         show()
@@ -50,17 +45,15 @@ class UnaryDialog : BaseDialog() {
     //
 
     interface DialogListener {
-        fun onUnaryDialogClick(passValue: String?, tag: String)
+        fun onUnaryDialogClick(tag: String)
     }
 }
 
 fun unaryDialog(
-    title: String, message: String = "",
+    title: String,
+    message: String = "",
     @StringRes btnTxtRes: Int = R.string.dialog_btn_ok,
-    tag: String,
-    passValue: String? = null
+    tag: String
 ): UnaryDialog = UnaryDialog().apply {
-    arguments = putBaseBundle(title, message, btnTxtRes, tag).apply {
-        putString(ARG_PASS_VALUE, passValue)
-    }
+    arguments = putBaseBundle(title, message, btnTxtRes, tag = tag)
 }

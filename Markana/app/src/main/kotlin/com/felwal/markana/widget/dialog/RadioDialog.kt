@@ -76,11 +76,14 @@ class RadioDialog : BaseDialog() {
 }
 
 fun radioDialog(
-    title: String, message: String = "",
-    radioButtonTexts: List<String>, selectedIndex: Int,
+    title: String,
+    message: String = "",
+    radioButtonTexts: List<String>,
+    selectedIndex: Int,
+    negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
 ): RadioDialog = RadioDialog().apply {
-    arguments = putBaseBundle(title, message, NO_RES, tag).apply {
+    arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
         putStringArrayList(ARG_RADIO_TEXTS, ArrayList(radioButtonTexts))
         putInt(ARG_SELECTED_INDEX, selectedIndex)
     }
