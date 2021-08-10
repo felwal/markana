@@ -72,7 +72,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // init t
+        // init tb
         setSupportActionBar(binding.tb)
         val homeIcon = getDrawableCompat(R.drawable.ic_cancel)?.mutate()
         homeIcon?.let {

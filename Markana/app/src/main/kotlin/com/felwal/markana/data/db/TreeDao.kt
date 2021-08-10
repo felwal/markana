@@ -12,23 +12,23 @@ interface TreeDao {
 
     // write
 
-    fun addTreeIfNotExists(vararg trees: Tree) = trees.forEach {
+    suspend fun addTreeIfNotExists(vararg trees: Tree) = trees.forEach {
         if (!doesTreeExist(it.uri)) addTree(it)
     }
 
     @Insert
-    fun addTree(vararg trees: Tree)
+    suspend fun addTree(vararg trees: Tree)
 
     @Query("DELETE FROM trees WHERE id = :id")
-    fun deleteTree(id: Int);
+    suspend fun deleteTree(id: Int);
 
     // read
 
     @Query("SELECT * FROM trees")
-    fun getTrees(): List<Tree>
+    suspend fun getTrees(): List<Tree>
 
-    fun doesTreeExist(uri: String) = getTree(uri) != null
+    suspend fun doesTreeExist(uri: String) = getTree(uri) != null
 
     @Query("SELECT * FROM trees WHERE uri = :uri LIMIT 1")
-    fun getTree(uri: String): Tree?
+    suspend fun getTree(uri: String): Tree?
 }

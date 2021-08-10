@@ -68,8 +68,12 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
             return@registerForActivityResult
         }
 
-        // the file has been created; now load it
+        // save the note
         model.persistNotePermissions(uri)
+        model.saveNote(Note(uri = uri.toString()), false)
+        model.syncNote(uri.toString()) // sync to put filename in db before loading
+
+        // load the note
         model.noteUri = uri.toString()
         model.loadNote()
     }

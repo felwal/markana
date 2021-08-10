@@ -17,6 +17,7 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.data.Tree
 import com.felwal.markana.util.coToastLog
 import com.felwal.markana.util.isMime
+import com.felwal.markana.util.toastLog
 import com.felwal.markana.util.tryToastLog
 import java.io.BufferedReader
 import java.io.FileNotFoundException
@@ -58,16 +59,13 @@ class SafDataSource(private val applicationContext: Context) {
             // this also fires if the file has been moved/deleted
             // and in the case of Dropbox, when renamed
             applicationContext
-                .coToastLog(LOG_TAG, "Provider not found or permission to read not persisted, unlinking note ...")
+                .coToastLog(LOG_TAG, "File not found or permission to read not persisted, unlinking note ...")
 
             // TODO: get option to relink
 
-            // no sense in keeping what we can't read; unlink
-            val db = DbDataSource.getInstance(applicationContext)
-            db.noteDao().deleteNote(uri.toString())
-            return null
-
             // TODO: update to allow temporary permissions / edit with
+
+            return null // unlink note
         }
 
         try {
@@ -92,7 +90,10 @@ class SafDataSource(private val applicationContext: Context) {
             catch (e: FileNotFoundException) {
                 // files from google drive fire this after restart. why?
                 // they aren't caught with not having permissions.
-                applicationContext.coToastLog(LOG_TAG, "Provider not found or permissions not persisted", e)
+                applicationContext
+                    .coToastLog(LOG_TAG, "File not found or permissions not persisted, unlinking note ...", e)
+
+                return null // unlink note
             }
 
             return Note(filename, content, uri = uri.toString())
@@ -102,11 +103,11 @@ class SafDataSource(private val applicationContext: Context) {
         }
         catch (e: IllegalArgumentException) {
             // "Failed to determine if home:Markana/notes/h.txt is child of home:Markana/notes"
-            // gets triggered when a file is gets it's extension changed externally to something Markana cant open
-            applicationContext.coToastLog(LOG_TAG, "Cannot find file", e)
+            // file was moved, removed or otherwise made unavailable
+            applicationContext.coToastLog(LOG_TAG, "Cannot find file to read", e)
         }
 
-        return null
+        return null // unlink note
     }
 
     suspend fun readTree(tree: Tree): List<Note> {
@@ -159,9 +160,9 @@ class SafDataSource(private val applicationContext: Context) {
     fun createFile(createDocumentResultLauncher: ActivityResultLauncher<String>, filename: String) =
         createDocumentResultLauncher.launch(filename)
 
-    suspend fun writeFile(note: Note) {
+    fun writeFile(note: Note) {
         if (false && !hasWritePermission(note.uri)) {
-            applicationContext.coToastLog(LOG_TAG, "Provider not found or permission to write not persisted")
+            applicationContext.toastLog(LOG_TAG, "File not found or permission to write not persisted")
 
             // TODO: save edits in db and suggest saving copy?
 
@@ -175,33 +176,54 @@ class SafDataSource(private val applicationContext: Context) {
                 }
             }
         }
-        catch (e: FileNotFoundException) {
-            applicationContext.coToastLog(LOG_TAG, "File was not found", e)
-        }
         catch (e: SecurityException) {
-            applicationContext.coToastLog(LOG_TAG, "Write permission denied for note", e)
+            applicationContext.toastLog(LOG_TAG, "Write permission denied for note", e)
+        }
+        catch (e: FileNotFoundException) {
+            applicationContext.toastLog(LOG_TAG, "Cannot find file to write", e)
+        }
+        catch (e: IllegalArgumentException) {
+            applicationContext.toastLog(LOG_TAG, "Cannot find file to write", e)
         }
     }
 
-    suspend fun renameFile(uri: Uri, filename: String) {
+    fun renameFile(uri: Uri, filename: String): Uri? {
         try {
-            DocumentsContract.renameDocument(resolver, uri, filename)
+            DocumentsContract.renameDocument(resolver, uri, filename)?.let {
+                // it is now technically a new file
+                persistPermissions(it)
+                return it
+            }
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.coToastLog(LOG_TAG, "Provider does not support rename", e)
+            applicationContext.toastLog(LOG_TAG, "Provider does not support rename", e)
         }
         catch (e: IllegalStateException) {
             applicationContext
-                .coToastLog(LOG_TAG, "Could not rename file; '$filename' already exists at the given location", e)
+                .toastLog(LOG_TAG, "Could not rename file; '$filename' already exists at the given location", e)
         }
+        catch (e: FileNotFoundException) {
+            applicationContext.toastLog(LOG_TAG, "Cannot find file to rename", e)
+        }
+        catch (e: IllegalArgumentException) {
+            applicationContext.toastLog(LOG_TAG, "Cannot find file to rename", e)
+        }
+
+        return null
     }
 
-    suspend fun deleteFile(uri: Uri) {
+    fun deleteFile(uri: Uri) {
         try {
             DocumentsContract.deleteDocument(resolver, uri)
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.coToastLog(LOG_TAG, "Provider does not support delete. Unlinking ...", e)
+            applicationContext.toastLog(LOG_TAG, "Provider does not support delete, unlinking note ...", e)
+        }
+        catch (e: FileNotFoundException) {
+            applicationContext.toastLog(LOG_TAG, "Cannot find file to delete, unlinking note ...", e)
+        }
+        catch (e: IllegalArgumentException) {
+            applicationContext.toastLog(LOG_TAG, "Cannot find file to delete, unlinking note ...", e)
         }
     }
 
@@ -216,9 +238,8 @@ class SafDataSource(private val applicationContext: Context) {
         }
     }
 
-    private fun releasePermissions(uri: Uri) {
-        return resolver.releasePersistableUriPermission(uri, persistPermissionsFlags)
-    }
+    private fun releasePermissions(uri: Uri) =
+        resolver.releasePersistableUriPermission(uri, persistPermissionsFlags)
 
     private fun getPersistedPermission(uri: String): UriPermission? {
         val permissions = resolver.persistedUriPermissions
@@ -234,18 +255,15 @@ class SafDataSource(private val applicationContext: Context) {
         // TODO: also check if it isn't in a permitted tree?
     }
 
-    private fun hasReadPermission(uri: String): Boolean {
-        return getPersistedPermission(uri)?.isReadPermission ?: false
-    }
+    private fun hasReadPermission(uri: String): Boolean =
+        getPersistedPermission(uri)?.isReadPermission ?: false
 
-    private fun hasWritePermission(uri: String): Boolean {
-        return getPersistedPermission(uri)?.isWritePermission ?: false
-    }
+    private fun hasWritePermission(uri: String): Boolean =
+        getPersistedPermission(uri)?.isWritePermission ?: false
 }
 
 class CreateTextDocument : ActivityResultContracts.CreateDocument() {
 
-    override fun createIntent(context: Context, input: String): Intent {
-        return super.createIntent(context, input).setType(MIME_TEXT)
-    }
+    override fun createIntent(context: Context, input: String): Intent =
+        super.createIntent(context, input).setType(MIME_TEXT)
 }

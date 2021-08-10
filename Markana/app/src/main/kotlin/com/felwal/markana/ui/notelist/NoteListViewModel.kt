@@ -8,13 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
 import com.felwal.markana.util.withUI
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
-    val itemsData: MutableLiveData<MutableList<Note>> by lazy {
-        MutableLiveData<MutableList<Note>>()
-    }
+    val itemsData by lazy { MutableLiveData<MutableList<Note>>() }
     val selectionIndices: MutableList<Int> = mutableListOf()
 
     val items: List<Note> get() = itemsData.value ?: listOf()
@@ -48,17 +47,13 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     // write
 
     fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) {
-        viewModelScope.launch {
-            repo.linkNote(openDocumentLauncher)
-            loadNotes()
-        }
+        repo.linkNote(openDocumentLauncher)
+        loadNotes()
     }
 
     fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) {
-        viewModelScope.launch {
-            repo.linkFolder(openTreeLauncher)
-            loadNotes()
-        }
+        repo.linkFolder(openTreeLauncher)
+        loadNotes()
     }
 
     fun pinNotes(notes: List<Note>) {

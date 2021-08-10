@@ -19,7 +19,7 @@ class NoteRepository(
     // read
 
     suspend fun getNotes(): List<Note> = withIO {
-        return@withIO db.noteDao().getNotes(prefs.sortBy, prefs.ascending)
+        db.noteDao().getNotes(prefs.sortBy, prefs.ascending)
     }
 
     suspend fun getNote(uri: String): Note? = withIO {
@@ -28,64 +28,74 @@ class NoteRepository(
 
     // sync: download from saf to db
 
-    suspend fun syncNotes() = withIO {
-        db.noteDao().getUris().forEach {
-            syncNote(it)
+    suspend fun syncNotes() {
+        extractTrees()
+        withIO {
+            db.noteDao().getUris().forEach {
+                syncNote(it)
+            }
         }
     }
 
-    private suspend fun syncNote(uri: String) = withIO {
-        saf.readFile(uri.toUri())?.let {
-            db.noteDao().updateNoteContent(uri, it.filename, it.content)
+    suspend fun syncNote(uri: String) {
+        val note = saf.readFile(uri.toUri())
+        if (note == null) db.noteDao().deleteNote(uri)
+        else withIO {
+            db.noteDao().updateNoteContent(uri, note.filename, note.content)
         }
     }
 
     // extract: save tree notes to db
 
-    private suspend fun extractAllTrees() = withIO {
+    private suspend fun extractTrees() = withIO {
         db.treeDao().getTrees().forEach { extractTree(it) }
     }
 
-    private suspend fun extractTree(tree: Tree) = withIO {
+    private suspend fun extractTree(tree: Tree) {
         // TODO: persist permissions?
 
         val notes = saf.readTree(tree)
-        db.noteDao().addNoteIfNotExists(*notes.toTypedArray())
+        withIO {
+            db.noteDao().addNoteIfNotExists(*notes.toTypedArray())
+        }
     }
 
     // write
 
-    suspend fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) = withIO {
+    fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) {
         /** Saving to db is done in [handleOpenedDocument], which should be called from [openDocumentLauncher]. */
         saf.openFile(openDocumentLauncher)
     }
 
-    suspend fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) = withIO {
+    fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) {
         /** Saving to db is done in [handleOpenedDocumentTree], which should be called from [openTreeLauncher]. */
         saf.openTree(openTreeLauncher, null)
     }
 
-    suspend fun createNote(createDocumentLauncher: ActivityResultLauncher<String>) = withIO {
+    fun createNote(createDocumentLauncher: ActivityResultLauncher<String>) {
         saf.createFile(createDocumentLauncher, "")
     }
 
-    suspend fun saveNote(note: Note, rename: Boolean) = withIO {
-        db.noteDao().addOrUpdateNote(note)
+    suspend fun saveNote(note: Note, rename: Boolean) {
+        // rename
+        val newUri = if (rename) saf.renameFile(note.uri.toUri(), note.filename) else null
+        newUri?.let {
+            db.noteDao().deleteNote(note.uri)
+            note.uri = it.toString()
+        }
+
         saf.writeFile(note)
-        if (rename) saf.renameFile(note.uri.toUri(), note.filename)
+        withIO {
+            db.noteDao().addOrUpdateNote(note)
+        }
     }
 
     suspend fun updateNoteMetadata(vararg notes: Note) = withIO {
-        for (note in notes) {
-            db.noteDao().updateNoteMetadata(note.uri, note.isPinned)
-        }
+        for (note in notes) db.noteDao().updateNoteMetadata(note.uri, note.isPinned)
     }
 
-    suspend fun unlinkNotes(uris: List<String>) = withIO {
-        for (uri in uris) {
-            unlinkNote(uri)
-        }
-    }
+    suspend fun unlinkNotes(uris: List<String>) =
+        uris.forEach { unlinkNote(it) }
 
     private suspend fun unlinkNote(uri: String) = withIO {
         val note = db.noteDao().getNote(uri)
@@ -99,19 +109,19 @@ class NoteRepository(
         }
     }
 
-    suspend fun unlinkTree(id: Int) = withIO {
+    private suspend fun unlinkTree(id: Int) = withIO {
         db.treeDao().deleteTree(id)
         db.noteDao().deleteNotes(id)
     }
 
-    suspend fun deleteNotes(uris: List<String>) = withIO {
+    suspend fun deleteNotes(uris: List<String>) {
         for (uri in uris) {
             saf.deleteFile(uri.toUri())
             unlinkNote(uri) // TODO: dont unlink all of same folder
         }
     }
 
-    suspend fun deleteNote(uri: String) = withIO {
+    suspend fun deleteNote(uri: String) {
         saf.deleteFile(uri.toUri())
         unlinkNote(uri) // TODO: dont unlink all of same folder
     }
@@ -131,7 +141,7 @@ class NoteRepository(
         else applicationContext.coToast("Note already linked")
     }
 
-    suspend fun handleOpenedDocumentTree(uri: Uri) = withIO {
+    suspend fun handleOpenedDocumentTree(uri: Uri) {
         saf.persistPermissions(uri)
 
         // save tree uri and sync
@@ -142,7 +152,7 @@ class NoteRepository(
 
     // permissions
 
-    suspend fun persistPermissions(uri: Uri) = withIO {
+    fun persistPermissions(uri: Uri) {
         saf.persistPermissions(uri)
     }
 }
