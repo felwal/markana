@@ -33,14 +33,6 @@
     <dimen name="stroke_width_small">1dp</dimen>
     <dimen name="height_divider">1dp</dimen>
 
-    <!-- icon size -->
-
-    <dimen name="icon_size">24dp</dimen>
-    <dimen name="icon_size_small">16dp</dimen>
-    <dimen name="icon_size_launcher">108dp</dimen>
-    <dimen name="icon_viewport_size">24.0</dimen>
-    <dimen name="icon_viewport_size_launcher">108</dimen>
-
     <!-- elevation -->
 
     <dimen name="elev_ab">4dp</dimen>

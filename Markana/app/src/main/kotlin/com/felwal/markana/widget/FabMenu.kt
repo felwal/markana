@@ -103,14 +103,14 @@ class FabMenu(
         if (isFabMenuOpen) {
             fromColor = openColor
             toColor = closedColor
-            toIcon = context.getDrawableCompat(R.drawable.ic_add)?.mutate()
+            toIcon = context.getDrawableCompat(R.drawable.ic_add_24)?.mutate()
             toIcon?.setColorFilter(context.getColorByAttr(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
         }
         // animate to open menu
         else {
             fromColor = closedColor
             toColor = openColor
-            toIcon = context.getDrawableCompat(R.drawable.ic_clear)?.mutate()
+            toIcon = context.getDrawableCompat(R.drawable.ic_clear_24)?.mutate()
             toIcon?.setColorFilter(context.getColorByAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
         }
 

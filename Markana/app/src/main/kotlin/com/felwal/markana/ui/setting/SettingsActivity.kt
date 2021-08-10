@@ -72,7 +72,7 @@ open class SettingsActivity : AbsSettingsActivity(
                     title = getString(R.string.tv_settings_item_title_theme),
                     values = Theme.values().map { it.title },
                     selectedIndex = prefs.themeInt,
-                    iconRes = R.drawable.ic_theme,
+                    iconRes = R.drawable.ic_theme_24,
                     tag = DIALOG_THEME
                 ),
             ),
@@ -82,34 +82,34 @@ open class SettingsActivity : AbsSettingsActivity(
                     title = getString(R.string.tv_settings_item_title_italic_symbol),
                     values = Emph.values().map { it.title },
                     selectedIndex = prefs.emphSymbolInt,
-                    iconRes = R.drawable.ic_italic,
+                    iconRes = R.drawable.ic_italic_24,
                     tag = DIALOG_ITALIC
                 ),
                 SingleSelectionItem(
                     title = getString(R.string.tv_settings_item_title_bold_symbol),
                     values = Strong.values().map { it.title },
                     selectedIndex = prefs.strongSymbolInt,
-                    iconRes = R.drawable.ic_bold,
+                    iconRes = R.drawable.ic_bold_24,
                     tag = DIALOG_BOLD
                 ),
                 SingleSelectionItem(
                     title = getString(R.string.tv_settings_item_title_bulletlist_symbol),
                     values = Bullet.values().map { it.title },
                     selectedIndex = prefs.bulletlistSymbolInt,
-                    iconRes = R.drawable.ic_list_bullet,
+                    iconRes = R.drawable.ic_list_bullet_24,
                     tag = DIALOG_BULLETLIST
                 ),
                 StringItem(
                     title = getString(R.string.tv_settings_item_title_hr_symbol),
                     value = prefs.breakSymbol,
                     hint = "3 or more of *, -, or _",
-                    iconRes = R.drawable.ic_horizontal_rule,
+                    iconRes = R.drawable.ic_horizontal_rule_24,
                     tag = DIALOG_HR
                 ),
                 BooleanItem(
                     title = getString(R.string.tv_settings_item_title_checkbox_space),
                     value = prefs.checkboxSpace,
-                    iconRes = R.drawable.ic_checkbox_blank,
+                    iconRes = R.drawable.ic_checkbox_blank_24,
                     onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
                 ),
             ),

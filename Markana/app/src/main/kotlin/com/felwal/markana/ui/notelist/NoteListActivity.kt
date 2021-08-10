@@ -74,7 +74,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
 
         // init tb
         setSupportActionBar(binding.tb)
-        val homeIcon = getDrawableCompat(R.drawable.ic_cancel)?.mutate()
+        val homeIcon = getDrawableCompat(R.drawable.ic_cancel_24)?.mutate()
         homeIcon?.let {
             it.setColorFilter(getColorByAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
             supportActionBar?.setHomeAsUpIndicator(it)
@@ -108,8 +108,8 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
             // set gridView
             findItem(R.id.action_view_toggle)?.let {
                 it.isChecked = prefs.gridView
-                if (prefs.gridView) it.setIcon(R.drawable.ic_view_list).setTitle(R.string.action_view_list)
-                else it.setIcon(R.drawable.ic_view_grid).setTitle(R.string.action_view_grid)
+                if (prefs.gridView) it.setIcon(R.drawable.ic_view_list_24).setTitle(R.string.action_view_list)
+                else it.setIcon(R.drawable.ic_view_grid_24).setTitle(R.string.action_view_grid)
             }
         }
 
@@ -274,7 +274,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
             // create note
             addItem(
                 getString(R.string.tv_fab_create),
-                getDrawableCompat(R.drawable.ic_create)
+                getDrawableCompat(R.drawable.ic_create_24)
             ) {
                 emptySelection()
                 NoteDetailActivity.startActivity(this@NoteListActivity)
@@ -283,7 +283,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
             // link note
             addItem(
                 getString(R.string.tv_fab_link),
-                getDrawableCompat(R.drawable.ic_link)
+                getDrawableCompat(R.drawable.ic_link_24)
             ) {
                 emptySelection()
                 model.linkNote(openDocument)
@@ -292,7 +292,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
             // link folder
             addItem(
                 getString(R.string.tv_fab_link_folder),
-                getDrawableCompat(R.drawable.ic_folder_add)
+                getDrawableCompat(R.drawable.ic_folder_add_24)
             ) {
                 emptySelection()
                 model.linkFolder(openDocumentTree)

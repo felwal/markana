@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_medium"
-            android:background="@drawable/ic_file"
+            android:background="@drawable/ic_file_24"
             android:backgroundTint="?attr/colorSecondary"
             app:layout_constraintBottom_toTopOf="@+id/tv_empty_title"
             app:layout_constraintEnd_toEndOf="parent"
