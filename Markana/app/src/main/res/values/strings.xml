@@ -63,14 +63,8 @@
 
     <!-- dialog -->
 
-    <!-- title -->
-    <string name="dialog_title_delete_note">Delete note?</string>
-    <string name="dialog_title_delete_notes">Delete notes?</string>
-    <string name="dialog_title_unlink_notes">Unlink notes?</string>
-
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>
-    <string name="dialog_msg_unlink_notes">You can always link them again.</string>
 
     <!-- button -->
     <string name="dialog_btn_ok">OK</string>

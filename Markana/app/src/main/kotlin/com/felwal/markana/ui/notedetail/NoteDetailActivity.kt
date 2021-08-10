@@ -22,6 +22,7 @@ import com.felwal.markana.util.toggleChecklist
 import com.felwal.markana.util.toggleCode
 import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
+import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.toggleHeader
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.toggleEmph
@@ -134,8 +135,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         R.id.action_redo -> {} // TODO
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
         R.id.action_delete -> binaryDialog(
-            title = getString(R.string.dialog_title_delete_note),
-            message = getString(R.string.dialog_msg_delete_notes),
+            title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
+            message = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
             posBtnTxtRes = R.string.dialog_btn_delete,
             tag = DIALOG_DELETE
         ).show(supportFragmentManager)

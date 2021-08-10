@@ -332,14 +332,14 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     private fun pinSelection() = pinNotes(model.selectedNotes)
 
     private fun unlinkSelection() = binaryDialog(
-        title = getString(R.string.dialog_title_unlink_notes),
-        message = getString(R.string.dialog_msg_unlink_notes),
+        title = getQuantityString(R.plurals.dialog_title_unlink_notes, selectionCount),
+        message = getQuantityString(R.plurals.dialog_msg_unlink_notes, selectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK
     ).show(supportFragmentManager)
 
     private fun deleteSelection() = binaryDialog(
-        title = getString(R.string.dialog_title_delete_notes),
+        title = getQuantityString(R.plurals.dialog_title_delete_notes, selectionCount),
         message = getString(R.string.dialog_msg_delete_notes),
         posBtnTxtRes = R.string.dialog_btn_delete,
         tag = DIALOG_DELETE
