@@ -18,9 +18,11 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_diminutive"
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_24"
-        style="@style/Fab" />
+        style="@style/Widget.Markana.Fab" />
 
 </LinearLayout>

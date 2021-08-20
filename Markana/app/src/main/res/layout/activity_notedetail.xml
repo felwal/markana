@@ -25,15 +25,17 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="?colorPrimary"
                 app:expandedTitleGravity="top"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:titleEnabled="false">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/tb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:menu="@menu/menu_notedetail_tb"
-                    style="@style/Toolbar" />
+                    style="@style/Widget.Markana.Toolbar" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -58,30 +60,36 @@
                 android:paddingStart="@dimen/spacing_small"
                 android:paddingEnd="@dimen/spacing_small">
 
-                <com.felwal.markana.widget.TimidEditText
+                <com.felwal.markana.widget.AutoUnfocusEditText
                     android:id="@+id/et_note_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/et_notedetail_title_hint"
                     android:inputType="text"
-                    android:textColor="?attr/colorAccent"
                     android:imeOptions="flagNoExtractUi"
+                    android:textColor="?android:colorAccent"
+                    android:textAppearance="@style/TextAppearance.Markana.Headline1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    style="@style/EditText.Note.Title" />
+                    tools:text="note.md"
+                    style="@style/Widget.Markana.EditText.NoTint" />
 
-                <com.felwal.markana.widget.TimidEditText
+                <com.felwal.markana.widget.AutoUnfocusEditText
                     android:id="@+id/et_note_body"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/spacing_medium"
                     android:hint="@string/et_notedetail_body_hint"
                     android:singleLine="false"
                     android:inputType="textMultiLine|textCapSentences"
                     android:imeOptions="flagNoExtractUi"
+                    android:textColor="?android:textColorPrimary"
+                    android:textAppearance="@style/TextAppearance.Markana.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_note_title"
-                    style="@style/EditText.Note" />
+                    style="@style/Widget.Markana.EditText.NoTint" />
 
                 <View
                     android:id="@+id/v_empty"
@@ -112,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:theme="@style/AppbarTheme"
+                android:theme="@style/ThemeOverlay.Markana.Appbar"
                 app:backgroundTint="?android:colorBackground"
                 app:elevation="@dimen/elev_nb"
                 app:layout_constraintBottom_toBottomOf="parent"

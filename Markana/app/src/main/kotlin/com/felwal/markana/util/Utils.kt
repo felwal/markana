@@ -1,24 +1,5 @@
 package com.felwal.markana.util
 
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-
-// collection
-
-fun <E> MutableCollection<E>.toggleInclusion(element: E) =
-    if (contains(element)) remove(element) else add(element)
-
-fun <E> MutableList<E>.replace(oldElement: E, newElement: E) =
-    set(indexOf(oldElement), newElement)
-
-fun <E> MutableCollection<E>.empty() = removeAll(this)
-
-inline fun <reified E> MutableList<E>.nullable(): MutableList<E?> = mutableListOf(*toTypedArray())
-
-fun <E> MutableCollection<E?>.fillUp(value: E?, toSize: Int) =
-    repeat(toSize - size) { add(value) }
-
 // any
 
 fun <T, O> T.unless(equals: T, block: (it: T) -> O): O? = if (this != equals) block(this) else null

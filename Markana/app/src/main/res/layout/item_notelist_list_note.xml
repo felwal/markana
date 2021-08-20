@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_note_24"
-            app:tint="?attr/colorControlActivated" />
+            app:tint="?colorControlActivated" />
 
         <ImageView
             android:id="@+id/iv_pin"
@@ -43,11 +43,9 @@
             android:layout_marginStart="@dimen/spacing_small"
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginTop="@dimen/spacing_tiny"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
-            android:textStyle="normal"
             android:singleLine="true"
             android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.Markana.Subtitle1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,14 +59,14 @@
             android:layout_marginEnd="@dimen/spacing_tiny"
             android:layout_marginTop="@dimen/spacing_diminutive"
             android:layout_marginBottom="@dimen/spacing_tiny"
-            android:textSize="@dimen/type_caption"
             android:maxLines="12"
             android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.Markana.Caption"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_icon"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
-            tools:text="Modified ..." />
+            tools:text="Modified 19 Aug" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

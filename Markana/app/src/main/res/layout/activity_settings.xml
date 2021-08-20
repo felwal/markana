@@ -11,21 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stateListAnimator="@animator/selector_elev_ab"
-        android:theme="@style/AppbarTheme">
+        android:theme="@style/ThemeOverlay.Markana.Appbar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctb"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="?colorPrimary"
             app:expandedTitleGravity="top"
             app:layout_scrollFlags="noScroll"
             app:titleEnabled="false">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 tools:title="@string/title_activity_settings"
-                style="@style/Toolbar" />
+                style="@style/Widget.Markana.Toolbar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

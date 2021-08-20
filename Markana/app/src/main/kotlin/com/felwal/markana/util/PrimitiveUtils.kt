@@ -8,7 +8,7 @@ import kotlin.math.min
 fun CharSequence.split(vararg delimiters: String, lowerLimit: Int, ignoreCase: Boolean = false): List<String?> {
     return split(*delimiters, ignoreCase = ignoreCase)
         .toMutableList()
-        .nullable()
+        .toNullable()
         .apply { fillUp(null, lowerLimit) }
 }
 
@@ -25,6 +25,6 @@ fun String.isMime(type: String, subType: String): Boolean {
 // int
 
 /**
- * Truncate an Int to the range[[min], [max]]
+ * Clamp an Int to the range[[min], [max]]
  */
-fun Int.truncate(min: Int, max: Int): Int = max(min, min(this, max))
+fun Int.clamp(min: Int, max: Int): Int = max(min, min(this, max))

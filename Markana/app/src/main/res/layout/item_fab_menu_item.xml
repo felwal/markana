@@ -15,20 +15,24 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_menu_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/Fab.Mini" />
+        style="@style/Widget.Markana.Fab.Mini" />
 
     <TextView
         android:id="@+id/tv_menu_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_small"
+        android:textAppearance="@style/TextAppearance.Markana.Body2"
         app:layout_constraintBottom_toBottomOf="@+id/fab_menu_item"
         app:layout_constraintEnd_toStartOf="@+id/fab_menu_item"
         app:layout_constraintTop_toTopOf="@+id/fab_menu_item"
         app:layout_constraintVertical_bias="0.4"
-        tools:text="Item"
-        style="@style/TextView.Body.FabTitle" />
+        tools:text="Item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

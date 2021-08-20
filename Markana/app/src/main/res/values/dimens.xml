@@ -17,8 +17,8 @@
     <dimen name="spacing_settings_item_vertical">@dimen/spacing_small</dimen>
 
     <!-- dialog -->
-    <dimen name="spacing_dialog_top">8dp</dimen>
-    <dimen name="spacing_dialog_side">24dp</dimen>
+    <dimen name="spacing_dialog_top">@dimen/spacing_tiny</dimen>
+    <dimen name="spacing_dialog_side">@dimen/spacing_medium</dimen>
     <dimen name="spacing_dialog_side_20dp">20dp</dimen>
 
     <!-- layout -->
@@ -43,26 +43,13 @@
 
     <!-- type -->
 
-    <!-- general -->
-    <dimen name="type_headline1">36sp</dimen>
-    <dimen name="type_headline2">28sp</dimen>
-    <dimen name="type_title_toolbar">18sp</dimen>
-    <dimen name="type_title_tab">16sp</dimen>
-    <dimen name="type_heading1">18sp</dimen>
-    <dimen name="type_heading2">14sp</dimen>
-    <dimen name="type_body">14sp</dimen>
+    <!-- palette -->
+    <dimen name="type_headline1">24sp</dimen>
+    <dimen name="type_headline2">18sp</dimen>
+    <dimen name="type_subtitle1">16sp</dimen>
+    <dimen name="type_subtitle2">14sp</dimen>
+    <dimen name="type_body1">16sp</dimen>
+    <dimen name="type_body2">14sp</dimen>
     <dimen name="type_caption">12sp</dimen>
-    <dimen name="type_overline">12sp</dimen>
-
-    <!-- dialog -->
-    <dimen name="type_dialog_title">17sp</dimen>
-    <dimen name="type_dialog_message">16sp</dimen>
-
-    <!-- settings -->
-    <dimen name="type_heading_setting">16dp</dimen>
-
-    <!-- note detail -->
-    <dimen name="type_note_title">24sp</dimen>
-    <dimen name="type_note_body">16sp</dimen>
 
 </resources>

@@ -3,7 +3,6 @@
     <!-- dark theme -->
 
     <style name="Theme.Markana" parent="Theme.Default">
-        <!-- statusbar -->
         <item name="android:windowLightStatusBar">false</item>
 
         <!-- divider (manual) -->

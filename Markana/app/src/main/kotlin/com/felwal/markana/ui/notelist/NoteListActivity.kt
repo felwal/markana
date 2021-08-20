@@ -19,7 +19,7 @@ import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
-import com.felwal.markana.util.empty
+import com.felwal.markana.util.removeAll
 import com.felwal.markana.util.getColorByAttr
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.getInteger
@@ -315,7 +315,9 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     private fun enableToolbarScroll() {
         val params: AppBarLayout.LayoutParams = binding.ctb.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags =
-            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
+                AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS or
+                AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
         binding.ctb.layoutParams = params
     }
 
@@ -395,7 +397,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
             model.itemsData.value?.set(index, note)
             adapter.notifyItemChanged(index)
         }
-        model.selectionIndices.empty()
+        model.selectionIndices.removeAll()
 
         // sync tb
         invalidateOptionsMenu()

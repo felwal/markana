@@ -36,12 +36,12 @@
             android:textStyle="normal"
             android:singleLine="true"
             android:ellipsize="end"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="url" />
+            tools:text="url"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -50,11 +50,11 @@
             android:layout_marginStart="@dimen/spacing_tiny"
             android:layout_marginEnd="@dimen/spacing_tiny"
             android:layout_marginTop="@dimen/spacing_tiny"
-            android:textColor="?android:colorAccent"
-            android:textSize="16sp"
-            android:textStyle="normal"
-            android:ellipsize="end"
             android:maxLines="3"
+            android:ellipsize="end"
+            android:textColor="?colorAccent"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.Markana.Subtitle1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_uri"
@@ -70,11 +70,12 @@
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:maxLines="12"
             android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.Markana.Body2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
-            tools:text="Body text text text text ... text text ..." />
+            tools:text="Body text text text text ... \ntext text ..." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

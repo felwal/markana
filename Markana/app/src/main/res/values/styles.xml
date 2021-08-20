@@ -1,123 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- appbar -->
+    <!-- overlay -->
 
-    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="ThemeOverlay.Markana.Appbar" parent="">
+        <!-- built-in action buttons, e.g. home/up -->
+        <!--<item name="colorControlNormal">?colorOnBackground</item>-->
+        <!-- custom action buttons -->
+        <item name="iconTint">?colorControlActivated</item>
+    </style>
+
+    <style name="ThemeOverlay.Markana.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Markana.MaterialAlertDialog</item>
+        <!-- <item name="android:background">?colorSurface</item> -->
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Markana.MaterialAlertDialog" parent="">
+        <item name="cornerSize">@dimen/corner_radius_dialog</item>
+    </style>
+
+    <!-- widget -->
+
+    <style name="Widget.Markana.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?android:colorBackground</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:theme">@style/AppbarTheme</item>
-
+        <item name="android:theme">@style/ThemeOverlay.Markana.Appbar</item>
         <item name="elevation">@dimen/elev_ab</item>
         <item name="titleTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">@style/Theme.Markana.PopupOverlay</item>
     </style>
 
-    <style name="AppbarTheme">
-        <!-- built-in action buttons, e.g. home/up -->
-        <!--<item name="colorControlNormal">?attr/colorOnBackground</item>-->
-        <!-- custom action buttons -->
-        <item name="iconTint">?attr/colorControlActivated</item>
-    </style>
-
-    <!-- fab -->
-
-    <style name="Fab">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="Widget.Markana.Fab" parent="">
         <item name="android:elevation">@dimen/elev_fab</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-
         <item name="fabSize">normal</item>
-        <item name="backgroundTint">?attr/colorSecondary</item>
-        <item name="iconTint">?attr/colorOnSecondary</item>
+        <item name="backgroundTint">?colorSecondary</item>
+        <item name="iconTint">?colorOnSecondary</item>
     </style>
 
-    <style name="Fab.Mini">
+    <style name="Widget.Markana.Fab.Mini">
         <item name="fabSize">mini</item>
     </style>
 
-    <!-- edittext -->
+    <style name="Widget.Markana.TextView" parent="Widget.AppCompat.TextView">
+    </style>
 
-    <style name="EditText">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/type_note_body</item>
+    <style name="Widget.Markana.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:focusedByDefault">false</item>
-        <!--<item name="android:textColorHint">?android:textColorSecondary</item>-->
     </style>
 
-    <style name="EditText.Note">
-        <item name="android:backgroundTint">@color/trans</item>
+    <style name="Widget.Markana.EditText.NoTint">
+        <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
 
-    <style name="EditText.Note.Title">
-        <item name="android:textSize">@dimen/type_note_title</item>
+    <style name="Widget.Markana.Divider" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/height_divider</item>
+        <item name="android:background">?android:listDivider</item>
+    </style>
+
+    <!-- textappearance -->
+
+    <style name="TextAppearance.Markana" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.Markana.Headline1">
+        <item name="android:textSize">@dimen/type_headline1</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- textview -->
-
-    <style name="TextView" parent="TextAppearance.AppCompat">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <style name="TextAppearance.Markana.Headline2">
+        <item name="android:textSize">@dimen/type_headline2</item>
     </style>
 
-    <style name="TextView.Heading1">
-        <item name="android:textSize">@dimen/type_heading1</item>
+    <style name="TextAppearance.Markana.Subtitle1">
+        <item name="android:textSize">@dimen/type_subtitle1</item>
     </style>
 
-    <style name="TextView.HeadingSetting">
-        <item name="android:textSize">@dimen/type_heading_setting</item>
+    <style name="TextAppearance.Markana.Subtitle2">
+        <item name="android:textSize">@dimen/type_subtitle2</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextView.Body">
-        <item name="android:textSize">@dimen/type_body</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    <style name="TextAppearance.Markana.Body1">
+        <item name="android:textSize">@dimen/type_body1</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
-    <style name="TextView.Body.FabTitle">
+    <style name="TextAppearance.Markana.Body2">
+        <item name="android:textSize">@dimen/type_body2</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
-    <style name="TextView.DialogTitle">
-        <item name="android:textSize">@dimen/type_dialog_title</item>
-        <!--<item name="android:textStyle">bold</item>-->
-    </style>
-
-    <style name="TextView.DialogMessageLone">
-        <item name="android:textSize">@dimen/type_dialog_title</item>
-    </style>
-
-    <style name="TextView.DialogMessage">
-        <item name="android:textSize">@dimen/type_dialog_message</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-    </style>
-
-    <style name="TextView.Overline">
-        <item name="android:textSize">@dimen/type_overline</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-
-        <item name="textAllCaps">true</item>
-    </style>
-
-    <style name="TextView.SettingHeader">
-        <item name="android:textSize">@dimen/type_heading2</item>
-        <item name="android:textColor">?android:colorControlActivated</item>
-        <item name="android:gravity">bottom</item>
-
-        <item name="textAllCaps">false</item>
-    </style>
-
-    <!-- view -->
-
-    <style name="Divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/height_divider</item>
-        <item name="android:background">?android:attr/listDivider</item>
+    <style name="TextAppearance.Markana.Caption">
+        <item name="android:textSize">@dimen/type_caption</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
 </resources>
