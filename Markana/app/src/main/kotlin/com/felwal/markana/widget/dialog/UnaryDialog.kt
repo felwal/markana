@@ -1,9 +1,9 @@
 package com.felwal.markana.widget.dialog
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
 
 private const val ARG_PASS_VALUE = "passValue"

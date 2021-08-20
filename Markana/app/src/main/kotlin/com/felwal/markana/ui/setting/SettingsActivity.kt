@@ -127,15 +127,15 @@ open class SettingsActivity : AbsSettingsActivity(
 
     // dialog
 
-    override fun onRadioDialogClick(index: Int, tag: String) {
+    override fun onRadioDialogClick(checkedItem: Int, tag: String) {
         when (tag) {
             DIALOG_THEME -> {
-                prefs.themeInt = index
+                prefs.themeInt = checkedItem
                 updateTheme()
             }
-            DIALOG_ITALIC -> prefs.emphSymbolInt = index
-            DIALOG_BOLD -> prefs.strongSymbolInt = index
-            DIALOG_BULLETLIST -> prefs.bulletlistSymbolInt = index
+            DIALOG_ITALIC -> prefs.emphSymbolInt = checkedItem
+            DIALOG_BOLD -> prefs.strongSymbolInt = checkedItem
+            DIALOG_BULLETLIST -> prefs.bulletlistSymbolInt = checkedItem
         }
         reflateViews()
     }

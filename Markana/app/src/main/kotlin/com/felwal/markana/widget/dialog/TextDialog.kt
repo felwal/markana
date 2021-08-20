@@ -1,9 +1,9 @@
 package com.felwal.markana.widget.dialog
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogTextBinding
 import com.felwal.markana.util.string
@@ -49,7 +49,7 @@ class TextDialog : BaseDialog() {
         return builder.run {
             setView(binding.root)
             setTitle(title)
-            if (!message.equals("")) setMessage(message)
+            if (message != "") setMessage(message)
 
             setPositiveButton(posBtnTxtRes) { _, _ ->
                 val input = binding.et.string.trim { it <= ' ' }

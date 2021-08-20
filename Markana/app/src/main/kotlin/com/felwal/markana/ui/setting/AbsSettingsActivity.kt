@@ -156,7 +156,7 @@ abstract class AbsSettingsActivity(
                 title, value, hideDivider, iconRes,
                 radioDialog(
                     title = title, message = desc,
-                    radioButtonTexts = values, selectedIndex = selectedIndex,
+                    items = values, checkedItem = selectedIndex,
                     tag = tag
                 )
             )

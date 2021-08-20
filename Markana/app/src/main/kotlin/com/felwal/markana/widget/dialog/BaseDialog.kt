@@ -1,6 +1,5 @@
 package com.felwal.markana.widget.dialog
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
@@ -8,9 +7,11 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.felwal.markana.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 const val NO_RES = -1
 
@@ -22,7 +23,7 @@ private const val ARG_TAG = "tag"
 
 abstract class BaseDialog : DialogFragment() {
 
-    protected lateinit var builder: AlertDialog.Builder
+    protected lateinit var builder: MaterialAlertDialogBuilder
     protected lateinit var inflater: LayoutInflater
 
     // args
@@ -36,7 +37,7 @@ abstract class BaseDialog : DialogFragment() {
     // DialogFragment
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        builder = AlertDialog.Builder(activity)
+        builder = MaterialAlertDialogBuilder(requireActivity())
         inflater = requireActivity().layoutInflater
 
         unpackBundle(unpackBaseBundle())
@@ -73,12 +74,8 @@ abstract class BaseDialog : DialogFragment() {
     // build
 
     private fun styleDialog(dialog: AlertDialog): AlertDialog = dialog.apply {
-        setTitleTextAppearance(resources, R.style.TextView_DialogTitle)
-        setMessageTextAppearance(
-            if (title == "") R.style.TextView_DialogMessageLone
-            else R.style.TextView_DialogMessage
-        )
-        window?.setBackgroundDrawableResource(R.drawable.shape_dialog_bg)
+        setTitleTextAppearanceAppCompat(resources, R.style.TextAppearance_Markana_Headline2)
+        setMessageTextAppearance(R.style.TextAppearance_Markana_Body1)
     }
 
     protected abstract fun buildDialog(): AlertDialog
@@ -93,8 +90,14 @@ fun AlertDialog.Builder.setCancelButton(@StringRes resId: Int): AlertDialog.Buil
         dialog.cancel()
     }
 
-fun AlertDialog.setTitleTextAppearance(res: Resources, @StyleRes resId: Int) =
-    res.getIdentifier("alertTitle", "id", "android")
+fun AlertDialog.setTitleTextAppearanceAppCompat(res: Resources, @StyleRes resId: Int) =
+    setTitleTextAppearance(res, resId, context.packageName)
+
+fun AlertDialog.setTitleTextAppearanceAndroid(res: Resources, @StyleRes resId: Int) =
+    setTitleTextAppearance(res, resId, "android")
+
+fun AlertDialog.setTitleTextAppearance(res: Resources, @StyleRes resId: Int, defPackage: String) =
+    res.getIdentifier("alertTitle", "id", defPackage)
         .takeIf { it > 0 }
         ?.let { titleId ->
             findViewById<TextView>(titleId)?.setTextAppearance(resId)

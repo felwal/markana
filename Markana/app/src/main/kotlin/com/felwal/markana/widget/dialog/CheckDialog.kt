@@ -5,18 +5,20 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
-import com.felwal.markana.util.clamp
+import com.felwal.markana.util.firsts
+import com.felwal.markana.util.orEmpty
+import com.felwal.markana.util.seconds
 
 private const val ARG_ITEMS = "items"
-private const val ARG_CHECKED_ITEM = "checkedItem"
+private const val ARG_CHECKED_ITEMS = "checkedItems"
 
-class RadioDialog : BaseDialog() {
+class CheckDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
     // args
     private lateinit var items: Array<out String>
-    private var checkedItem = 0
+    private lateinit var checkedItems: BooleanArray
 
     // DialogFragment
 
@@ -36,16 +38,18 @@ class RadioDialog : BaseDialog() {
     override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
             items = getStringArray(ARG_ITEMS).orEmpty()
-            checkedItem = getInt(ARG_CHECKED_ITEM, 0).clamp(0, items.size)
+            checkedItems = getBooleanArray(ARG_CHECKED_ITEMS).orEmpty()
         }
     }
 
     override fun buildDialog(): AlertDialog = builder.run {
         setTitle(title)
 
-        setSingleChoiceItems(items, checkedItem) { dialog, which ->
-            dialog.cancel()
-            listener.onRadioDialogClick(which, dialogTag)
+        setMultiChoiceItems(items, checkedItems) { _, which, isChecked ->
+            checkedItems[which] = isChecked
+        }
+        setPositiveButton(posBtnTxtRes) { _, _ ->
+            listener.onCheckDialogPositiveClick(checkedItems, dialogTag)
         }
         setCancelButton(negBtnTxtRes)
 
@@ -55,20 +59,20 @@ class RadioDialog : BaseDialog() {
     //
 
     interface DialogListener {
-        fun onRadioDialogClick(checkedItem: Int, tag: String)
+        fun onCheckDialogPositiveClick(checkedItems: BooleanArray, tag: String)
     }
 }
 
-fun radioDialog(
+fun checkDialog(
     title: String,
     message: String = "",
-    items: List<String>,
-    checkedItem: Int,
+    vararg items: Pair<String, Boolean>,
+    @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): RadioDialog = RadioDialog().apply {
-    arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
-        putStringArray(ARG_ITEMS, items.toTypedArray())
-        putInt(ARG_CHECKED_ITEM, checkedItem)
+): CheckDialog = CheckDialog().apply {
+    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
+        putStringArray(ARG_ITEMS, items.firsts.toTypedArray())
+        putBooleanArray(ARG_CHECKED_ITEMS, items.seconds.toBooleanArray())
     }
 }
