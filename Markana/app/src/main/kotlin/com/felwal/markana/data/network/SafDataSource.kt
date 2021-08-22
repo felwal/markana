@@ -1,5 +1,6 @@
 package com.felwal.markana.data.network
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.UriPermission
@@ -12,7 +13,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import com.felwal.markana.data.db.DbDataSource
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.Tree
 import com.felwal.markana.util.coToastLog
@@ -23,7 +23,6 @@ import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStreamReader
-import java.lang.IllegalArgumentException
 
 private const val LOG_TAG = "Saf"
 private const val MIME_TEXT_TYPE = "text"
@@ -70,13 +69,7 @@ class SafDataSource(private val applicationContext: Context) {
 
         try {
             // read metadata
-            var filename = ""
-            val cursor = resolver.query(uri, null, null, null, null, null)
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    filename = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                }
-            }
+            val filename = resolver.getDisplayName(uri)
 
             // read content
             var content = ""
@@ -119,6 +112,7 @@ class SafDataSource(private val applicationContext: Context) {
         var wrongMimeCount = 0
 
         for (file in docFiles) {
+            file.uri
             // check mime TODO: markdown isn't recognized as text
             if (true || file.type?.isMime(MIME_TEXT_TYPE) == true) {
                 readFile(file.uri)?.let { note ->
@@ -132,7 +126,7 @@ class SafDataSource(private val applicationContext: Context) {
 
         if (wrongMimeCount > 0) {
             //applicationContext.coToast("$wrongMimeCount files were not linked due to wrong format")
-            Log.i(LOG_TAG,"$wrongMimeCount files were not linked due to wrong format")
+            Log.i(LOG_TAG, "$wrongMimeCount files were not linked due to wrong format")
         }
 
         return notes
@@ -142,7 +136,7 @@ class SafDataSource(private val applicationContext: Context) {
      * Recursively gets all files in a documentFile directory
      */
     private fun readDocumentFile(document: DocumentFile?): List<DocumentFile> {
-        document ?: return listOf()
+        if (document == null || isFileHidden(document.uri)) return listOf()
         if (!document.isDirectory) return listOf(document)
 
         val docs = mutableListOf<List<DocumentFile>>()
@@ -260,6 +254,21 @@ class SafDataSource(private val applicationContext: Context) {
 
     private fun hasWritePermission(uri: String): Boolean =
         getPersistedPermission(uri)?.isWritePermission ?: false
+
+    // tool
+
+    private fun isFileHidden(uri: Uri): Boolean =
+        resolver.getDisplayName(uri).substring(0, 1) == "."
+}
+
+private fun ContentResolver.getDisplayName(uri: Uri): String {
+    val cursor = query(uri, null, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            return it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+        }
+    }
+    return ""
 }
 
 class CreateTextDocument : ActivityResultContracts.CreateDocument() {
