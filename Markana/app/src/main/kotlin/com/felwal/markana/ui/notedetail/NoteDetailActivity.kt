@@ -1,5 +1,6 @@
 package com.felwal.markana.ui.notedetail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,6 +25,7 @@ import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.makeMultilinePreventEnter
 import com.felwal.markana.util.multiplyAlphaComponent
 import com.felwal.markana.util.selectEnd
+import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
@@ -133,8 +135,10 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         binding.etNoteTitle.makeMultilinePreventEnter()
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_notedetail_tb, menu)
+        menu.setOptionalIconsVisible(true)
         return true
     }
 

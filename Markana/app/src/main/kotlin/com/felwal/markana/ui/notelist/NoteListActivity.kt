@@ -28,6 +28,7 @@ import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.removeAll
+import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.updateTheme
 import com.felwal.markana.widget.FabMenu
@@ -152,6 +153,8 @@ class NoteListActivity : AppCompatActivity(),
                 menuInflater.inflate(R.menu.menu_notelist_tb_selection_multi, menu)
             }
         }
+
+        menu.setOptionalIconsVisible(true)
 
         return true
     }

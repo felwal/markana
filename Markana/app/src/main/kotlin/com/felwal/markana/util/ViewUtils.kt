@@ -2,6 +2,7 @@ package com.felwal.markana.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.text.Editable
@@ -12,6 +13,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.view.isGone
 import androidx.core.view.size
 import com.felwal.markana.R
@@ -49,6 +51,11 @@ fun View.snackbar(text: String, long: Boolean = true, actionText: String = "", a
     Snackbar.make(this, text, if (long) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT)
         .setAction(actionText, action)
         .show()
+
+// menu
+
+@SuppressLint("RestrictedApi")
+fun Menu.setOptionalIconsVisible(visible: Boolean) = (this as? MenuBuilder)?.setOptionalIconsVisible(visible)
 
 // edittext
 
