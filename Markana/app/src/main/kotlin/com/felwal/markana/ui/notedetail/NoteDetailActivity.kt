@@ -48,8 +48,8 @@ private const val LOG_TAG = "NoteDetail"
 
 private const val EXTRA_NOTE_URI = "uri"
 
-private const val DIALOG_DELETE = "deleteNotes"
-private const val DIALOG_COLOR = "color"
+private const val DIALOG_DELETE = "deleteNote"
+private const val DIALOG_COLOR = "colorNote"
 
 class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, ColorDialog.DialogListener {
 
@@ -152,7 +152,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
         R.id.action_delete -> binaryDialog(
             title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
-            message = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
+            message = getString(R.string.dialog_msg_delete_notes),
             posBtnTxtRes = R.string.dialog_btn_delete,
             tag = DIALOG_DELETE
         ).show(supportFragmentManager)

@@ -18,27 +18,35 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
+import com.felwal.markana.util.common
 import com.felwal.markana.util.defaults
-import com.felwal.markana.util.removeAll
 import com.felwal.markana.util.getColorAttr
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.getInteger
+import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
+import com.felwal.markana.util.removeAll
 import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.updateTheme
 import com.felwal.markana.widget.FabMenu
 import com.felwal.markana.widget.dialog.BinaryDialog
+import com.felwal.markana.widget.dialog.ColorDialog
 import com.felwal.markana.widget.dialog.binaryDialog
+import com.felwal.markana.widget.dialog.colorDialog
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
 
 private const val DIALOG_DELETE = "deleteNotes"
 private const val DIALOG_UNLINK = "unlinkNotes"
+private const val DIALOG_COLOR = "colorNotes"
 
-class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, SwipeRefreshLayout.OnRefreshListener {
+class NoteListActivity : AppCompatActivity(),
+    BinaryDialog.DialogListener,
+    ColorDialog.DialogListener,
+    SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: ActivityNotelistBinding
     private lateinit var adapter: NoteListAdapter
@@ -182,6 +190,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         // multi selection tb
         android.R.id.home -> emptySelection()
         R.id.action_pin -> pinSelection()
+        R.id.action_color -> colorSelection()
         R.id.action_unlink -> unlinkSelection()
         R.id.action_delete -> deleteSelection()
 
@@ -336,11 +345,28 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         binding.ctb.layoutParams = params
     }
 
-    // data: convenience
+    // data
 
-    private fun copySelection() = copyNote(selectedNote)
+    private fun copySelection() {
+        // TODO: needs createAndSave
+        /*selectedNote?.let {
+            val copy = it.copy(id = NO_ID)
+            db.noteDao().addNote(copy)
+            emptySelection()
+        }*/
+    }
 
-    private fun pinSelection() = pinNotes(model.selectedNotes)
+    private fun pinSelection() {
+        model.pinNotes(model.selectedNotes)
+        emptySelection()
+    }
+
+    private fun colorSelection() = colorDialog(
+        title = getString(R.string.dialog_title_color),
+        items = getIntegerArray(R.array.note_palette),
+        checkedItem = model.selectedNotes.common { it.colorIndex },
+        tag = DIALOG_COLOR
+    ).show(supportFragmentManager)
 
     private fun unlinkSelection() = binaryDialog(
         title = getQuantityString(R.plurals.dialog_title_unlink_notes, selectionCount),
@@ -355,32 +381,6 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         posBtnTxtRes = R.string.dialog_btn_delete,
         tag = DIALOG_DELETE
     ).show(supportFragmentManager)
-
-    // data
-
-    private fun copyNote(note: Note?) {
-        // TODO: needs createAndSave
-        /*note?.let {
-            val copy = it.copy(id = NO_ID)
-            db.noteDao().addNote(copy)
-            emptySelection()
-        }*/
-    }
-
-    private fun pinNotes(notes: List<Note>) {
-        model.pinNotes(notes)
-        emptySelection()
-    }
-
-    private fun unlinkNotes(notes: List<Note>) {
-        model.unlinkNotes(notes)
-        emptySelection()
-    }
-
-    private fun deleteNotes(notes: List<Note>) {
-        model.deleteNotes(notes)
-        emptySelection()
-    }
 
     // selection
 
@@ -417,8 +417,23 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
 
     override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
-            DIALOG_DELETE -> deleteNotes(model.selectedNotes)
-            DIALOG_UNLINK -> unlinkNotes(model.selectedNotes)
+            DIALOG_DELETE -> {
+                model.deleteNotes(model.selectedNotes)
+                emptySelection()
+            }
+            DIALOG_UNLINK -> {
+                model.unlinkNotes(model.selectedNotes)
+                emptySelection()
+            }
+        }
+    }
+
+    override fun onColorDialogItemClick(checkedItem: Int, tag: String) {
+        when (tag) {
+            DIALOG_COLOR -> {
+                model.colorNotes(model.selectedNotes, checkedItem)
+                emptySelection()
+            }
         }
     }
 }

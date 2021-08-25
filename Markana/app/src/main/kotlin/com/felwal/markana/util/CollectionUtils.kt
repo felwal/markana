@@ -21,6 +21,14 @@ fun <E> MutableCollection<E?>.cropUp(value: E?, toSize: Int) {
     else if (size > toSize) crop(toSize)
 }
 
+inline fun <T, R> Iterable<T>.common(value: (T) -> R): R? {
+    if (this is Collection && isEmpty()) return null
+
+    val firstValue = value(elementAt(0))
+    for (element in this) if (value(element) != firstValue) return null
+    return firstValue
+}
+
 fun BooleanArray?.orEmpty(): BooleanArray = this ?: BooleanArray(0)
 
 fun IntArray?.orEmpty(): IntArray = this ?: IntArray(0)

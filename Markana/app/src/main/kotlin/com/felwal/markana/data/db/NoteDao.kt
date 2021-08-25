@@ -34,8 +34,8 @@ interface NoteDao {
     @Query("UPDATE notes SET filename = :filename, content = :content WHERE uri = :uri")
     suspend fun updateNoteContent(uri: String, filename: String, content: String)
 
-    @Query("UPDATE notes SET pinned = :isPinned WHERE uri = :uri")
-    suspend fun updateNoteMetadata(uri: String, isPinned: Boolean)
+    @Query("UPDATE notes SET pinned = :isPinned, color_index = :colorIndex WHERE uri = :uri")
+    suspend fun updateNoteMetadata(uri: String, isPinned: Boolean, colorIndex: Int)
 
     @Delete
     suspend fun deleteNote(vararg notes: Note)

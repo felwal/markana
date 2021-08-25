@@ -16,19 +16,25 @@
         android:id="@+id/action_pin"
         android:title="@string/action_pin"
         android:icon="@drawable/ic_pin_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_color"
+        android:title="@string/action_color"
+        android:icon="@drawable/ic_color_24"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_unlink"
         android:title="@string/action_unlink"
         android:icon="@drawable/ic_unlink_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 
     <item
         android:id="@+id/action_delete"
         android:title="@string/action_delete"
         android:icon="@drawable/ic_delete_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

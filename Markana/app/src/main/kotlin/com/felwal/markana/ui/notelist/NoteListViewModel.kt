@@ -68,6 +68,15 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
+    fun colorNotes(notes: List<Note>, colorIndex: Int) {
+        viewModelScope.launch {
+            for (note in notes) note.colorIndex = colorIndex
+
+            repo.updateNoteMetadata(*notes.toTypedArray())
+            loadNotes()
+        }
+    }
+
     fun unlinkNotes(notes: List<Note>) {
         viewModelScope.launch {
             repo.unlinkNotes(notes.map { it.uri })

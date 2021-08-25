@@ -15,6 +15,7 @@ import com.felwal.markana.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 const val NO_RES = -1
+const val NULL_INT = -1
 
 private const val ARG_TITLE = "title"
 private const val ARG_MESSAGE = "message"

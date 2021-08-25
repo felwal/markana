@@ -48,7 +48,7 @@ class ColorDialog : BaseDialog() {
     override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
             items = getIntArray(ARG_ITEMS).orEmpty()
-            checkedItem = getInt(ARG_CHECKED_ITEM, 0).clamp(0, items.size)
+            checkedItem = getInt(ARG_CHECKED_ITEM, 0).clamp(-1, items.size)
         }
     }
 
@@ -106,12 +106,12 @@ fun colorDialog(
     title: String,
     message: String = "",
     @ColorInt items: IntArray,
-    checkedItem: Int,
+    checkedItem: Int? = null,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
 ): ColorDialog = ColorDialog().apply {
     arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
         putIntArray(ARG_ITEMS, items)
-        putInt(ARG_CHECKED_ITEM, checkedItem)
+        putInt(ARG_CHECKED_ITEM, checkedItem ?: NULL_INT)
     }
 }

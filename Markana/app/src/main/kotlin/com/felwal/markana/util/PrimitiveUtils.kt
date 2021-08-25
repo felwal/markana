@@ -30,7 +30,7 @@ fun String.isMime(type: String, subType: String): Boolean {
 // int
 
 /**
- * Clamp an Int to the range[[min], [max]]
+ * Clamp an Int to the range [[min], [max]]
  */
 fun Int.clamp(min: Int, max: Int): Int = max(min, min(this, max))
 

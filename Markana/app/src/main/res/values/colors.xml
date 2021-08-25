@@ -6,8 +6,8 @@
     <!-- main -->
     <color name="red_accent">@color/material_red_400</color>
     <color name="red_accent_trans">#33FF522D</color>
-    <color name="red_primary">#C82400</color>
-    <color name="red_primary_dark">#9B1C00</color>
+    <color name="red_primary">@color/material_red_400</color>
+    <color name="red_primary_dark">@color/material_red_600</color>
 
     <!-- greyscale -->
     <color name="black">#000000</color>
