@@ -10,6 +10,7 @@ private const val KEY_SORT_ORDER = "sort_order"
 private const val KEY_GRID_VIEW = "grid_view"
 
 private const val KEY_THEME = "theme"
+private const val KEY_COLOR_ITEMS = "color_items"
 private const val KEY_MD_SYMBOL_EMPH = "italic"
 private const val KEY_MD_SYMBOL_STRONG = "bold"
 private const val KEY_MD_SYMBOL_BULLETLIST = "bulletlist"
@@ -72,6 +73,10 @@ class Prefs(c: Context) {
     var themeInt: Int
         get() = sp.getInt(KEY_THEME, 0)
         set(value) = sp.putInt(KEY_THEME, value)
+
+    var colorNoteItems: Boolean
+        get() = sp.getBoolean(KEY_COLOR_ITEMS, true)
+        set(value) = sp.putBoolean(KEY_COLOR_ITEMS, value)
 
     // settings: markdown
 

@@ -22,7 +22,7 @@ private const val DIALOG_BOLD = "boldDialog"
 private const val DIALOG_BULLETLIST = "bulletlistDialog"
 private const val DIALOG_HR = "hrDialog"
 
-open class SettingsActivity : AbsSettingsActivity(
+open class SettingsActivity : BaseSettingsActivity(
     dividerMode = DividerMode.IN_SECTION,
     indentEverything = false
 ),
@@ -75,6 +75,12 @@ open class SettingsActivity : AbsSettingsActivity(
                     iconRes = R.drawable.ic_theme_24,
                     tag = DIALOG_THEME
                 ),
+                BooleanItem(
+                    title = getString(R.string.tv_settings_item_title_color_items),
+                    value = prefs.colorNoteItems,
+                    iconRes = R.drawable.ic_color_24,
+                    onSwitch = { prefs.colorNoteItems = !prefs.colorNoteItems }
+                )
             ),
             ItemSection(
                 title = getString(R.string.tv_settings_header_markdown),

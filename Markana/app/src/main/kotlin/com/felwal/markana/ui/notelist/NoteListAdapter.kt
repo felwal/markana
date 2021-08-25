@@ -91,11 +91,14 @@ class NoteListAdapter(
             // color
             binding.tvTitle.setTextColor(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
-            binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
-            binding.clNote.background.setTint(note.getBackgroundColor(c))
+            if (prefs.colorNoteItems) {
+                binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+                binding.clNote.background.setTint(note.getBackgroundColor(c))
+                markSelection(note.isSelected, note.getBackgroundColor(c))
+            }
+            else markSelection(note.isSelected, c.getColorAttr(R.attr.colorSurface))
 
-            // mark selected and pinned
-            markSelection(note.isSelected, note.getBackgroundColor(c))
+            // mark pinned
             binding.ivPin.isInvisible = !note.isPinned
         }
     }

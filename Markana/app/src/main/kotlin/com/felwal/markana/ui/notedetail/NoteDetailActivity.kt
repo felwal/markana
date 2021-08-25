@@ -15,6 +15,7 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
+import com.felwal.markana.prefs
 import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
 import com.felwal.markana.util.getIntegerArray
@@ -216,9 +217,11 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         binding.tb.menu.forEach { it.icon?.setTint(fgColor) }
         binding.bab.menu.forEach { it.icon?.setTint(fgColor) }
 
-        //binding.root.setBackgroundColor(bgColor)
-        //binding.tb.setBackgroundColor(bgColor)
-        binding.bab.setBackgroundColor(bgColor)
+        if (prefs.colorNoteItems) {
+            //binding.root.setBackgroundColor(bgColor)
+            //binding.tb.setBackgroundColor(bgColor)
+            binding.bab.setBackgroundColor(bgColor)
+        }
     }
 
     // dialog

@@ -25,7 +25,7 @@ import com.felwal.markana.widget.dialog.radioDialog
 import com.felwal.markana.widget.dialog.textDialog
 import com.felwal.markana.widget.dialog.unaryDialog
 
-abstract class AbsSettingsActivity(
+abstract class BaseSettingsActivity(
     private val dividerMode: DividerMode,
     private val indentEverything: Boolean
 ) : AppCompatActivity() {
@@ -297,7 +297,7 @@ abstract class AbsSettingsActivity(
             tvValue.setTextRemoveIfEmpty(value)
 
             // view
-            root.enableRipple(this@AbsSettingsActivity)
+            root.enableRipple(this@BaseSettingsActivity)
             vDivider.isInvisible = hideDivider
 
             // icon
@@ -321,7 +321,7 @@ abstract class AbsSettingsActivity(
             tvDesc.setTextRemoveIfEmpty(desc)
 
             // view
-            root.enableRipple(this@AbsSettingsActivity)
+            root.enableRipple(this@BaseSettingsActivity)
             vDivider.isInvisible = hideDivider
 
             // icon

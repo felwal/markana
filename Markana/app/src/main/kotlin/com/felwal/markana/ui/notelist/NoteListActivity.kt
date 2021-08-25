@@ -49,6 +49,8 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     private val selectionMode: Boolean get() = selectionCount != 0
     private val selectedNote: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
 
+    private var colorNoteItems = true
+
     private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
         Log.i(LOG_TAG, "open document uri result: $uri")
@@ -79,6 +81,8 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
             it.setColorFilter(getColorAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
             supportActionBar?.setHomeAsUpIndicator(it)
         }
+
+        colorNoteItems = prefs.colorNoteItems
 
         initFabMenu()
         initRecycler()
@@ -187,6 +191,11 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
     override fun onRestart() {
         super.onRestart()
         fabMenu.closeMenuIfOpen()
+
+        if (colorNoteItems != prefs.colorNoteItems) {
+            adapter.notifyDataSetChanged()
+            colorNoteItems = prefs.colorNoteItems
+        }
     }
 
     override fun onStart() {

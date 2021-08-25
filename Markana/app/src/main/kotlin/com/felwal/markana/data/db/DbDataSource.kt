@@ -6,7 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.Tree
-import com.felwal.markana.util.DATABASE_NAME
+
+const val DATABASE_NAME = "markana"
 
 @Database(entities = [Note::class, Tree::class], version = 1)
 abstract class DbDataSource : RoomDatabase() {
