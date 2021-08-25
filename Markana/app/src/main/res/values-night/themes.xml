@@ -1,19 +1,20 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- dark theme -->
 
     <style name="Theme.Markana" parent="Theme.Default">
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- divider (manual) -->
-        <item name="android:strokeColor">@color/grey5</item>
-
-        <!-- bg -->
-        <item name="android:colorBackground">@color/grey2</item>
-
-        <!-- surface -->
-        <item name="colorSurface">@color/grey4</item>
+        <item name="android:colorBackground">@color/background_dk</item>
+        <item name="colorSurface">@color/surface_dk</item>
         <item name="colorOnSurface">@color/white</item>
+        <item name="android:strokeColor">@color/divider_dk</item>
+    </style>
+
+    <!-- overlay -->
+
+    <style name="ThemeOverlay.Markana.Popup" parent="ThemeOverlay.AppCompat.DayNight">
+        <!-- popup bg color uses ?colorSurface, but with an overlay of ~11% -->
     </style>
 
 </resources>

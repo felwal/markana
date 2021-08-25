@@ -18,8 +18,8 @@
 
     <!-- dialog -->
     <dimen name="spacing_dialog_top">@dimen/spacing_tiny</dimen>
-    <dimen name="spacing_dialog_side">@dimen/spacing_medium</dimen>
-    <dimen name="spacing_dialog_side_20dp">20dp</dimen>
+    <dimen name="spacing_dialog_horizontal">20dp</dimen>
+    <dimen name="spacing_dialog_horizontal_minus_4">16dp</dimen>
 
     <!-- layout -->
 
@@ -30,7 +30,7 @@
     <!-- misc -->
     <dimen name="corner_radius_medium">10dp</dimen>
     <dimen name="corner_radius_dialog">8dp</dimen>
-    <dimen name="stroke_width_small">1dp</dimen>
+    <dimen name="width_stroke_small">1dp</dimen>
     <dimen name="height_divider">1dp</dimen>
 
     <!-- elevation -->
@@ -41,11 +41,11 @@
     <dimen name="elev_overlay">9dp</dimen>
     <dimen name="elev_fabmenu">10dp</dimen>
 
-    <!-- type -->
+    <!-- typography -->
 
     <!-- palette -->
     <dimen name="type_headline1">24sp</dimen>
-    <dimen name="type_headline2">18sp</dimen>
+    <dimen name="type_headline2">20sp</dimen>
     <dimen name="type_subtitle1">16sp</dimen>
     <dimen name="type_subtitle2">14sp</dimen>
     <dimen name="type_body1">16sp</dimen>

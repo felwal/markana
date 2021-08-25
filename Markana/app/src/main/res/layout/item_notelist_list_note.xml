@@ -12,7 +12,7 @@
         android:id="@+id/cl_note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_grid_note_bg">
+        android:background="@drawable/shape_list_note_bg">
 
         <ImageView
             android:id="@+id/iv_icon"
@@ -34,7 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_pin_16"
-            app:tint="@color/red" />
+            app:tint="?colorControlActivated" />
 
         <TextView
             android:id="@+id/tv_title"

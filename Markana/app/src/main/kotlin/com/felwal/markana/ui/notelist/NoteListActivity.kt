@@ -20,7 +20,7 @@ import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.defaults
 import com.felwal.markana.util.removeAll
-import com.felwal.markana.util.getColorByAttr
+import com.felwal.markana.util.getColorAttr
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.getInteger
 import com.felwal.markana.util.getQuantityString
@@ -76,7 +76,7 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
         setSupportActionBar(binding.tb)
         val homeIcon = getDrawableCompat(R.drawable.ic_cancel_24)?.mutate()
         homeIcon?.let {
-            it.setColorFilter(getColorByAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+            it.setColorFilter(getColorAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
             supportActionBar?.setHomeAsUpIndicator(it)
         }
 
@@ -214,8 +214,8 @@ class NoteListActivity : AppCompatActivity(), BinaryDialog.DialogListener, Swipe
 
     private fun initRefreshLayout() {
         binding.srl.setOnRefreshListener(this)
-        binding.srl.setProgressBackgroundColorSchemeColor(getColorByAttr(android.R.attr.colorBackground))
-        binding.srl.setColorSchemeColors(getColorByAttr(R.attr.colorControlActivated))
+        binding.srl.setProgressBackgroundColorSchemeColor(getColorAttr(android.R.attr.colorBackground))
+        binding.srl.setColorSchemeColors(getColorAttr(R.attr.colorControlActivated))
     }
 
     override fun onRefresh() {

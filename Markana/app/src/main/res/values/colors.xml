@@ -4,25 +4,38 @@
     <!-- palette -->
 
     <!-- main -->
-    <color name="red_light">#FF522D</color>
-    <color name="red_light_trans">#33FF522D</color>
-    <color name="red">#C82400</color>
-    <color name="red_dark">#9B1C00</color>
-    <color name="teal_light">#03DAC5</color>
-    <color name="teal_dark">#018786</color>
+    <color name="red_accent">@color/material_red_400</color>
+    <color name="red_accent_trans">#33FF522D</color>
+    <color name="red_primary">#C82400</color>
+    <color name="red_primary_dark">#9B1C00</color>
 
     <!-- greyscale -->
     <color name="black">#000000</color>
     <color name="grey1">#121212</color> <!-- dk bg default -->
     <color name="grey2">#202124</color> <!-- dk bg -->
-    <color name="grey3">#242528</color> <!-- dk surface -->
-    <color name="grey4">#27292B</color> <!-- dk surface TF -->
+    <color name="grey3">#27292B</color> <!-- dk surface -->
+    <color name="grey4">#2F3033</color> <!-- dk surface TF -->
     <color name="grey5">#4E4F53</color> <!-- dk divider -->
     <color name="grey6">#DDDDDD</color> <!-- lt divider -->
     <color name="grey7">#F5F5F5</color> <!-- lt surface -->
     <color name="white">#FFFFFF</color>
 
-    <!-- trans -->
-    <color name="trans">#00000000</color>
+    <!-- variants -->
+    <color name="grey4_minus_11_percent">#14171B</color>
+    <color name="grey4_minus_15_percent">#0A0C0E</color>
+
+    <!-- application -->
+
+    <!-- dark -->
+    <color name="background_dk">@color/grey2</color>
+    <color name="surface_dk">@color/grey3</color>
+    <color name="divider_dk">@color/grey5</color>
+    <color name="text_primary_dk">#DDFFFFFF</color>
+
+    <!-- light -->
+    <color name="background_lt">@color/white</color>
+    <color name="surface_lt">@color/grey7</color>
+    <color name="divider_lt">@color/grey6</color>
+    <color name="text_primary_lt">#DD000000</color>
 
 </resources>

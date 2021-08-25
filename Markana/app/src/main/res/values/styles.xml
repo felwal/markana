@@ -1,7 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- overlay -->
+    <!-- dialog -->
+
+    <style name="ThemeOverlay.Markana.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <!-- shape -->
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Markana.Dialog</item>
+        <!-- title -->
+        <item name="materialAlertDialogTitleTextStyle">@style/Widget.Markana.TextView.Dialog.Title</item>
+        <!-- message -->
+        <item name="materialAlertDialogBodyTextStyle">@style/Widget.Markana.TextView.Dialog.Body</item>
+        <!-- list item -->
+        <item name="android:checkedTextViewStyle">@style/Widget.Markana.TextView.Dialog.Item</item>
+
+        <!-- <item name="android:background">?colorSurface</item> -->
+    </style>
+    
+    <style name="ShapeAppearanceOverlay.Markana.Dialog" parent="">
+        <item name="cornerSize">@dimen/corner_radius_dialog</item>
+    </style>
+    
+    <style name="Widget.Markana.TextView.Dialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.Markana.Headline2</item>
+    </style>
+
+    <style name="Widget.Markana.TextView.Dialog.Body" parent="">
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textAppearance">@style/TextAppearance.Markana.Body1</item>
+    </style>
+
+    <style name="Widget.Markana.TextView.Dialog.Item" parent="Widget.MaterialComponents.CheckedTextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.Markana.Subtitle1</item>
+    </style>
+
+    <!-- appbar -->
+
+    <style name="ThemeOverlay.Markana.Popup" parent="ThemeOverlay.AppCompat.DayNight">
+        <item name="colorSurface">?android:colorBackground</item>
+    </style>
 
     <style name="ThemeOverlay.Markana.Appbar" parent="">
         <!-- built-in action buttons, e.g. home/up -->
@@ -10,25 +48,16 @@
         <item name="iconTint">?colorControlActivated</item>
     </style>
 
-    <style name="ThemeOverlay.Markana.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Markana.MaterialAlertDialog</item>
-        <!-- <item name="android:background">?colorSurface</item> -->
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Markana.MaterialAlertDialog" parent="">
-        <item name="cornerSize">@dimen/corner_radius_dialog</item>
-    </style>
-
-    <!-- widget -->
-
     <style name="Widget.Markana.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?android:colorBackground</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:theme">@style/ThemeOverlay.Markana.Appbar</item>
         <item name="elevation">@dimen/elev_ab</item>
         <item name="titleTextColor">?android:textColorPrimary</item>
-        <item name="popupTheme">@style/Theme.Markana.PopupOverlay</item>
+        <item name="popupTheme">@style/ThemeOverlay.Markana.Popup</item>
     </style>
+
+    <!-- widget -->
 
     <style name="Widget.Markana.Fab" parent="">
         <item name="android:elevation">@dimen/elev_fab</item>
@@ -74,6 +103,7 @@
 
     <style name="TextAppearance.Markana.Headline2">
         <item name="android:textSize">@dimen/type_headline2</item>
+        <!--<item name="android:textStyle">bold</item>-->
     </style>
 
     <style name="TextAppearance.Markana.Subtitle1">

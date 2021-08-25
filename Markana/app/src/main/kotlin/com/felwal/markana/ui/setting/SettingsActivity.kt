@@ -109,6 +109,8 @@ open class SettingsActivity : AbsSettingsActivity(
                 BooleanItem(
                     title = getString(R.string.tv_settings_item_title_checkbox_space),
                     value = prefs.checkboxSpace,
+                    descOn = "- [ ]",
+                    descOff = "- []",
                     iconRes = R.drawable.ic_checkbox_blank_24,
                     onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
                 ),
@@ -127,7 +129,7 @@ open class SettingsActivity : AbsSettingsActivity(
 
     // dialog
 
-    override fun onRadioDialogClick(checkedItem: Int, tag: String) {
+    override fun onRadioDialogItemClick(checkedItem: Int, tag: String) {
         when (tag) {
             DIALOG_THEME -> {
                 prefs.themeInt = checkedItem

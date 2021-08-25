@@ -40,8 +40,8 @@ fun View.hideKeyboard() {
 
 // orientation
 
-val Activity.orientation: Int get() = getResources().getConfiguration().orientation
+val Context.orientation: Int get() = resources.configuration.orientation
 
-val Activity.isPortrait: Boolean get() = orientation == Configuration.ORIENTATION_PORTRAIT
+val Context.isPortrait: Boolean get() = orientation == Configuration.ORIENTATION_PORTRAIT
 
-val Activity.isLandscape: Boolean get() = orientation == Configuration.ORIENTATION_LANDSCAPE
+val Context.isLandscape: Boolean get() = orientation == Configuration.ORIENTATION_LANDSCAPE

@@ -8,34 +8,39 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.felwal.markana.AppContainer
+import androidx.core.view.forEach
 import com.felwal.markana.App
+import com.felwal.markana.AppContainer
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
-import com.felwal.markana.databinding.ActivityNotedetailBinding
-import com.felwal.markana.widget.dialog.BinaryDialog
-import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.data.network.CreateTextDocument
-import com.felwal.markana.util.toggleStrong
-import com.felwal.markana.util.toggleBulletlist
-import com.felwal.markana.util.toggleChecklist
-import com.felwal.markana.util.toggleCode
+import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
+import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
-import com.felwal.markana.util.toggleHeader
 import com.felwal.markana.util.insertThematicBreak
-import com.felwal.markana.util.toggleEmph
 import com.felwal.markana.util.makeMultilinePreventEnter
-import com.felwal.markana.util.toggleNumberlist
-import com.felwal.markana.util.toggleQuote
+import com.felwal.markana.util.multiplyAlphaComponent
 import com.felwal.markana.util.selectEnd
 import com.felwal.markana.util.showKeyboard
-import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
 import com.felwal.markana.util.toEpochSecond
+import com.felwal.markana.util.toggleBulletlist
+import com.felwal.markana.util.toggleChecklist
+import com.felwal.markana.util.toggleCode
+import com.felwal.markana.util.toggleEmph
+import com.felwal.markana.util.toggleHeader
+import com.felwal.markana.util.toggleNumberlist
+import com.felwal.markana.util.toggleQuote
+import com.felwal.markana.util.toggleStrikethrough
+import com.felwal.markana.util.toggleStrong
 import com.felwal.markana.util.updateTheme
+import com.felwal.markana.widget.dialog.BinaryDialog
+import com.felwal.markana.widget.dialog.ColorDialog
+import com.felwal.markana.widget.dialog.binaryDialog
+import com.felwal.markana.widget.dialog.colorDialog
 import java.time.LocalDateTime
 
 private const val LOG_TAG = "NoteDetail"
@@ -43,8 +48,9 @@ private const val LOG_TAG = "NoteDetail"
 private const val EXTRA_NOTE_URI = "uri"
 
 private const val DIALOG_DELETE = "deleteNotes"
+private const val DIALOG_COLOR = "color"
 
-class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
+class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, ColorDialog.DialogListener {
 
     private lateinit var binding: ActivityNotedetailBinding
 
@@ -93,7 +99,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // bab menu listener
-        binding.babTypography.setOnMenuItemClickListener(::onOptionsItemSelected)
+        binding.bab.setOnMenuItemClickListener(::onOptionsItemSelected)
 
         // focus body on outside click
         binding.vEmpty.setOnClickListener {
@@ -110,7 +116,10 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         model.noteUri = intent.getStringExtra(EXTRA_NOTE_URI)
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
-            note?.let { loadContent(it) }
+            note?.let {
+                applyNoteColor()
+                loadContent(it)
+            }
         }
         model.noteUri ?: model.createNote(createDocument)
         model.loadNote()
@@ -133,6 +142,12 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         android.R.id.home -> saveNote() then finish()
         R.id.action_undo -> {} // TODO
         R.id.action_redo -> {} // TODO
+        R.id.action_color -> colorDialog(
+            title = getString(R.string.dialog_title_color),
+            items = getIntegerArray(R.array.note_palette),
+            checkedItem = model.note.colorIndex,
+            tag = DIALOG_COLOR
+        ).show(supportFragmentManager)
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
         R.id.action_delete -> binaryDialog(
             title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
@@ -193,11 +208,33 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener {
         Log.i(LOG_TAG, "note saved: $note")
     }
 
+    private fun applyNoteColor() {
+        val fgColor = model.note.getColor(this)
+        val bgColor = model.note.getBackgroundColor(this).multiplyAlphaComponent(0.65f)
+
+        binding.etNoteTitle.setTextColor(fgColor)
+        binding.tb.menu.forEach { it.icon?.setTint(fgColor) }
+        binding.bab.menu.forEach { it.icon?.setTint(fgColor) }
+
+        //binding.root.setBackgroundColor(bgColor)
+        //binding.tb.setBackgroundColor(bgColor)
+        binding.bab.setBackgroundColor(bgColor)
+    }
+
     // dialog
 
     override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
             DIALOG_DELETE -> model.deleteNote() then finish()
+        }
+    }
+
+    override fun onColorDialogItemClick(checkedItem: Int, tag: String) {
+        when (tag) {
+            DIALOG_COLOR -> {
+                model.note.colorIndex = checkedItem
+                applyNoteColor()
+            }
         }
     }
 

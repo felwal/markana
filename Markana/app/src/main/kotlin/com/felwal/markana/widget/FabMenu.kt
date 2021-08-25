@@ -19,7 +19,7 @@ import com.felwal.markana.databinding.ItemFabMenuOverlayBinding
 import com.felwal.markana.util.ANIM_DURATION
 import com.felwal.markana.util.crossfadeIn
 import com.felwal.markana.util.crossfadeOut
-import com.felwal.markana.util.getColorByAttr
+import com.felwal.markana.util.getColorAttr
 import com.felwal.markana.util.getDrawableCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -92,8 +92,8 @@ class FabMenu(
     }
 
     private fun animateFab() {
-        @ColorInt val closedColor: Int = context.getColorByAttr(R.attr.colorSecondary)
-        @ColorInt val openColor: Int = context.getColorByAttr(R.attr.colorSurface)
+        @ColorInt val closedColor: Int = context.getColorAttr(R.attr.colorSecondary)
+        @ColorInt val openColor: Int = context.getColorAttr(R.attr.colorSurface)
 
         @ColorInt val fromColor: Int
         @ColorInt val toColor: Int
@@ -104,14 +104,14 @@ class FabMenu(
             fromColor = openColor
             toColor = closedColor
             toIcon = context.getDrawableCompat(R.drawable.ic_add_24)?.mutate()
-            toIcon?.setColorFilter(context.getColorByAttr(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
+            toIcon?.setColorFilter(context.getColorAttr(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
         }
         // animate to open menu
         else {
             fromColor = closedColor
             toColor = openColor
             toIcon = context.getDrawableCompat(R.drawable.ic_clear_24)?.mutate()
-            toIcon?.setColorFilter(context.getColorByAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+            toIcon?.setColorFilter(context.getColorAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
         }
 
         binding.fab.animateFab(fromColor, toColor, toIcon)

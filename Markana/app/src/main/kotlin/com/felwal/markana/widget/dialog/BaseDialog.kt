@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
@@ -42,7 +43,7 @@ abstract class BaseDialog : DialogFragment() {
 
         unpackBundle(unpackBaseBundle())
 
-        return styleDialog(buildDialog())
+        return buildDialog()
     }
 
     // bundle
@@ -86,9 +87,7 @@ abstract class BaseDialog : DialogFragment() {
 }
 
 fun AlertDialog.Builder.setCancelButton(@StringRes resId: Int): AlertDialog.Builder =
-    setNegativeButton(resId) { dialog, _ ->
-        dialog.cancel()
-    }
+    setNegativeButton(resId) { dialog, _ -> dialog.cancel() }
 
 fun AlertDialog.setTitleTextAppearanceAppCompat(res: Resources, @StyleRes resId: Int) =
     setTitleTextAppearance(res, resId, context.packageName)

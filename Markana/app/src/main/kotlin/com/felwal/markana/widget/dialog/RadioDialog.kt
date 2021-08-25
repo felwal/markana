@@ -45,7 +45,7 @@ class RadioDialog : BaseDialog() {
 
         setSingleChoiceItems(items, checkedItem) { dialog, which ->
             dialog.cancel()
-            listener.onRadioDialogClick(which, dialogTag)
+            listener.onRadioDialogItemClick(which, dialogTag)
         }
         setCancelButton(negBtnTxtRes)
 
@@ -55,7 +55,7 @@ class RadioDialog : BaseDialog() {
     //
 
     interface DialogListener {
-        fun onRadioDialogClick(checkedItem: Int, tag: String)
+        fun onRadioDialogItemClick(checkedItem: Int, tag: String)
     }
 }
 

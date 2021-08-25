@@ -28,10 +28,12 @@ fun Context.getQuantityString(@PluralsRes id: Int, quantity: Int, vararg formatA
 
 fun Context.getStringArray(@ArrayRes id: Int): Array<String> = resources.getStringArray(id)
 
+fun Context.getIntegerArray(@ArrayRes id: Int): IntArray = resources.getIntArray(id)
+
 // attr
 
 @ColorInt
-fun Context.getColorByAttr(@AttrRes id: Int): Int {
+fun Context.getColorAttr(@AttrRes id: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(id, typedValue, true)
     return typedValue.data

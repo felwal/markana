@@ -3,12 +3,17 @@ package com.felwal.markana.util
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.Layout
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.core.view.isGone
+import androidx.core.view.size
 import com.felwal.markana.R
 import com.google.android.material.snackbar.Snackbar
 
@@ -26,6 +31,17 @@ fun TextView.setTextRemoveIfEmpty(value: String) {
     text = value
     isGone = text == ""
 }
+
+// color
+
+/**
+ * Shorthand for [View.getBackgroundTintList]
+ */
+var View.backgroundTint: Int?
+    @ColorInt get() = backgroundTintList?.defaultColor
+    set(@ColorInt value) {
+        backgroundTintList = if (value != null) ColorStateList.valueOf(value) else null
+    }
 
 // snackbar
 

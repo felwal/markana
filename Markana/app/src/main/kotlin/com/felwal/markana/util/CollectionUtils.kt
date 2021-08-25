@@ -23,6 +23,8 @@ fun <E> MutableCollection<E?>.cropUp(value: E?, toSize: Int) {
 
 fun BooleanArray?.orEmpty(): BooleanArray = this ?: BooleanArray(0)
 
+fun IntArray?.orEmpty(): IntArray = this ?: IntArray(0)
+
 val <A, B> Array<out Pair<A, B>>.firsts: List<A> get() = map { it.first }
 
 val <A, B> Array<out Pair<A, B>>.seconds: List<B> get() = map { it.second }

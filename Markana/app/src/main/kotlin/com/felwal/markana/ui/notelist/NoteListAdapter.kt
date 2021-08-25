@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +23,9 @@ import com.felwal.markana.util.FORMATTER_THIS_YEAR
 import com.felwal.markana.util.FORMATTER_TODAY
 import com.felwal.markana.util.atStartOfYear
 import com.felwal.markana.util.fromEpochSecond
+import com.felwal.markana.util.getColorAttr
+import com.felwal.markana.util.getIntegerArray
+import com.felwal.markana.util.toast
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -80,12 +83,19 @@ class NoteListAdapter(
         fun bind(note: Note) {
             currentNote = note
 
+            // text
             binding.tvUri.text = note.uri
             binding.tvTitle.text = note.filename
             binding.tvBody.text = note.content.trim() // TODO: dont get the full string
 
+            // color
+            binding.tvTitle.setTextColor(note.getColor(c))
+            binding.ivPin.drawable.setTint(note.getColor(c))
+            binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+            binding.clNote.background.setTint(note.getBackgroundColor(c))
+
             // mark selected and pinned
-            markSelection(note.isSelected)
+            markSelection(note.isSelected, note.getBackgroundColor(c))
             binding.ivPin.isInvisible = !note.isPinned
         }
     }
@@ -112,6 +122,7 @@ class NoteListAdapter(
         fun bind(note: Note) {
             currentNote = note
 
+            // text
             binding.tvTitle.text = note.filename
             binding.tvModified.text =
                 if (prefs.sortBy == SortBy.OPENED) {
@@ -121,22 +132,27 @@ class NoteListAdapter(
                     "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
                 }
 
+            // color
+            binding.ivIcon.drawable.setTint(note.getColor(c))
+            binding.ivPin.drawable.setTint(note.getColor(c))
+            //binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+            //binding.clNote.background.setTint(note.getBackgroundColor(c))
+
             // mark selected and pinned
-            markSelection(note.isSelected)
+            markSelection(note.isSelected, c.getColorAttr(android.R.attr.colorBackground))
             binding.ivPin.isInvisible = !note.isPinned
         }
     }
 
     abstract class SelectableViewHolder(
-        private val c: Context,
+        protected val c: Context,
         binding: ViewBinding,
         private var selectableBackground: ConstraintLayout
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        protected fun markSelection(selected: Boolean) {
-            selectableBackground.background.setTintMode(PorterDuff.Mode.SRC_OVER)
-            if (selected) selectableBackground.background.setTint(c.getColor(R.color.red_light_trans))
-            else selectableBackground.background.setTint(c.getColor(R.color.trans))
+        protected fun markSelection(selected: Boolean, @ColorInt defaultColor: Int) {
+            if (selected) selectableBackground.background.setTint(c.getColor(R.color.red_accent_trans))
+            else selectableBackground.background.setTint(defaultColor)
         }
     }
 }

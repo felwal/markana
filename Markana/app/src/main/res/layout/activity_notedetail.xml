@@ -20,7 +20,8 @@
             android:id="@+id/ab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stateListAnimator="@animator/selector_elev_ab">
+            android:stateListAnimator="@animator/selector_elev_ab"
+            android:theme="@style/ThemeOverlay.Markana.Appbar">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -116,7 +117,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.bottomappbar.BottomAppBar
-                android:id="@+id/bab_typography"
+                android:id="@+id/bab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"

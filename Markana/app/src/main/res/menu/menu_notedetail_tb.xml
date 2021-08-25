@@ -8,13 +8,20 @@
         android:id="@+id/action_undo"
         android:title="@string/action_undo"
         android:icon="@drawable/ic_undo_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_redo"
         android:title="@string/action_redo"
         android:icon="@drawable/ic_redo_24"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_color"
+        android:title="@string/action_color"
+        android:icon="@drawable/ic_color_24"
+        app:showAsAction="always" />
+
 
     <item
         android:id="@+id/action_clipboard"
