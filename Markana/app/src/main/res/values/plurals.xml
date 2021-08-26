@@ -19,6 +19,10 @@
         <item quantity="one">Unlink note?</item>
         <item quantity="other">Unlink notes?</item>
     </plurals>
+    <plurals name="dialog_title_color_notes">
+        <item quantity="one">Color note</item>
+        <item quantity="other">Color notes</item>
+    </plurals>
 
     <!-- message -->
     <plurals name="dialog_msg_unlink_notes">

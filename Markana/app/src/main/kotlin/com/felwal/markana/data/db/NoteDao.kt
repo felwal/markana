@@ -56,6 +56,15 @@ interface NoteDao {
     suspend fun getNotes(sortBy: SortBy, asc: Boolean): List<Note> =
         getNotesQuery(SimpleSQLiteQuery("SELECT * FROM notes" + orderBy(sortBy, asc)))
 
+    suspend fun getNotes(searchQuery: String, sortBy: SortBy, asc: Boolean): List<Note> =
+        getNotesQuery(
+            SimpleSQLiteQuery(
+                "SELECT * FROM notes WHERE " +
+                    like(searchQuery, "filename", "content") +
+                    orderBy(sortBy, asc)
+            )
+        )
+
     @RawQuery
     suspend fun getNotesQuery(sortQuery: SupportSQLiteQuery?): List<Note>
 
@@ -72,6 +81,14 @@ interface NoteDao {
     suspend fun noteCount(): Int
 
     // tool
+
+    private fun like(query: String, vararg columns: String) =
+        columns.foldIndexed("") { i, acc, col ->
+            acc +
+                (if (i == 0) "(" else " OR ") +
+                "$col LIKE '%$query%'" +
+                if (i == columns.size - 1) ")" else ""
+        }
 
     private fun orderBy(sortBy: SortBy, asc: Boolean) =
         " ORDER BY pinned DESC, " +

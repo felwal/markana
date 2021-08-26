@@ -5,8 +5,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +15,11 @@ import com.felwal.markana.databinding.ItemFabMenuBinding
 import com.felwal.markana.databinding.ItemFabMenuItemBinding
 import com.felwal.markana.databinding.ItemFabMenuOverlayBinding
 import com.felwal.markana.util.ANIM_DURATION
+import com.felwal.markana.util.backgroundTint
 import com.felwal.markana.util.crossfadeIn
 import com.felwal.markana.util.crossfadeOut
 import com.felwal.markana.util.getColorAttr
-import com.felwal.markana.util.getDrawableCompat
+import com.felwal.markana.util.getDrawableCompatFilter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 const val OVERLAY_ALPHA = 0.96f
@@ -35,12 +34,12 @@ class FabMenu(
     private val overlayBinding = ItemFabMenuOverlayBinding.inflate(inflater, parent, true)
     private var itemBindings: MutableList<ItemFabMenuItemBinding> = mutableListOf()
 
-    private var isFabMenuOpen: Boolean = false
+    var isMenuOpen: Boolean = false
 
     init {
         // open/close
         binding.fab.setOnClickListener {
-            if (isFabMenuOpen) closeMenu() else openMenu()
+            if (isMenuOpen) closeMenu() else openMenu()
         }
 
         // close
@@ -63,7 +62,7 @@ class FabMenu(
         itemBindings.add(itemBinding)
     }
 
-    private fun openMenu() {
+    fun openMenu() {
         animateFab()
 
         for (itemBinding in itemBindings) {
@@ -72,10 +71,10 @@ class FabMenu(
         }
         overlayBinding.root.crossfadeIn(OVERLAY_ALPHA)
 
-        isFabMenuOpen = true
+        isMenuOpen = true
     }
 
-    private fun closeMenu() {
+    fun closeMenu() {
         animateFab()
 
         for (itemBinding in itemBindings) {
@@ -84,11 +83,7 @@ class FabMenu(
         }
         overlayBinding.root.crossfadeOut()
 
-        isFabMenuOpen = false
-    }
-
-    fun closeMenuIfOpen() = isFabMenuOpen.also {
-        if (isFabMenuOpen) closeMenu()
+        isMenuOpen = false
     }
 
     private fun animateFab() {
@@ -100,18 +95,16 @@ class FabMenu(
         val toIcon: Drawable?
 
         // animate to closed menu
-        if (isFabMenuOpen) {
+        if (isMenuOpen) {
             fromColor = openColor
             toColor = closedColor
-            toIcon = context.getDrawableCompat(R.drawable.ic_add_24)?.mutate()
-            toIcon?.setColorFilter(context.getColorAttr(R.attr.colorOnSecondary), PorterDuff.Mode.SRC_IN)
+            toIcon = context.getDrawableCompatFilter(R.drawable.ic_add_24, R.attr.colorOnSecondary)
         }
         // animate to open menu
         else {
             fromColor = closedColor
             toColor = openColor
-            toIcon = context.getDrawableCompat(R.drawable.ic_clear_24)?.mutate()
-            toIcon?.setColorFilter(context.getColorAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
+            toIcon = context.getDrawableCompatFilter(R.drawable.ic_clear_24, R.attr.colorControlActivated)
         }
 
         binding.fab.animateFab(fromColor, toColor, toIcon)
@@ -126,7 +119,7 @@ fun FloatingActionButton.animateFab(@ColorInt fromColor: Int, @ColorInt toColor:
 
     colorFade.addUpdateListener { animation: ValueAnimator ->
         val animatedValue = animation.animatedValue as Int
-        backgroundTintList = ColorStateList.valueOf(animatedValue)
+        backgroundTint = animatedValue
     }
     colorFade.start()
 

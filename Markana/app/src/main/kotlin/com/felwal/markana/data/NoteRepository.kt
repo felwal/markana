@@ -18,8 +18,9 @@ class NoteRepository(
 
     // read
 
-    suspend fun getNotes(): List<Note> = withIO {
-        db.noteDao().getNotes(prefs.sortBy, prefs.ascending)
+    suspend fun getNotes(searchQuery: String): List<Note> = withIO {
+        if (searchQuery == "") db.noteDao().getNotes(prefs.sortBy, prefs.ascending)
+        else db.noteDao().getNotes(searchQuery, prefs.sortBy, prefs.ascending)
     }
 
     suspend fun getNote(uri: String): Note? = withIO {

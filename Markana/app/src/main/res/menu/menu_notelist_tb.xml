@@ -5,16 +5,25 @@
     tools:context="com.felwal.markana.ui.notelist.NoteListActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        android:icon="@drawable/ic_search_24"
+        android:iconifiedByDefault="true"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:queryHint="@string/action_search"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
         android:id="@+id/action_view_toggle"
         android:title="@string/action_view_list"
         android:icon="@drawable/ic_view_list_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_sort"
         android:title="@string/action_sort"
         android:icon="@drawable/ic_sort_24"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
 
         <menu>
             <group

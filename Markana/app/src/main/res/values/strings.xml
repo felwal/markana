@@ -32,6 +32,7 @@
     <string name="action_view_list">List view</string>
     <string name="action_view_grid">Grid view</string>
     <string name="action_sort">Sort</string>
+    <string name="action_search">Search</string>
 
     <string name="action_sort_name">Name</string>
     <string name="action_sort_modified">Modified</string>
@@ -43,8 +44,10 @@
     <string name="et_notedetail_title_hint">note.txt</string>
     <string name="et_notedetail_body_hint">Note</string>
 
-    <string name="tv_notelist_empty_title">Welcome to Markana!</string>
-    <string name="tv_notelist_empty_message">Create your first note with +</string>
+    <string name="tv_notelist_empty_new_title">Welcome to Markana!</string>
+    <string name="tv_notelist_empty_new_message">Create your first note with +</string>
+    <string name="tv_notelist_empty_search_title">No results found</string>
+    <string name="tv_notelist_empty_search_message">Check spelling or try another term</string>
     <string name="tv_fab_create">Create note</string>
     <string name="tv_fab_link">Link file</string>
     <string name="tv_fab_link_folder">Link folder</string>
@@ -63,9 +66,6 @@
     <string name="tv_settings_item_msg_about">Made by Felix Wallin</string>
 
     <!-- dialog -->
-
-    <!-- title -->
-    <string name="dialog_title_color">Color</string>
 
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>

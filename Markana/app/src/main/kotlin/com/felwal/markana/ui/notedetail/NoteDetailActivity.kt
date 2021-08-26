@@ -148,7 +148,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         R.id.action_undo -> {} // TODO
         R.id.action_redo -> {} // TODO
         R.id.action_color -> colorDialog(
-            title = getString(R.string.dialog_title_color),
+            title = getQuantityString(R.plurals.dialog_title_color_notes, 1),
             items = getIntegerArray(R.array.note_palette),
             checkedItem = model.note.colorIndex,
             tag = DIALOG_COLOR

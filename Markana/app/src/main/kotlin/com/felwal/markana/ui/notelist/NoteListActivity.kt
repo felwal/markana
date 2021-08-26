@@ -1,12 +1,12 @@
 package com.felwal.markana.ui.notelist
 
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -55,7 +55,7 @@ class NoteListActivity : AppCompatActivity(),
     private lateinit var model: NoteListViewModel
 
     private val selectionCount: Int get() = model.selectionIndices.size
-    private val selectionMode: Boolean get() = selectionCount != 0
+    private val isSelectionMode: Boolean get() = selectionCount != 0
     private val selectedNote: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
 
     private var colorNoteItems = true
@@ -85,11 +85,9 @@ class NoteListActivity : AppCompatActivity(),
 
         // init tb
         setSupportActionBar(binding.tb)
-        val homeIcon = getDrawableCompat(R.drawable.ic_cancel_24)?.mutate()
-        homeIcon?.let {
-            it.setColorFilter(getColorAttr(R.attr.colorControlActivated), PorterDuff.Mode.SRC_IN)
-            supportActionBar?.setHomeAsUpIndicator(it)
-        }
+        supportActionBar?.setHomeAsUpIndicator(
+            getDrawableCompat(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
+        )
 
         colorNoteItems = prefs.colorNoteItems
 
@@ -139,6 +137,19 @@ class NoteListActivity : AppCompatActivity(),
                 // change scroll flags: scroll and snap tb
                 enableToolbarScroll()
                 //binding.ab.setExpanded(false, true)
+
+                // search
+                val searchItem = menu.findItem(R.id.action_search)
+                val searchView = searchItem.actionView as SearchView
+                searchView.queryHint = "Search"
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String) = false
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        model.searchQuery = newText
+                        model.loadNotes()
+                        return false
+                    }
+                })
             }
             1 -> {
                 // set menu
@@ -202,7 +213,7 @@ class NoteListActivity : AppCompatActivity(),
 
     override fun onRestart() {
         super.onRestart()
-        fabMenu.closeMenuIfOpen()
+        fabMenu.closeMenu()
 
         if (colorNoteItems != prefs.colorNoteItems) {
             adapter.notifyDataSetChanged()
@@ -217,9 +228,8 @@ class NoteListActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() = when {
-        fabMenu.closeMenuIfOpen() -> {
-        }
-        selectionMode -> emptySelection()
+        fabMenu.isMenuOpen -> fabMenu.closeMenu()
+        isSelectionMode -> emptySelection()
         else -> super.onBackPressed()
     }
 
@@ -260,7 +270,7 @@ class NoteListActivity : AppCompatActivity(),
         // adapter
         adapter = NoteListAdapter(
             onClick = {
-                if (selectionMode) selectNote(it)
+                if (isSelectionMode) selectNote(it)
                 else NoteDetailActivity.startActivity(this, it.uri)
             },
             onLongClick = {
@@ -285,7 +295,23 @@ class NoteListActivity : AppCompatActivity(),
         adapter.submitList(items)
 
         // toggle empty page
-        binding.clEmpty.isGone = items.isNotEmpty()
+        if (items.isEmpty()) {
+            binding.inEmpty.root.isGone = false
+
+            // set new use empty page
+            if (model.searchQuery == "") {
+                binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_new_title)
+                binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_new_message)
+                binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_note_24, R.attr.colorAccent))
+            }
+            // set search empty page
+            else {
+                binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_search_title)
+                binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_search_message)
+                binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_search_24, R.attr.colorAccent))
+            }
+        }
+        else binding.inEmpty.root.isGone = true
     }
 
     // fab
@@ -365,7 +391,7 @@ class NoteListActivity : AppCompatActivity(),
     }
 
     private fun colorSelection() = colorDialog(
-        title = getString(R.string.dialog_title_color),
+        title = getQuantityString(R.plurals.dialog_title_color_notes, selectionCount),
         items = getIntegerArray(R.array.note_palette),
         checkedItem = model.selectedNotes.common { it.colorIndex },
         tag = DIALOG_COLOR

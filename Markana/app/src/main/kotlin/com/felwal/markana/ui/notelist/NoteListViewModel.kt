@@ -15,6 +15,7 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
     val itemsData by lazy { MutableLiveData<MutableList<Note>>() }
     val selectionIndices: MutableList<Int> = mutableListOf()
+    var searchQuery: String = ""
 
     val items: List<Note> get() = itemsData.value ?: listOf()
     val selectedNotes: List<Note> get() = items.filter { it.isSelected }
@@ -23,7 +24,7 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
     fun loadNotes() {
         viewModelScope.launch {
-            val notes = repo.getNotes()
+            val notes = repo.getNotes(searchQuery)
                 .toMutableList()
                 .onEachIndexed { index, note ->
                     // sync with selection
