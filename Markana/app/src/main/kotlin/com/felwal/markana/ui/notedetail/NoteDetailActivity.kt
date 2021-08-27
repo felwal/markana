@@ -39,7 +39,7 @@ import com.felwal.markana.util.toggleNumberlist
 import com.felwal.markana.util.toggleQuote
 import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.toggleStrong
-import com.felwal.markana.util.updateTheme
+import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.dialog.BinaryDialog
 import com.felwal.markana.widget.dialog.ColorDialog
 import com.felwal.markana.widget.dialog.binaryDialog
@@ -91,7 +91,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     // Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        updateTheme()
+        updateDayNight()
         super.onCreate(savedInstanceState)
         binding = ActivityNotedetailBinding.inflate(layoutInflater)
         setContentView(binding.root)

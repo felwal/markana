@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stateListAnimator="@animator/selector_elev_ab"
-            android:theme="@style/ThemeOverlay.Markana.Appbar">
+            android:theme="@style/ThemeOverlay.Markana.ActionBar">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -121,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:theme="@style/ThemeOverlay.Markana.Appbar"
+                android:theme="@style/ThemeOverlay.Markana.ActionBar"
                 app:backgroundTint="?android:colorBackground"
                 app:elevation="@dimen/elev_nb"
                 app:layout_constraintBottom_toBottomOf="parent"

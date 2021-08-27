@@ -20,7 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-fun updateTheme() = AppCompatDelegate.setDefaultNightMode(
+fun updateDayNight() = AppCompatDelegate.setDefaultNightMode(
     when (prefs.theme) {
         Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO

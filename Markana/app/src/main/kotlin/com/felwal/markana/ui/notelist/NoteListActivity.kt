@@ -30,7 +30,7 @@ import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.removeAll
 import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.toggleInclusion
-import com.felwal.markana.util.updateTheme
+import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.felwal.markana.widget.dialog.BinaryDialog
 import com.felwal.markana.widget.dialog.ColorDialog
@@ -78,7 +78,7 @@ class NoteListActivity : AppCompatActivity(),
     // Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        updateTheme()
+        updateDayNight()
         super.onCreate(savedInstanceState)
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -143,7 +143,10 @@ class NoteListActivity : AppCompatActivity(),
                 val searchView = searchItem.actionView as SearchView
                 searchView.queryHint = "Search"
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String) = false
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        searchView.clearFocus()
+                        return false
+                    }
                     override fun onQueryTextChange(newText: String): Boolean {
                         model.searchQuery = newText
                         model.loadNotes()

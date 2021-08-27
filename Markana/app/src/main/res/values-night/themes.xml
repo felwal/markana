@@ -13,7 +13,7 @@
 
     <!-- overlay -->
 
-    <style name="ThemeOverlay.Markana.Popup" parent="ThemeOverlay.AppCompat.DayNight">
+    <style name="ThemeOverlay.Markana.ActionBarPopup" parent="ThemeOverlay.AppCompat.DayNight">
         <!-- popup bg color uses ?colorSurface, but with an overlay of ~11% -->
     </style>
 

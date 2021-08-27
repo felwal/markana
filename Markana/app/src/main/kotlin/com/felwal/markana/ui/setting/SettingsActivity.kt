@@ -11,7 +11,7 @@ import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.then
-import com.felwal.markana.util.updateTheme
+import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.dialog.RadioDialog
 import com.felwal.markana.widget.dialog.TextDialog
 import com.felwal.markana.widget.dialog.UnaryDialog
@@ -36,7 +36,7 @@ open class SettingsActivity : BaseSettingsActivity(
     override val llItemContainer: LinearLayout get() = binding.ll
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        updateTheme()
+        updateDayNight()
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -139,7 +139,7 @@ open class SettingsActivity : BaseSettingsActivity(
         when (tag) {
             DIALOG_THEME -> {
                 prefs.themeInt = checkedItem
-                updateTheme()
+                updateDayNight()
             }
             DIALOG_ITALIC -> prefs.emphSymbolInt = checkedItem
             DIALOG_BOLD -> prefs.strongSymbolInt = checkedItem

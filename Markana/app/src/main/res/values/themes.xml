@@ -14,11 +14,13 @@
         <item name="colorSecondaryVariant">@color/red_primary</item>
         <item name="colorOnSecondary">?android:colorBackground</item>
 
-        <!-- menu -->
+        <!-- type -->
         <item name="textAllCaps">false</item>
 
         <!-- theme/style -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Markana.Dialog</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.Markana.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
         <item name="android:textViewStyle">@style/Widget.Markana.TextView</item>
         <item name="android:editTextStyle">@style/Widget.Markana.EditText</item>
     </style>

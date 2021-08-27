@@ -37,24 +37,29 @@
 
     <!-- appbar -->
 
-    <style name="ThemeOverlay.Markana.Popup" parent="ThemeOverlay.AppCompat.DayNight">
-        <item name="colorSurface">?android:colorBackground</item>
+    <style name="ThemeOverlay.Markana.ActionBar" parent="">
+        <item name="iconTint">?colorControlActivated</item>
+        <item name="searchViewStyle">@style/Widget.Markana.SearchView.ActionBar</item>
     </style>
 
-    <style name="ThemeOverlay.Markana.Appbar" parent="">
-        <!-- built-in action buttons, e.g. home/up -->
-        <!--<item name="colorControlNormal">?colorOnBackground</item>-->
-        <!-- custom action buttons -->
-        <item name="iconTint">?colorControlActivated</item>
+    <style name="ThemeOverlay.Markana.ActionBarPopup" parent="ThemeOverlay.AppCompat.DayNight">
+        <item name="colorSurface">?android:colorBackground</item>
+        <item name="searchViewStyle">@style/Widget.Markana.SearchView</item>
+    </style>
+
+    <style name="Widget.Markana.SearchView.ActionBar" parent="Widget.AppCompat.SearchView.ActionBar">
+    </style>
+
+    <style name="Widget.Markana.SearchView" parent="Widget.AppCompat.SearchView">
     </style>
 
     <style name="Widget.Markana.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?android:colorBackground</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:theme">@style/ThemeOverlay.Markana.Appbar</item>
+        <item name="android:theme">@style/ThemeOverlay.Markana.ActionBar</item>
         <item name="elevation">@dimen/elev_ab</item>
         <item name="titleTextColor">?android:textColorPrimary</item>
-        <item name="popupTheme">@style/ThemeOverlay.Markana.Popup</item>
+        <item name="popupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
     </style>
 
     <!-- widget -->
