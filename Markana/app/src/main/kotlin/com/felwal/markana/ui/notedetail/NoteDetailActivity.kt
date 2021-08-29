@@ -1,6 +1,5 @@
 package com.felwal.markana.ui.notedetail
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,8 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
+import androidx.core.widget.doBeforeTextChanged
+import androidx.core.widget.doOnTextChanged
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
@@ -40,10 +41,14 @@ import com.felwal.markana.util.toggleQuote
 import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.toggleStrong
 import com.felwal.markana.util.updateDayNight
+import com.felwal.markana.widget.StringHistory
 import com.felwal.markana.widget.dialog.BinaryDialog
 import com.felwal.markana.widget.dialog.ColorDialog
 import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.widget.dialog.colorDialog
+import com.felwal.markana.widget.redo
+import com.felwal.markana.widget.registerUndoRedo
+import com.felwal.markana.widget.undo
 import java.time.LocalDateTime
 
 private const val LOG_TAG = "NoteDetail"
@@ -68,6 +73,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
 
     private val haveChangesBeenMade: Boolean
         get() = binding.etNoteTitle.string != model.note.filename || binding.etNoteBody.string != model.note.content
+
+    private val contentHistory = StringHistory()
 
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
         Log.i(LOG_TAG, "create document uri result: $uri")
@@ -122,6 +129,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             note?.let {
                 applyNoteColor()
                 loadContent(it)
+                binding.etNoteBody.registerUndoRedo(contentHistory)
             }
         }
         model.noteUri ?: model.createNote(createDocument)
@@ -135,7 +143,6 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         binding.etNoteTitle.makeMultilinePreventEnter()
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_notedetail_tb, menu)
         menu.setOptionalIconsVisible(true)
@@ -145,8 +152,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
         // tb
         android.R.id.home -> saveNote() then finish()
-        R.id.action_undo -> {} // TODO
-        R.id.action_redo -> {} // TODO
+        R.id.action_undo -> binding.etNoteBody.undo(contentHistory)
+        R.id.action_redo -> binding.etNoteBody.redo(contentHistory)
         R.id.action_color -> colorDialog(
             title = getQuantityString(R.plurals.dialog_title_color_notes, 1),
             items = getIntegerArray(R.array.note_palette),

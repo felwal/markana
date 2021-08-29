@@ -8,6 +8,12 @@ fun <E> MutableList<E>.replace(oldElement: E, newElement: E) =
 
 fun <E> MutableCollection<E>.removeAll() = removeAll(this)
 
+fun <E> MutableList<E>.removeAll(range: IntRange) = range.reversed().forEach { removeAt(it) }
+
+fun <E> MutableList<E>.removeAllFrom(index: Int) = removeAll(index until size)
+
+fun <E> MutableList<E>.removeAllTo(index: Int) = removeAll(0..index)
+
 inline fun <reified E> MutableList<E>.toNullable(): MutableList<E?> = mutableListOf(*toTypedArray())
 
 fun <E> MutableCollection<E?>.fillUp(value: E?, toSize: Int) =

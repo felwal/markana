@@ -38,6 +38,6 @@ fun Int.toColorStateList() = ColorStateList.valueOf(this)
 
 @ColorInt
 fun Int.multiplyAlphaComponent(@FloatRange(from = 0.0, to = 1.0) factor: Float): Int {
-    val alpha = (Color.alpha(this) * factor).roundToInt()
+    val alpha = (Color.alpha(this) * factor).roundToInt().clamp(0, 255)
     return Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
 }

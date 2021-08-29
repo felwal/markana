@@ -8,7 +8,6 @@ import androidx.annotation.ArrayRes
 import androidx.annotation.AttrRes
 import androidx.annotation.BoolRes
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
