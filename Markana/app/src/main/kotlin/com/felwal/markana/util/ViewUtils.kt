@@ -8,14 +8,12 @@ import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.Layout
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.view.isGone
-import androidx.core.view.size
 import com.felwal.markana.R
 import com.google.android.material.snackbar.Snackbar
 
@@ -63,6 +61,16 @@ val EditText.string: String get() = text.toString()
 
 val Editable.copy: Editable
     get() = Editable.Factory.getInstance().newEditable(this)
+
+/**
+ * Creates a copy of the [EditText]'s [Editable] ([EditText.getText]), executes the [block]
+ * and then reassignes with [EditText.setText].
+ */
+inline fun EditText.updateEditable(block: Editable.() -> Unit) {
+    val textCopy = text.copy
+    textCopy.block()
+    text = textCopy
+}
 
 fun EditText.selectStart() = setSelection(0)
 

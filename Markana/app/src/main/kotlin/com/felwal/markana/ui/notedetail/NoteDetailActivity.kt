@@ -9,8 +9,6 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
-import androidx.core.widget.doBeforeTextChanged
-import androidx.core.widget.doOnTextChanged
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
@@ -30,6 +28,7 @@ import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
+import com.felwal.markana.util.toColorStateList
 import com.felwal.markana.util.toEpochSecond
 import com.felwal.markana.util.toggleBulletlist
 import com.felwal.markana.util.toggleChecklist
@@ -41,14 +40,11 @@ import com.felwal.markana.util.toggleQuote
 import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.toggleStrong
 import com.felwal.markana.util.updateDayNight
-import com.felwal.markana.widget.StringHistory
+import com.felwal.markana.widget.UndoRedoManager
 import com.felwal.markana.widget.dialog.BinaryDialog
 import com.felwal.markana.widget.dialog.ColorDialog
 import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.widget.dialog.colorDialog
-import com.felwal.markana.widget.redo
-import com.felwal.markana.widget.registerUndoRedo
-import com.felwal.markana.widget.undo
 import java.time.LocalDateTime
 
 private const val LOG_TAG = "NoteDetail"
@@ -74,7 +70,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     private val haveChangesBeenMade: Boolean
         get() = binding.etNoteTitle.string != model.note.filename || binding.etNoteBody.string != model.note.content
 
-    private val contentHistory = StringHistory()
+    private lateinit var contentHistoryManager: UndoRedoManager
 
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
         Log.i(LOG_TAG, "create document uri result: $uri")
@@ -129,7 +125,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             note?.let {
                 applyNoteColor()
                 loadContent(it)
-                binding.etNoteBody.registerUndoRedo(contentHistory)
+                contentHistoryManager = UndoRedoManager(binding.etNoteBody)
             }
         }
         model.noteUri ?: model.createNote(createDocument)
@@ -152,8 +148,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
         // tb
         android.R.id.home -> saveNote() then finish()
-        R.id.action_undo -> binding.etNoteBody.undo(contentHistory)
-        R.id.action_redo -> binding.etNoteBody.redo(contentHistory)
+        R.id.action_undo -> contentHistoryManager.undo()
+        R.id.action_redo -> contentHistoryManager.redo()
         R.id.action_color -> colorDialog(
             title = getQuantityString(R.plurals.dialog_title_color_notes, 1),
             items = getIntegerArray(R.array.note_palette),
