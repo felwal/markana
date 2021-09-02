@@ -12,8 +12,12 @@ class UndoRedoManager(private val et: EditText) {
     private val historyBuffer = ArrayDeque<Command>()
     private val futureBuffer = ArrayDeque<Command>()
 
-    val canUndo: Boolean get() = historyBuffer.isNotEmpty()
-    val canRedo: Boolean get() = futureBuffer.isNotEmpty()
+    private val canUndo: Boolean get() = historyBuffer.isNotEmpty()
+    private val canRedo: Boolean get() = futureBuffer.isNotEmpty()
+
+    private var onCanUndoChangeListener: ((canUndo: Boolean) -> Unit)? = null
+    private var onCanRedoChangeListener: ((canUndo: Boolean) -> Unit)? = null
+
     private var textUndoedOrRedoed = false
 
     init {
@@ -47,16 +51,25 @@ class UndoRedoManager(private val et: EditText) {
 
     private fun registerNewText(command: Command, newText: String) {
         command.newText = newText
+
         if (canRedo) futureBuffer.removeAll()
         historyBuffer.add(command)
+
+        onCanUndoChangeListener?.let { it(true) }
+        onCanRedoChangeListener?.let { it(false) }
     }
 
     fun undo() {
         if (!canUndo) return
 
+        val canUndoBefore = canUndo
+
         val lastCommand = historyBuffer.removeLast()
         futureBuffer.addLast(lastCommand)
         textUndoedOrRedoed = true
+
+        onCanUndoChangeListener?.let { if (canUndo != canUndoBefore) it(!canUndoBefore) }
+        onCanRedoChangeListener?.let { it(true) }
 
         et.updateEditable {
             replace(lastCommand.start, lastCommand.newEnd, lastCommand.oldText)
@@ -67,14 +80,27 @@ class UndoRedoManager(private val et: EditText) {
     fun redo() {
         if (!canRedo) return
 
+        val canRedoBefore = canRedo
+
         val nextCommand = futureBuffer.removeLast()
         historyBuffer.addLast(nextCommand)
         textUndoedOrRedoed = true
+
+        onCanUndoChangeListener?.let { it(true) }
+        onCanRedoChangeListener?.let { if (canRedo != canRedoBefore) it(!canRedoBefore) }
 
         et.updateEditable {
             replace(nextCommand.start, nextCommand.oldEnd, nextCommand.newText)
         }
         et.setSelection(nextCommand.newEnd)
+    }
+
+    fun doOnCanUndoChange(action: (canUndo: Boolean) -> Unit) {
+        onCanUndoChangeListener = action
+    }
+
+    fun doOnCanRedoChange(action: (canRedo: Boolean) -> Unit) {
+        onCanRedoChangeListener = action
     }
 
     private class Command(val start: Int, val oldText: String) {

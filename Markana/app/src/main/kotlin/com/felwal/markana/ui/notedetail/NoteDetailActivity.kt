@@ -28,7 +28,6 @@ import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
-import com.felwal.markana.util.toColorStateList
 import com.felwal.markana.util.toEpochSecond
 import com.felwal.markana.util.toggleBulletlist
 import com.felwal.markana.util.toggleChecklist
@@ -123,9 +122,9 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
             note?.let {
-                applyNoteColor()
+                applyNoteColor(it)
                 loadContent(it)
-                contentHistoryManager = UndoRedoManager(binding.etNoteBody)
+                initUndoRedo(it)
             }
         }
         model.noteUri ?: model.createNote(createDocument)
@@ -194,6 +193,29 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
 
     //
 
+    private fun initUndoRedo(note: Note) {
+        val colorEnabled = note.getColor(this@NoteDetailActivity)
+        val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
+        val undoItem = binding.tb.menu.findItem(R.id.action_undo)
+        val redoItem = binding.tb.menu.findItem(R.id.action_redo)
+
+        undoItem.isEnabled = false
+        undoItem.icon?.setTint(colorDisabled)
+        redoItem.isEnabled = false
+        redoItem.icon?.setTint(colorDisabled)
+
+        contentHistoryManager = UndoRedoManager(binding.etNoteBody).apply {
+            doOnCanUndoChange { canUndo ->
+                undoItem.isEnabled = canUndo
+                undoItem.icon?.setTint(if (canUndo) colorEnabled else colorDisabled)
+            }
+            doOnCanRedoChange { canRedo ->
+                redoItem.isEnabled = canRedo
+                redoItem.icon?.setTint(if (canRedo) colorEnabled else colorDisabled)
+            }
+        }
+    }
+
     private fun clearAllFocus() {
         binding.etNoteTitle.clearFocus()
         binding.etNoteBody.clearFocus()
@@ -216,9 +238,9 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         Log.i(LOG_TAG, "note saved: $note")
     }
 
-    private fun applyNoteColor() {
-        val fgColor = model.note.getColor(this)
-        val bgColor = model.note.getBackgroundColor(this).multiplyAlphaComponent(0.65f)
+    private fun applyNoteColor(note: Note) {
+        val fgColor = note.getColor(this)
+        val bgColor = note.getBackgroundColor(this).multiplyAlphaComponent(0.65f)
 
         binding.etNoteTitle.setTextColor(fgColor)
         binding.tb.menu.forEach { it.icon?.setTint(fgColor) }
@@ -243,7 +265,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         when (tag) {
             DIALOG_COLOR -> {
                 model.note.colorIndex = checkedItem
-                applyNoteColor()
+                applyNoteColor(model.note)
             }
         }
     }
