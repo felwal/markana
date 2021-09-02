@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 app:contentScrim="?colorPrimary"
                 app:expandedTitleGravity="top"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:layout_scrollFlags="noScroll"
                 app:titleEnabled="false">
 
                 <androidx.appcompat.widget.Toolbar

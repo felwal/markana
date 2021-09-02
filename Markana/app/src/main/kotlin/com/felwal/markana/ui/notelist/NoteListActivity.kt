@@ -216,7 +216,7 @@ class NoteListActivity : AppCompatActivity(),
 
     override fun onRestart() {
         super.onRestart()
-        fabMenu.closeMenu()
+        if (fabMenu.isMenuOpen) fabMenu.closeMenu()
 
         if (colorNoteItems != prefs.colorNoteItems) {
             adapter.notifyDataSetChanged()

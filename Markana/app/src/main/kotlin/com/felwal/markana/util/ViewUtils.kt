@@ -59,15 +59,14 @@ fun Menu.setOptionalIconsVisible(visible: Boolean) = (this as? MenuBuilder)?.set
 
 val EditText.string: String get() = text.toString()
 
-val Editable.copy: Editable
-    get() = Editable.Factory.getInstance().newEditable(this)
+fun Editable.copy(): Editable = Editable.Factory.getInstance().newEditable(this)
 
 /**
  * Creates a copy of the [EditText]'s [Editable] ([EditText.getText]), executes the [block]
  * and then reassignes with [EditText.setText].
  */
 inline fun EditText.updateEditable(block: Editable.() -> Unit) {
-    val textCopy = text.copy
+    val textCopy = text.copy()
     textCopy.block()
     text = textCopy
 }
@@ -76,6 +75,10 @@ fun EditText.selectStart() = setSelection(0)
 
 fun EditText.selectEnd() = setSelection(string.length)
 
+/**
+ * Makes the EditText wrap multiple lines
+ * while at the same time preventing the keyboard Enter button.
+ */
 fun EditText.makeMultilinePreventEnter() = apply {
     isSingleLine = true
     setHorizontallyScrolling(false) // allow wrapping

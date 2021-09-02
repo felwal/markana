@@ -93,10 +93,10 @@ interface NoteDao {
     private fun orderBy(sortBy: SortBy, asc: Boolean) =
         " ORDER BY pinned DESC, " +
             when (sortBy) {
-                SortBy.NAME -> "lower(filename), filename"
-                SortBy.MODIFIED -> "modified"
-                SortBy.OPENED -> "opened"
+                SortBy.NAME -> "lower(filename) ${order(asc)}, filename "
+                SortBy.MODIFIED -> "modified "
+                SortBy.OPENED -> "opened "
             } + order(asc)
 
-    private fun order(asc: Boolean) = if (asc) " ASC" else " DESC"
+    private fun order(asc: Boolean) = if (asc) "ASC" else "DESC"
 }
