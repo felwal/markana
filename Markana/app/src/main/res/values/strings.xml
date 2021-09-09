@@ -1,5 +1,7 @@
 <resources>
 
+    <!-- app -->
+
     <string name="app_name">Markana</string>
 
     <!-- activity -->
@@ -10,14 +12,28 @@
 
     <!-- action -->
 
+    <!-- notelist -->
+    <string name="action_search">Search</string>
+    <string name="action_view_list">List view</string>
+    <string name="action_view_grid">Grid view</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_sort_name">Name</string>
+    <string name="action_sort_modified">Modified</string>
+    <string name="action_sort_opened">Opened</string>
+    <string name="action_sort_asc">Ascending</string>
     <string name="action_settings">Settings</string>
-    <string name="action_undo">Undo</string>
-    <string name="action_redo">Redo</string>
+
+    <!-- notelist selection -->
     <string name="action_color">Color</string>
     <string name="action_delete">Delete</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_pin">Pin/unpin</string>
     <string name="action_copy">Copy</string>
+
+    <!-- notedetail -->
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_clipboard">Copy to clipboard</string>
     <string name="action_bold">Bold</string>
     <string name="action_italic">Italic</string>
     <string name="action_strikethrough">Strikethrough</string>
@@ -28,29 +44,25 @@
     <string name="action_bulletlist">Bulletlist</string>
     <string name="action_numberlist">Numberlist</string>
     <string name="action_horizontal_rule">Thematic break</string>
-    <string name="action_clipboard">Copy to clipboard</string>
-    <string name="action_view_list">List view</string>
-    <string name="action_view_grid">Grid view</string>
-    <string name="action_sort">Sort</string>
-    <string name="action_search">Search</string>
-
-    <string name="action_sort_name">Name</string>
-    <string name="action_sort_modified">Modified</string>
-    <string name="action_sort_opened">Opened</string>
-    <string name="action_sort_asc">Ascending</string>
 
     <!-- view -->
 
+    <!-- notedetail -->
     <string name="et_notedetail_title_hint">note.txt</string>
     <string name="et_notedetail_body_hint">Note</string>
 
+    <!-- notelist -->
+    <plurals name="tb_notelist_title_selection">
+        <item quantity="one">%d note</item>
+        <item quantity="other">%d notes</item>
+    </plurals>
     <string name="tv_notelist_empty_new_title">Welcome to Markana!</string>
     <string name="tv_notelist_empty_new_message">Create your first note with +</string>
     <string name="tv_notelist_empty_search_title">No results found</string>
     <string name="tv_notelist_empty_search_message">Check spelling or try another term</string>
-    <string name="tv_fab_create">Create note</string>
-    <string name="tv_fab_link">Link file</string>
-    <string name="tv_fab_link_folder">Link folder</string>
+    <string name="tv_notelist_fab_create">Create note</string>
+    <string name="tv_notelist_fab_link">Link file</string>
+    <string name="tv_notelist_fab_link_folder">Link folder</string>
 
     <!-- settings -->
     <string name="tv_settings_header_appearance">Appearance</string>
@@ -67,8 +79,26 @@
 
     <!-- dialog -->
 
+    <!-- title -->
+    <plurals name="dialog_title_delete_notes">
+        <item quantity="one">Delete note?</item>
+        <item quantity="other">Delete notes?</item>
+    </plurals>
+    <plurals name="dialog_title_unlink_notes">
+        <item quantity="one">Unlink note?</item>
+        <item quantity="other">Unlink notes?</item>
+    </plurals>
+    <plurals name="dialog_title_color_notes">
+        <item quantity="one">Color note</item>
+        <item quantity="other">Color notes</item>
+    </plurals>
+
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>
+    <plurals name="dialog_msg_unlink_notes">
+        <item quantity="one">You can always link it again.</item>
+        <item quantity="other">You can always link them again.</item>
+    </plurals>
 
     <!-- button -->
     <string name="dialog_btn_ok">OK</string>

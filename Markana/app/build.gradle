@@ -52,6 +52,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.3.0"
     implementation "androidx.room:room-ktx:2.3.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "io.noties.markwon:core:4.6.2"
+    implementation "io.noties.markwon:editor:4.6.2"
+
     kapt "androidx.room:room-compiler:2.3.0"
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -85,6 +85,8 @@
                     android:singleLine="false"
                     android:inputType="textMultiLine|textCapSentences"
                     android:imeOptions="flagNoExtractUi"
+                    android:linksClickable="true"
+                    android:autoLink="email|web"
                     android:textColor="?android:textColorPrimary"
                     android:textAppearance="@style/TextAppearance.Markana.Body1"
                     app:layout_constraintEnd_toEndOf="parent"

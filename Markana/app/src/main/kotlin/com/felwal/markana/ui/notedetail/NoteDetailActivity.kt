@@ -3,6 +3,10 @@ package com.felwal.markana.ui.notedetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.text.style.ForegroundColorSpan
+import android.text.style.QuoteSpan
+import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -39,12 +43,24 @@ import com.felwal.markana.util.toggleQuote
 import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.toggleStrong
 import com.felwal.markana.util.updateDayNight
+import com.felwal.markana.util.useEditHandler
 import com.felwal.markana.widget.UndoRedoManager
 import com.felwal.markana.widget.dialog.BinaryDialog
 import com.felwal.markana.widget.dialog.ColorDialog
 import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.widget.dialog.colorDialog
+import io.noties.markwon.Markwon
+import io.noties.markwon.SoftBreakAddsNewLinePlugin
+import io.noties.markwon.core.MarkwonTheme
+import io.noties.markwon.core.spans.CodeBlockSpan
+import io.noties.markwon.core.spans.CodeSpan
+import io.noties.markwon.core.spans.EmphasisSpan
+import io.noties.markwon.core.spans.HeadingSpan
+import io.noties.markwon.core.spans.StrongEmphasisSpan
+import io.noties.markwon.editor.MarkwonEditor
+import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import java.time.LocalDateTime
+import java.util.concurrent.Executors
 
 private const val LOG_TAG = "NoteDetail"
 
@@ -103,6 +119,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        binding.etNoteBody.movementMethod = LinkMovementMethod.getInstance()
+
         // bab menu listener
         binding.bab.setOnMenuItemClickListener(::onOptionsItemSelected)
 
@@ -123,6 +141,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             note ?: finish() // the note was not found or had not granted access
             note?.let {
                 applyNoteColor(it)
+                initMarkwon(it)
                 loadContent(it)
                 initUndoRedo(it)
             }
@@ -164,8 +183,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         ).show(supportFragmentManager)
 
         // bab
-        R.id.action_italic -> etCurrentFocus?.toggleEmph()
         R.id.action_bold -> etCurrentFocus?.toggleStrong()
+        R.id.action_italic -> etCurrentFocus?.toggleEmph()
         R.id.action_strikethrough -> etCurrentFocus?.toggleStrikethrough()
         R.id.action_heading -> etCurrentFocus?.toggleHeader()
         R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
@@ -186,12 +205,57 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         }
     }
 
+    override fun onPause() {
+        saveNote()
+        super.onPause()
+    }
+
     override fun onDestroy() {
         appContainer.noteDetailContainer = null
         super.onDestroy()
     }
 
     //
+
+    private fun initMarkwon(note: Note) {
+        val theme = MarkwonTheme.builderWithDefaults(this).run {
+            build()
+        }
+
+        val markwon = Markwon.builder(this).run {
+            usePlugin(SoftBreakAddsNewLinePlugin.create())
+            build()
+        }
+
+        val editor = MarkwonEditor.builder(markwon).run {
+            // change color
+            punctuationSpan(ForegroundColorSpan::class.java) { ForegroundColorSpan(note.getColor(this@NoteDetailActivity)) }
+
+            // emphasis
+            useEditHandler(StrongEmphasisSpan(), "**", "__")
+            useEditHandler(EmphasisSpan(), "*", "_")
+            //useEditHandler(StrikethroughSpan(), "~~")
+
+            // block
+            //useEditHandler(QuoteSpan(), ">")
+            useEditHandler(CodeBlockSpan(theme), "```")
+            useEditHandler(CodeSpan(theme), "`")
+
+            // heading
+            //useEditHandler(HeadingSpan(theme, 6), "######")
+            //useEditHandler(HeadingSpan(theme, 5), "#####")
+            //useEditHandler(HeadingSpan(theme, 4), "####")
+            //useEditHandler(HeadingSpan(theme, 3), "###")
+            //useEditHandler(HeadingSpan(theme, 2), "##")
+            //useEditHandler(HeadingSpan(theme, 1), "#")
+
+            build()
+        }
+
+        binding.etNoteBody.addTextChangedListener(
+            MarkwonEditorTextWatcher.withPreRender(editor, Executors.newCachedThreadPool(), binding.etNoteBody)
+        )
+    }
 
     private fun initUndoRedo(note: Note) {
         val colorEnabled = note.getColor(this@NoteDetailActivity)

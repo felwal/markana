@@ -11,15 +11,15 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_italic"
-        android:title="@string/action_italic"
-        android:icon="@drawable/ic_italic_24"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_bold"
         android:title="@string/action_bold"
         android:icon="@drawable/ic_bold_24"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_italic"
+        android:title="@string/action_italic"
+        android:icon="@drawable/ic_italic_24"
         app:showAsAction="always" />
 
     <item

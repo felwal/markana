@@ -323,7 +323,7 @@ class NoteListActivity : AppCompatActivity(),
         fabMenu = FabMenu(this, layoutInflater, binding.root).apply {
             // create note
             addItem(
-                getString(R.string.tv_fab_create),
+                getString(R.string.tv_notelist_fab_create),
                 getDrawableCompat(R.drawable.ic_create_24)
             ) {
                 emptySelection()
@@ -332,7 +332,7 @@ class NoteListActivity : AppCompatActivity(),
 
             // link note
             addItem(
-                getString(R.string.tv_fab_link),
+                getString(R.string.tv_notelist_fab_link),
                 getDrawableCompat(R.drawable.ic_link_24)
             ) {
                 emptySelection()
@@ -341,7 +341,7 @@ class NoteListActivity : AppCompatActivity(),
 
             // link folder
             addItem(
-                getString(R.string.tv_fab_link_folder),
+                getString(R.string.tv_notelist_fab_link_folder),
                 getDrawableCompat(R.drawable.ic_folder_add_24)
             ) {
                 emptySelection()
