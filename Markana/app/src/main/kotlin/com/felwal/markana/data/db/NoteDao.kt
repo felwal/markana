@@ -10,14 +10,34 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.prefs.SortBy
+import com.felwal.markana.util.toUriPathString
 
 @Dao
 interface NoteDao {
 
     // write
 
-    suspend fun addNoteIfNotExists(vararg notes: Note) = notes.forEach {
-        if (!doesNoteExist(it.uri)) addNote(it)
+    suspend fun addNoteIfNotExists(note: Note) {
+        // the note already exists
+        if (doesNoteExist(note.uri)) return
+
+        val noteLinkedIndependently = getNoteLinkedIndependently(note.uri.toUriPathString())
+
+        // the note already exists independently
+        if (noteLinkedIndependently != null) {
+            // copy metadata
+            note.apply {
+                modified = noteLinkedIndependently.modified
+                opened = noteLinkedIndependently.opened
+                isPinned = noteLinkedIndependently.isPinned
+                colorIndex = noteLinkedIndependently.colorIndex
+            }
+
+            // delete original independent to avoid duplicates
+            deleteNote(noteLinkedIndependently.uri)
+        }
+
+        addNote(note)
     }
 
     suspend fun addOrUpdateNote(vararg notes: Note) = notes.forEach {
@@ -52,6 +72,14 @@ interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE uri = :uri LIMIT 1")
     suspend fun getNote(uri: String): Note?
+
+    suspend fun doesNoteExistIncludeInTree(uriPathString: String) = getNoteIncludeInTree(uriPathString) != null
+
+    @Query("SELECT * FROM notes WHERE uri LIKE '%' || :uriPathString LIMIT 1")
+    suspend fun getNoteIncludeInTree(uriPathString: String): Note?
+
+    @Query("SELECT * FROM notes WHERE tree_id ISNULL AND uri LIKE '%' || :uriPathString")
+    suspend fun getNoteLinkedIndependently(uriPathString: String): Note?
 
     suspend fun getNotes(sortBy: SortBy, asc: Boolean): List<Note> =
         getNotesQuery(SimpleSQLiteQuery("SELECT * FROM notes" + orderBy(sortBy, asc)))

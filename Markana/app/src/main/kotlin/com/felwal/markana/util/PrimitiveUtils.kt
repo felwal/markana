@@ -17,16 +17,6 @@ fun CharSequence.split(vararg delimiters: String, lowerLimit: Int, ignoreCase: B
         .apply { fillUp(null, lowerLimit) }
 }
 
-fun String.isMime(type: String): Boolean {
-    val (thisType, thisSubtype) = split("/", lowerLimit = 2)
-    return thisType == type
-}
-
-fun String.isMime(type: String, subType: String): Boolean {
-    val (thisType, thisSubtype) = split("/", lowerLimit = 2)
-    return thisType == type && (thisSubtype == subType || subType == "*")
-}
-
 fun CharSequence.coerceSubstring(startIndex: Int, endIndex: Int): String =
     substring(startIndex.coerceIn(0, length - 1), endIndex.coerceIn(0, length - 1))
 

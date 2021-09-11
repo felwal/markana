@@ -8,6 +8,7 @@ import com.felwal.markana.data.db.DbDataSource
 import com.felwal.markana.data.network.SafDataSource
 import com.felwal.markana.prefs
 import com.felwal.markana.util.coToast
+import com.felwal.markana.util.toUriPathString
 import com.felwal.markana.util.withIO
 
 class NoteRepository(
@@ -57,7 +58,9 @@ class NoteRepository(
 
         val notes = saf.readTree(tree)
         withIO {
-            db.noteDao().addNoteIfNotExists(*notes.toTypedArray())
+            notes.forEach {
+                db.noteDao().addNoteIfNotExists(it)
+            }
         }
     }
 
@@ -130,6 +133,12 @@ class NoteRepository(
     // launcher results
 
     suspend fun handleOpenedDocument(uri: Uri) = withIO {
+        // check if exists in tree
+        if (db.noteDao().doesNoteExistIncludeInTree(uri.toUriPathString())) {
+            applicationContext.coToast("Note already linked (with tree)")
+            return@withIO
+        }
+
         saf.persistPermissions(uri)
 
         // read and save to db
