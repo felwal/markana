@@ -98,36 +98,18 @@ class NoteRepository(
         for (note in notes) db.noteDao().updateNoteMetadata(note.uri, note.isPinned, note.colorIndex)
     }
 
-    suspend fun unlinkNotes(uris: List<String>) =
-        uris.forEach { unlinkNote(it) }
-
-    private suspend fun unlinkNote(uri: String) = withIO {
-        val note = db.noteDao().getNote(uri)
-
-        note?.let {
-            // temp: also unlink whole tree if note from tree
-            // TODO: use a sort of archive in that case
-            it.treeId?.let { unlinkTree(it) }
-
-            db.noteDao().deleteNote(uri)
-        }
+    suspend fun unlinkNote(uri: String) = withIO {
+        db.noteDao().deleteNote(uri)
     }
 
-    private suspend fun unlinkTree(id: Int) = withIO {
+    suspend fun unlinkTree(id: Int) = withIO {
         db.treeDao().deleteTree(id)
         db.noteDao().deleteNotes(id)
     }
 
-    suspend fun deleteNotes(uris: List<String>) {
-        for (uri in uris) {
-            saf.deleteFile(uri.toUri())
-            unlinkNote(uri) // TODO: dont unlink all of same folder
-        }
-    }
-
     suspend fun deleteNote(uri: String) {
         saf.deleteFile(uri.toUri())
-        unlinkNote(uri) // TODO: dont unlink all of same folder
+        unlinkNote(uri)
     }
 
     // launcher results

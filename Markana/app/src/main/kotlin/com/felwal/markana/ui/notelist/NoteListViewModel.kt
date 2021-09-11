@@ -80,14 +80,27 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
     fun unlinkNotes(notes: List<Note>) {
         viewModelScope.launch {
-            repo.unlinkNotes(notes.map { it.uri })
+            notes.map { it.uri }.forEach {
+                repo.unlinkNote(it)
+            }
+            loadNotes()
+        }
+    }
+
+    fun unlinkTrees(notes: List<Note>) {
+        viewModelScope.launch {
+            notes.mapNotNull { it.treeId }.forEach {
+                repo.unlinkTree(it)
+            }
             loadNotes()
         }
     }
 
     fun deleteNotes(notes: List<Note>) {
         viewModelScope.launch {
-            repo.deleteNotes(notes.map { it.uri })
+            notes.map { it.uri }.forEach {
+                repo.deleteNote(it)
+            }
             loadNotes()
         }
     }

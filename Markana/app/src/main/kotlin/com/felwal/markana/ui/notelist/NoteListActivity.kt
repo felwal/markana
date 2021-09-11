@@ -42,6 +42,7 @@ private const val LOG_TAG = "NoteList"
 
 private const val DIALOG_DELETE = "deleteNotes"
 private const val DIALOG_UNLINK = "unlinkNotes"
+private const val DIALOG_UNLINK_TREE = "unlinkTrees"
 private const val DIALOG_COLOR = "colorNotes"
 
 class NoteListActivity : AppCompatActivity(),
@@ -55,6 +56,7 @@ class NoteListActivity : AppCompatActivity(),
     private lateinit var model: NoteListViewModel
 
     private val selectionCount: Int get() = model.selectionIndices.size
+    private val treeSelectionCount: Int get() = model.selectedNotes.mapNotNull { it.treeId }.toSet().size
     private val isSelectionMode: Boolean get() = selectionCount != 0
     private val selectedNote: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
 
@@ -209,6 +211,7 @@ class NoteListActivity : AppCompatActivity(),
         R.id.action_pin -> pinSelection()
         R.id.action_color -> colorSelection()
         R.id.action_unlink -> unlinkSelection()
+        R.id.action_unlink_tree -> unlinkSelectionTrees()
         R.id.action_delete -> deleteSelection()
 
         else -> super.onOptionsItemSelected(item)
@@ -407,6 +410,13 @@ class NoteListActivity : AppCompatActivity(),
         tag = DIALOG_UNLINK
     ).show(supportFragmentManager)
 
+    private fun unlinkSelectionTrees() = binaryDialog(
+        title = getQuantityString(R.plurals.dialog_title_unlink_tree, treeSelectionCount),
+        message = getQuantityString(R.plurals.dialog_msg_unlink_trees, treeSelectionCount),
+        posBtnTxtRes = R.string.dialog_btn_unlink,
+        tag = DIALOG_UNLINK_TREE
+    ).show(supportFragmentManager)
+
     private fun deleteSelection() = binaryDialog(
         title = getQuantityString(R.plurals.dialog_title_delete_notes, selectionCount),
         message = getString(R.string.dialog_msg_delete_notes),
@@ -455,6 +465,10 @@ class NoteListActivity : AppCompatActivity(),
             }
             DIALOG_UNLINK -> {
                 model.unlinkNotes(model.selectedNotes)
+                emptySelection()
+            }
+            DIALOG_UNLINK_TREE -> {
+                model.unlinkTrees(model.selectedNotes)
                 emptySelection()
             }
         }

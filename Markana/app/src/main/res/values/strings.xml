@@ -27,6 +27,7 @@
     <string name="action_color">Change color</string>
     <string name="action_delete">Delete</string>
     <string name="action_unlink">Unlink</string>
+    <string name="action_unlink_tree">Unlink folder</string>
     <string name="action_pin">Pin/unpin</string>
     <string name="action_copy">Copy</string>
 
@@ -88,13 +89,25 @@
         <item quantity="one">Unlink note?</item>
         <item quantity="other">Unlink notes?</item>
     </plurals>
-    <string name="dialog_title_color_notes">Note color</string>
+    <plurals name="dialog_title_unlink_tree">
+        <item quantity="one">Unlink folder?</item>
+        <item quantity="other">Unlink folders?</item>
+    </plurals>
+    <string name="dialog_title_color_notes">Note colour</string>
 
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>
     <plurals name="dialog_msg_unlink_notes">
-        <item quantity="one">You can always link it again.</item>
-        <item quantity="other">You can always link them again.</item>
+        <item quantity="one">This will not take effect if it is linked via a folder.
+            You can always link it again.</item>
+        <item quantity="other">This will not take effect if they are linked via folders.
+            You can always link them again.</item>
+    </plurals>
+    <plurals name="dialog_msg_unlink_trees">
+        <item quantity="one">This will unlink the containing folder and all notes therein.
+            You can always link it again.</item>
+        <item quantity="other">This will unlink the containing folders and all notes therein.
+            You can always link them again.</item>
     </plurals>
 
     <!-- button -->
