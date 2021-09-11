@@ -24,11 +24,12 @@
     <string name="action_settings">Settings</string>
 
     <!-- notelist selection -->
+    <string name="action_pin">Pin/unpin</string>
     <string name="action_color">Change color</string>
-    <string name="action_delete">Delete</string>
+    <string name="action_select_all">Select all</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_unlink_tree">Unlink folder</string>
-    <string name="action_pin">Pin/unpin</string>
+    <string name="action_delete">Delete</string>
     <string name="action_copy">Copy</string>
 
     <!-- notedetail -->

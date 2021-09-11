@@ -210,6 +210,7 @@ class NoteListActivity : AppCompatActivity(),
         android.R.id.home -> emptySelection()
         R.id.action_pin -> pinSelection()
         R.id.action_color -> colorSelection()
+        R.id.action_select_all -> selectAll()
         R.id.action_unlink -> unlinkSelection()
         R.id.action_unlink_tree -> unlinkSelectionTrees()
         R.id.action_delete -> deleteSelection()
@@ -440,6 +441,23 @@ class NoteListActivity : AppCompatActivity(),
         updateToolbarTitle()
     }
 
+    private fun selectAll() {
+        for (note in model.items) {
+            if (note.isSelected) continue
+
+            note.isSelected = true
+            val index = model.items.indexOf(note)
+            model.itemsData.value?.set(index, note)
+            adapter.notifyItemChanged(index)
+
+            model.selectionIndices.add(index)
+        }
+
+        // sync tb
+        invalidateOptionsMenu()
+        updateToolbarTitle()
+    }
+    
     private fun emptySelection() {
         for (note in model.selectedNotes) {
             note.isSelected = false

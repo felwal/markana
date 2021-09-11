@@ -25,6 +25,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_select_all"
+        android:title="@string/action_select_all"
+        android:icon="@drawable/ic_select_all_24"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_unlink"
         android:title="@string/action_unlink"
         android:icon="@drawable/ic_unlink_24"
