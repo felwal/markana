@@ -24,7 +24,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- notelist selection -->
-    <string name="action_color">Color</string>
+    <string name="action_color">Change color</string>
     <string name="action_delete">Delete</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_pin">Pin/unpin</string>
@@ -37,12 +37,12 @@
     <string name="action_bold">Bold</string>
     <string name="action_italic">Italic</string>
     <string name="action_strikethrough">Strikethrough</string>
+    <string name="action_code">Code</string>
     <string name="action_heading">Heading</string>
     <string name="action_quote">Quote</string>
-    <string name="action_code">Code</string>
+    <string name="action_bulletlist">Bullet list</string>
+    <string name="action_numberlist">Number list</string>
     <string name="action_checklist">Checklist</string>
-    <string name="action_bulletlist">Bulletlist</string>
-    <string name="action_numberlist">Numberlist</string>
     <string name="action_horizontal_rule">Thematic break</string>
 
     <!-- view -->
@@ -88,10 +88,7 @@
         <item quantity="one">Unlink note?</item>
         <item quantity="other">Unlink notes?</item>
     </plurals>
-    <plurals name="dialog_title_color_notes">
-        <item quantity="one">Color note</item>
-        <item quantity="other">Color notes</item>
-    </plurals>
+    <string name="dialog_title_color_notes">Note color</string>
 
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>

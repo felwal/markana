@@ -119,7 +119,9 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.etNoteBody.movementMethod = LinkMovementMethod.getInstance()
+        // enable clicking on links
+        // TODO: this also moves focus to start of et on scroll
+        //binding.etNoteBody.movementMethod = LinkMovementMethod.getInstance()
 
         // bab menu listener
         binding.bab.setOnMenuItemClickListener(::onOptionsItemSelected)
@@ -169,7 +171,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         R.id.action_undo -> contentHistoryManager.undo()
         R.id.action_redo -> contentHistoryManager.redo()
         R.id.action_color -> colorDialog(
-            title = getQuantityString(R.plurals.dialog_title_color_notes, 1),
+            title = getString(R.string.dialog_title_color_notes),
             items = getIntegerArray(R.array.note_palette),
             checkedItem = model.note.colorIndex,
             tag = DIALOG_COLOR
@@ -291,6 +293,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     }
 
     private fun saveNote() {
+        model.noteData.value ?: return
+
         val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string
         val now = LocalDateTime.now().toEpochSecond()
@@ -343,9 +347,4 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             c.startActivity(intent)
         }
     }
-}
-
-private fun Intent.getIntExtra(extraId: String): Int? {
-    val extra = getIntExtra(extraId, -1)
-    return if (extra == -1) null else extra
 }

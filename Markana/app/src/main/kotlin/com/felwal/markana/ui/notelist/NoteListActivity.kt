@@ -394,7 +394,7 @@ class NoteListActivity : AppCompatActivity(),
     }
 
     private fun colorSelection() = colorDialog(
-        title = getQuantityString(R.plurals.dialog_title_color_notes, selectionCount),
+        title = getString(R.string.dialog_title_color_notes),
         items = getIntegerArray(R.array.note_palette),
         checkedItem = model.selectedNotes.common { it.colorIndex },
         tag = DIALOG_COLOR

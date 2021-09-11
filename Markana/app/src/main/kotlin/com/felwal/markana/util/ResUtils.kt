@@ -12,6 +12,7 @@ import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.PluralsRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 
 // get res
@@ -31,6 +32,8 @@ fun Context.getQuantityString(@PluralsRes id: Int, quantity: Int, vararg formatA
 fun Context.getStringArray(@ArrayRes id: Int): Array<String> = resources.getStringArray(id)
 
 fun Context.getIntegerArray(@ArrayRes id: Int): IntArray = resources.getIntArray(id)
+
+fun Context.getStyle(@StyleRes id: Int): Int = resources.getIdentifier("CustomDigitsTheme", "style", packageName);
 
 // get attr res
 

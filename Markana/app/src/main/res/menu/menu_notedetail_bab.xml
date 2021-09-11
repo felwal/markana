@@ -4,64 +4,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.felwal.markana.ui.notelist.NoteListActivity">
 
-    <item
-        android:id="@+id/action_heading"
-        android:title="@string/action_heading"
-        android:icon="@drawable/ic_heading_24"
-        app:showAsAction="always" />
+    <group
+        android:id="@+id/group_format_text">
 
-    <item
-        android:id="@+id/action_bold"
-        android:title="@string/action_bold"
-        android:icon="@drawable/ic_bold_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_bold"
+            android:title="@string/action_bold"
+            android:icon="@drawable/ic_bold_24"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_italic"
-        android:title="@string/action_italic"
-        android:icon="@drawable/ic_italic_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_italic"
+            android:title="@string/action_italic"
+            android:icon="@drawable/ic_italic_24"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_strikethrough"
-        android:title="@string/action_strikethrough"
-        android:icon="@drawable/ic_strikethrough_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_strikethrough"
+            android:title="@string/action_strikethrough"
+            android:icon="@drawable/ic_strikethrough_24"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_quote"
-        android:title="@string/action_quote"
-        android:icon="@drawable/ic_quote_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_code"
+            android:title="@string/action_code"
+            android:icon="@drawable/ic_code_24"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_code"
-        android:title="@string/action_code"
-        android:icon="@drawable/ic_code_24"
-        app:showAsAction="always" />
+    </group>
 
-    <item
-        android:id="@+id/action_bulletlist"
-        android:title="@string/action_bulletlist"
-        android:icon="@drawable/ic_list_bullet_24"
-        app:showAsAction="always" />
+    <group
+        android:id="@+id/group_format_line">
 
-    <item
-        android:id="@+id/action_numberlist"
-        android:title="@string/action_numberlist"
-        android:icon="@drawable/ic_list_number_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_heading"
+            android:title="@string/action_heading"
+            android:icon="@drawable/ic_heading_24"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_checklist"
-        android:title="@string/action_checklist"
-        android:icon="@drawable/ic_checkbox_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_quote"
+            android:title="@string/action_quote"
+            android:icon="@drawable/ic_quote_24"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_scenebreak"
-        android:title="@string/action_horizontal_rule"
-        android:icon="@drawable/ic_horizontal_rule_24"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/action_bulletlist"
+            android:title="@string/action_bulletlist"
+            android:icon="@drawable/ic_list_bullet_24"
+            app:showAsAction="always" />
+
+        <item
+            android:id="@+id/action_numberlist"
+            android:title="@string/action_numberlist"
+            android:icon="@drawable/ic_list_number_24"
+            app:showAsAction="always" />
+
+        <item
+            android:id="@+id/action_checklist"
+            android:title="@string/action_checklist"
+            android:icon="@drawable/ic_list_check_24"
+            app:showAsAction="always" />
+
+    </group>
+
+    <group
+        android:id="@+id/group_insert">
+
+        <item
+            android:id="@+id/action_scenebreak"
+            android:title="@string/action_horizontal_rule"
+            android:icon="@drawable/ic_horizontal_rule_24"
+            app:showAsAction="always" />
+
+    </group>
 
 </menu>
