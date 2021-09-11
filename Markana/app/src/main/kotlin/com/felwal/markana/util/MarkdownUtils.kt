@@ -1,7 +1,9 @@
 package com.felwal.markana.util
 
 import android.text.Editable
+import android.text.Layout
 import android.widget.EditText
+import android.widget.TextView
 import com.felwal.markana.prefs
 
 private val emph get() = prefs.emphSymbol
@@ -12,10 +14,10 @@ private fun header(level: Int) = "${"#".repeat(level)} "
 private const val quote = "> "
 private val bullet get() = "${prefs.bulletlistSymbol} "
 private fun number(i: Int) = "${i + 1}. "
-private val checkbox get() = "$bullet[${if (prefs.checkboxSpace) " " else ""}] "
+private fun checkbox(checked: Boolean) = "$bullet[${if (checked) "x" else if (prefs.checkboxSpace) " " else ""}] "
 private val thematicBreak get() = "${prefs.breakSymbol}\n"
 
-// specifics
+// specific
 
 fun EditText.toggleEmph() = formatSelectedText(emph)
 
@@ -25,7 +27,15 @@ fun EditText.toggleStrikethrough() = formatSelectedText(strikethrough)
 
 fun EditText.toggleCode() = formatSelectedText(code)
 
-fun EditText.toggleHeader() = formatSelectedLines { header(1) }
+fun EditText.toggleHeader() = formatSelectedLines(
+    header(1),
+    header(1) to header(2),
+    header(2) to header(3),
+    header(3) to header(4),
+    header(4) to header(5),
+    header(5) to header(6),
+    header(6) to "",
+)
 
 fun EditText.toggleQuote() = formatSelectedLines { quote }
 
@@ -33,28 +43,36 @@ fun EditText.toggleBulletlist() = formatSelectedLines { bullet }
 
 fun EditText.toggleNumberlist() = formatSelectedLines { number(it) }
 
-fun EditText.toggleChecklist() = formatSelectedLines { checkbox }
+fun EditText.toggleChecklist() = formatSelectedLines(
+    checkbox(false),
+    checkbox(false) to checkbox(true),
+    checkbox(true) to ""
+)
 
 fun EditText.insertThematicBreak() = insertAtCursor(thematicBreak)
 
-// generals
+// general
 
 private fun EditText.insertAtCursor(marker: String) {
-    val textCopy = text.copy
     val end = selectionEnd
 
-    textCopy.insert(end, marker)
+    updateEditable {
+        insert(end, marker)
+    }
 
-    text = textCopy
     setSelection(end + marker.length)
 }
 
 private fun EditText.formatSelectedText(marker: String) {
-    val textCopy = text.copy
+    val textCopy = text.copy()
     val start = selectionStart
     val end = selectionEnd
 
+    // TODO: add rules
+
     // TODO: mark multi-paragraph, ie **hi**\n\n**by** instead of **hi\n\nby**
+    /*val selection = textCopy.substring(start, end)
+    if (selection.contains("\n\n")) {}*/
 
     // toggle: remove marker outside selection, ie **|hi|**
     if (removeTextMarker(textCopy, marker, start - marker.length, start, end, end + marker.length)) {
@@ -71,33 +89,60 @@ private fun EditText.formatSelectedText(marker: String) {
     // TODO: also toggle |**hi|**, *|*hi|** and *|*hi*|*
     // TODO: dont recognize and toggle **hi** as *hi*
 
+    // toggle: add marker
     // insert at end first to not alter index of start
     textCopy.insert(end, marker)
     textCopy.insert(start, marker)
 
+    // apply
     text = textCopy
     setSelection(start + marker.length, end + marker.length)
 }
 
-private fun removeTextMarker(
-    editable: Editable, marker: String,
-    openingMarkerStart: Int, openingMarkerEnd: Int,
-    closingMarkerStart: Int, closingMarkerEnd: Int
-): Boolean {
-    if (
-        editable.substring(openingMarkerStart, openingMarkerEnd) == marker
-        && editable.substring(closingMarkerStart, closingMarkerEnd) == marker
-    ) {
-        // delete closing first to not alter index of opening
-        editable.delete(closingMarkerStart, closingMarkerEnd)
-        editable.delete(openingMarkerStart, openingMarkerEnd)
-        return true
+// TODO: rules
+private fun EditText.formatSelectedLines(defaultMarker: String, vararg markerRules: Pair<String, String>) {
+    val textCopy = text.copy()
+    val start = selectionStart
+    val end = selectionEnd
+
+    val startLine = layout.getLineForOffset(start)
+    val endLine = layout.getLineForOffset(end)
+
+    var startOffset = 0
+    var endOffset = 0
+
+    for (line in endLine downTo startLine) {
+        val lineStart = layout.getLineStart(line)
+        val lineIndex = line - startLine
+
+        var ruleApplied = false
+        for (rule in markerRules) {
+            if (isLineMarked(textCopy, rule.first, lineStart)) {
+                textCopy.delete(lineStart, lineStart + rule.first.length)
+                textCopy.insert(lineStart, rule.second)
+
+                endOffset += rule.second.length - rule.first.length
+                if (line == startLine) startOffset += rule.second.length - rule.first.length
+
+                ruleApplied = true
+                break
+            }
+        }
+        if (!ruleApplied) {
+            textCopy.insert(lineStart, defaultMarker)
+
+            endOffset += defaultMarker.length
+            if (line == startLine) startOffset += defaultMarker.length
+        }
     }
-    return false
+
+    // apply
+    text = textCopy
+    setSelection(start + startOffset, end + endOffset)
 }
 
 private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
-    val textCopy = text.copy
+    val textCopy = text.copy()
     val start = selectionStart
     val end = selectionEnd
 
@@ -121,6 +166,7 @@ private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
         if (isLineMarked(textCopy, marker(lineIndex), lineStart)) {
             removeMarkerActions.add {
                 textCopy.delete(lineStart, lineStart + marker(lineIndex).length)
+
                 endOffset -= marker(lineIndex).length
                 if (line == startLine) startOffset -= marker(startLine).length
             }
@@ -129,6 +175,7 @@ private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
         else {
             addMarkerActions.add {
                 textCopy.insert(lineStart, marker(lineIndex))
+
                 endOffset += marker(lineIndex).length
                 if (line == startLine) startOffset += marker(startLine).length
             }
@@ -139,9 +186,36 @@ private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
     if (addMarkerActions.size > 0) addMarkerActions.forEach { it() }
     else removeMarkerActions.forEach { it() }
 
+    // apply
     text = textCopy
     setSelection(start + startOffset, end + endOffset)
 }
 
+// tool
+
+private fun removeTextMarker(
+    editable: Editable, marker: String,
+    openingMarkerStart: Int, openingMarkerEnd: Int,
+    closingMarkerStart: Int, closingMarkerEnd: Int
+): Boolean {
+    if (
+        editable.coerceSubstring(openingMarkerStart, openingMarkerEnd) == marker
+        && editable.coerceSubstring(closingMarkerStart, closingMarkerEnd) == marker
+    ) {
+        // delete closing first to not alter index of opening
+        editable.delete(closingMarkerStart, closingMarkerEnd)
+        editable.delete(openingMarkerStart, openingMarkerEnd)
+        return true
+    }
+    return false
+}
+
 private fun isLineMarked(editable: Editable, marker: String, lineStart: Int): Boolean =
-    editable.substring(lineStart, lineStart + marker.length) == marker
+    editable.coerceSubstring(lineStart, lineStart + marker.length) == marker
+
+private fun Layout.getParagraphStart(index: Int): Int {
+    for (i in index downTo 0) {
+        if (text.substring(i, i + 1) == "\n") return i
+    }
+    return -1
+}

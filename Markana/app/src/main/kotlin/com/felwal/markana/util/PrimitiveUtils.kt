@@ -27,6 +27,9 @@ fun String.isMime(type: String, subType: String): Boolean {
     return thisType == type && (thisSubtype == subType || subType == "*")
 }
 
+fun CharSequence.coerceSubstring(startIndex: Int, endIndex: Int): String =
+    substring(startIndex.coerceIn(0, length - 1), endIndex.coerceIn(0, length - 1))
+
 // int
 
 /**
