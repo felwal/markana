@@ -6,12 +6,12 @@ import android.widget.TableRow
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isInvisible
 import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogColorBinding
 import com.felwal.markana.databinding.ItemDialogColorBinding
 import com.felwal.markana.util.backgroundTint
 import com.felwal.markana.util.clamp
-import com.felwal.markana.util.getColorAttr
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.orEmpty
@@ -56,6 +56,14 @@ class ColorDialog : BaseDialog() {
         val binding = DialogColorBinding.inflate(inflater)
         setView(binding.root)
 
+        // scrollview borders
+        binding.vDividerTop.isInvisible = !binding.sv.canScrollVertically(-1)
+        binding.vDividerBottom.isInvisible = !binding.sv.canScrollVertically(1)
+        binding.sv.setOnScrollChangeListener { _, _, _, _, _ ->
+            binding.vDividerTop.isInvisible = !binding.sv.canScrollVertically(-1)
+            binding.vDividerBottom.isInvisible = !binding.sv.canScrollVertically(1)
+        }
+
         val columnCount = if (context.isPortrait) COLUMN_COUNT_PORTRAIT else COLUMN_COUNT_LANDSCAPE
 
         var tr = TableRow(binding.tl.context)
@@ -74,8 +82,7 @@ class ColorDialog : BaseDialog() {
 
             // set checked drawable
             if (i == checkedItem) {
-                val icon = context.getDrawableCompat(R.drawable.ic_check_24)
-                icon?.setTint(context.getColorAttr(R.attr.colorSurface))
+                val icon = context.getDrawableCompat(R.drawable.ic_check_24, R.attr.colorSurface)
                 itemBinding.iv.setImageDrawable(icon)
             }
 

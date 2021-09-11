@@ -42,6 +42,7 @@ class RadioDialog : BaseDialog() {
 
     override fun buildDialog(): AlertDialog = builder.run {
         setTitle(title)
+        if (message != "") setMessage(message)
 
         setSingleChoiceItems(items, checkedItem) { dialog, which ->
             dialog.cancel()
