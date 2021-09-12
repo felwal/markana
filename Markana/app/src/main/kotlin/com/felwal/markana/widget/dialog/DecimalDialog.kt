@@ -2,10 +2,11 @@ package com.felwal.markana.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
-import com.felwal.markana.databinding.DialogDecimalBinding
+import com.felwal.markana.databinding.DialogTextBinding
 import com.felwal.markana.util.string
 import com.felwal.markana.util.toast
 
@@ -45,7 +46,8 @@ class DecimalDialog : BaseDialog() {
     }
 
     override fun buildDialog(): AlertDialog {
-        val binding = DialogDecimalBinding.inflate(inflater)
+        val binding = DialogTextBinding.inflate(inflater)
+        binding.et.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
 
         binding.et.hint = hint
         if (text != NO_FLOAT_TEXT) binding.et.setText(text.toString())
@@ -58,7 +60,7 @@ class DecimalDialog : BaseDialog() {
             setPositiveButton(posBtnTxtRes) { _, _ ->
                 try {
                     val input = binding.et.string.toFloat()
-                    listener.onDecimalDialogPositiveClick(input, tag)
+                    listener.onDecimalDialogPositiveClick(input, dialogTag)
                 }
                 catch (e: NumberFormatException) {
                     activity?.toast(getString(R.string.toast_err_no_input))

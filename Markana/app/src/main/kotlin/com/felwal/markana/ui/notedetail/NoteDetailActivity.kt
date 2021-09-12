@@ -3,10 +3,7 @@ package com.felwal.markana.ui.notedetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
-import android.text.style.QuoteSpan
-import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -33,12 +30,12 @@ import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
 import com.felwal.markana.util.toEpochSecond
-import com.felwal.markana.util.toggleBulletlist
+import com.felwal.markana.util.toggleBulletList
 import com.felwal.markana.util.toggleChecklist
 import com.felwal.markana.util.toggleCode
 import com.felwal.markana.util.toggleEmph
 import com.felwal.markana.util.toggleHeader
-import com.felwal.markana.util.toggleNumberlist
+import com.felwal.markana.util.toggleNumberList
 import com.felwal.markana.util.toggleQuote
 import com.felwal.markana.util.toggleStrikethrough
 import com.felwal.markana.util.toggleStrong
@@ -55,7 +52,6 @@ import io.noties.markwon.core.MarkwonTheme
 import io.noties.markwon.core.spans.CodeBlockSpan
 import io.noties.markwon.core.spans.CodeSpan
 import io.noties.markwon.core.spans.EmphasisSpan
-import io.noties.markwon.core.spans.HeadingSpan
 import io.noties.markwon.core.spans.StrongEmphasisSpan
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
@@ -188,12 +184,12 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         R.id.action_bold -> etCurrentFocus?.toggleStrong()
         R.id.action_italic -> etCurrentFocus?.toggleEmph()
         R.id.action_strikethrough -> etCurrentFocus?.toggleStrikethrough()
-        R.id.action_heading -> etCurrentFocus?.toggleHeader()
-        R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
-        R.id.action_quote -> etCurrentFocus?.toggleQuote()
         R.id.action_code -> etCurrentFocus?.toggleCode()
-        R.id.action_bulletlist -> etCurrentFocus?.toggleBulletlist()
-        R.id.action_numberlist -> etCurrentFocus?.toggleNumberlist()
+        R.id.action_heading -> etCurrentFocus?.toggleHeader()
+        R.id.action_quote -> etCurrentFocus?.toggleQuote()
+        R.id.action_bullet_list -> etCurrentFocus?.toggleBulletList()
+        R.id.action_number_list -> etCurrentFocus?.toggleNumberList()
+        R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
         R.id.action_scenebreak -> etCurrentFocus?.insertThematicBreak()
 
         else -> super.onOptionsItemSelected(item)
@@ -314,7 +310,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         binding.tb.menu.forEach { it.icon?.setTint(fgColor) }
         binding.bab.menu.forEach { it.icon?.setTint(fgColor) }
 
-        if (prefs.colorNoteItems) {
+        if (prefs.notePreviewColor) {
             //binding.root.setBackgroundColor(bgColor)
             //binding.tb.setBackgroundColor(bgColor)
             binding.bab.setBackgroundColor(bgColor)

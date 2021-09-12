@@ -21,11 +21,12 @@ import com.felwal.markana.widget.dialog.BaseDialog
 import com.felwal.markana.widget.dialog.NO_RES
 import com.felwal.markana.widget.dialog.binaryDialog
 import com.felwal.markana.widget.dialog.decimalDialog
+import com.felwal.markana.widget.dialog.numberDialog
 import com.felwal.markana.widget.dialog.radioDialog
 import com.felwal.markana.widget.dialog.textDialog
 import com.felwal.markana.widget.dialog.unaryDialog
 
-abstract class BaseSettingsActivity(
+abstract class AbsSettingsActivity(
     private val dividerMode: DividerMode,
     private val indentEverything: Boolean
 ) : AppCompatActivity() {
@@ -98,7 +99,8 @@ abstract class BaseSettingsActivity(
 
     protected inner class StringItem(
         title: String,
-        private val desc: String = "",
+        private val desc: String? = null,
+        private val msg: String = "",
         private val value: String,
         private val hint: String,
         @DrawableRes iconRes: Int = NO_RES,
@@ -107,9 +109,32 @@ abstract class BaseSettingsActivity(
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
-                title, value, hideDivider, iconRes,
+                title, desc ?: value, hideDivider, iconRes,
                 textDialog(
-                    title = title, message = desc,
+                    title = title, message = msg,
+                    text = value, hint = hint,
+                    posBtnTxtRes = R.string.dialog_btn_set,
+                    tag = tag
+                )
+            )
+        }
+    }
+
+    protected inner class IntItem(
+        title: String,
+        private val desc: String? = null,
+        private val msg: String = "",
+        private val value: Int,
+        private val hint: String,
+        @DrawableRes iconRes: Int = NO_RES,
+        private val tag: String
+    ) : SettingItem(title, iconRes) {
+
+        override fun inflate(hideDivider: Boolean) {
+            inflateDialogItem(
+                title, desc ?: value.toString(), hideDivider, iconRes,
+                numberDialog(
+                    title = title, message = msg,
                     text = value, hint = hint,
                     posBtnTxtRes = R.string.dialog_btn_set,
                     tag = tag
@@ -120,7 +145,8 @@ abstract class BaseSettingsActivity(
 
     protected inner class FloatItem(
         title: String,
-        private val desc: String = "",
+        private val desc: String? = null,
+        private val msg: String = "",
         private val value: Float,
         private val hint: String,
         @DrawableRes iconRes: Int = NO_RES,
@@ -129,9 +155,9 @@ abstract class BaseSettingsActivity(
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
-                title, value.toString(), hideDivider, iconRes,
+                title, desc ?: value.toString(), hideDivider, iconRes,
                 decimalDialog(
-                    title = title, message = desc,
+                    title = title, message = msg,
                     text = value, hint = hint,
                     posBtnTxtRes = R.string.dialog_btn_set,
                     tag = tag
@@ -142,7 +168,8 @@ abstract class BaseSettingsActivity(
 
     protected inner class SingleSelectionItem(
         title: String,
-        private val desc: String = "",
+        private val desc: String? = null,
+        private val msg: String = "",
         private val values: List<String>,
         private val selectedIndex: Int,
         @DrawableRes iconRes: Int = NO_RES,
@@ -153,9 +180,9 @@ abstract class BaseSettingsActivity(
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
-                title, value, hideDivider, iconRes,
+                title, desc ?: value, hideDivider, iconRes,
                 radioDialog(
-                    title = title, message = desc,
+                    title = title, message = msg,
                     items = values, checkedItem = selectedIndex,
                     tag = tag
                 )
@@ -166,6 +193,7 @@ abstract class BaseSettingsActivity(
     protected inner class ConfirmationItem(
         title: String,
         private val desc: String = "",
+        private val msg: String = "",
         @DrawableRes iconRes: Int = NO_RES,
         @StringRes private val dialogPosBtnRes: Int,
         private val tag: String
@@ -173,9 +201,9 @@ abstract class BaseSettingsActivity(
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
-                title, "", hideDivider, iconRes,
+                title, desc, hideDivider, iconRes,
                 binaryDialog(
-                    title = title, message = desc,
+                    title = title, message = msg,
                     posBtnTxtRes = dialogPosBtnRes,
                     tag = tag
                 )
@@ -186,6 +214,7 @@ abstract class BaseSettingsActivity(
     protected inner class InfoItem(
         title: String,
         private val desc: String = "",
+        private val msg: String = "",
         @DrawableRes iconRes: Int = NO_RES,
         @StringRes private val dialogBtnRes: Int,
         private val tag: String
@@ -193,8 +222,8 @@ abstract class BaseSettingsActivity(
 
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
-                title, "", hideDivider, iconRes,
-                unaryDialog(title, desc, dialogBtnRes, tag)
+                title, desc, hideDivider, iconRes,
+                unaryDialog(title, msg, dialogBtnRes, tag)
             )
         }
     }
@@ -297,7 +326,7 @@ abstract class BaseSettingsActivity(
             tvValue.setTextRemoveIfEmpty(value)
 
             // view
-            root.enableRipple(this@BaseSettingsActivity)
+            root.enableRipple(this@AbsSettingsActivity)
             vDivider.isInvisible = hideDivider
 
             // icon
@@ -321,7 +350,7 @@ abstract class BaseSettingsActivity(
             tvDesc.setTextRemoveIfEmpty(desc)
 
             // view
-            root.enableRipple(this@BaseSettingsActivity)
+            root.enableRipple(this@AbsSettingsActivity)
             vDivider.isInvisible = hideDivider
 
             // icon

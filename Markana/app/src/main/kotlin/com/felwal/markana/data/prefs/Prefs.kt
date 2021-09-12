@@ -10,11 +10,12 @@ private const val KEY_SORT_ORDER = "sort_order"
 private const val KEY_GRID_VIEW = "grid_view"
 
 private const val KEY_THEME = "theme"
-private const val KEY_COLOR_ITEMS = "color_items"
-private const val KEY_MD_SYMBOL_EMPH = "italic"
-private const val KEY_MD_SYMBOL_STRONG = "bold"
-private const val KEY_MD_SYMBOL_BULLETLIST = "bulletlist"
-private const val KEY_MD_SYMBOL_BREAK = "horizontal_rule"
+private const val KEY_COLOR_ITEMS = "preview_color"
+private const val KEY_MAX_LINES = "preview_max_lines"
+private const val KEY_MD_SYMBOL_EMPH = "symbol_italic"
+private const val KEY_MD_SYMBOL_STRONG = "symbol_bold"
+private const val KEY_MD_SYMBOL_BULLET_LIST = "symbol_bullet_list"
+private const val KEY_MD_SYMBOL_BREAK = "symbol_horizontal_rule"
 private const val KEY_MD_CHECKBOX_SPACE = "checkbox_space"
 
 // names and values
@@ -74,9 +75,13 @@ class Prefs(c: Context) {
         get() = sp.getInt(KEY_THEME, 0)
         set(value) = sp.putInt(KEY_THEME, value)
 
-    var colorNoteItems: Boolean
+    var notePreviewColor: Boolean
         get() = sp.getBoolean(KEY_COLOR_ITEMS, true)
         set(value) = sp.putBoolean(KEY_COLOR_ITEMS, value)
+
+    var notePreviewMaxLines: Int
+        get() = sp.getInt(KEY_MAX_LINES, 12)
+        set(value) = sp.putInt(KEY_MAX_LINES, value)
 
     // settings: markdown
 
@@ -90,10 +95,10 @@ class Prefs(c: Context) {
         get() = sp.getInt(KEY_MD_SYMBOL_STRONG, 0)
         set(value) = sp.putInt(KEY_MD_SYMBOL_STRONG, value)
 
-    val bulletlistSymbol: String get() = Bullet.values()[bulletlistSymbolInt].symbol
-    var bulletlistSymbolInt: Int
-        get() = sp.getInt(KEY_MD_SYMBOL_BULLETLIST, 0)
-        set(value) = sp.putInt(KEY_MD_SYMBOL_BULLETLIST, value)
+    val bulletListSymbol: String get() = Bullet.values()[bulletListSymbolInt].symbol
+    var bulletListSymbolInt: Int
+        get() = sp.getInt(KEY_MD_SYMBOL_BULLET_LIST, 0)
+        set(value) = sp.putInt(KEY_MD_SYMBOL_BULLET_LIST, value)
 
     var breakSymbol: String
         get() = sp.getString(KEY_MD_SYMBOL_BREAK, "***") ?: "***"

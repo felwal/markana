@@ -49,14 +49,14 @@
             app:showAsAction="always" />
 
         <item
-            android:id="@+id/action_bulletlist"
-            android:title="@string/action_bulletlist"
+            android:id="@+id/action_bullet_list"
+            android:title="@string/action_bullet_list"
             android:icon="@drawable/ic_list_bullet_24"
             app:showAsAction="always" />
 
         <item
-            android:id="@+id/action_numberlist"
-            android:title="@string/action_numberlist"
+            android:id="@+id/action_number_list"
+            android:title="@string/action_number_list"
             android:icon="@drawable/ic_list_number_24"
             app:showAsAction="always" />
 

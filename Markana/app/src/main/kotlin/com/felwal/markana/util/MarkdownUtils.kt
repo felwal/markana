@@ -3,7 +3,6 @@ package com.felwal.markana.util
 import android.text.Editable
 import android.text.Layout
 import android.widget.EditText
-import android.widget.TextView
 import com.felwal.markana.prefs
 
 private val emph get() = prefs.emphSymbol
@@ -12,7 +11,7 @@ private const val strikethrough = "~~"
 private const val code = "`"
 private fun header(level: Int) = "${"#".repeat(level)} "
 private const val quote = "> "
-private val bullet get() = "${prefs.bulletlistSymbol} "
+private val bullet get() = "${prefs.bulletListSymbol} "
 private fun number(i: Int) = "${i + 1}. "
 private fun checkbox(checked: Boolean) = "$bullet[${if (checked) "x" else if (prefs.checkboxSpace) " " else ""}] "
 private val thematicBreak get() = "${prefs.breakSymbol}\n"
@@ -39,9 +38,9 @@ fun EditText.toggleHeader() = formatSelectedLines(
 
 fun EditText.toggleQuote() = formatSelectedLines { quote }
 
-fun EditText.toggleBulletlist() = formatSelectedLines { bullet }
+fun EditText.toggleBulletList() = formatSelectedLines { bullet }
 
-fun EditText.toggleNumberlist() = formatSelectedLines { number(it) }
+fun EditText.toggleNumberList() = formatSelectedLines { number(it) }
 
 fun EditText.toggleChecklist() = formatSelectedLines(
     checkbox(false),

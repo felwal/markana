@@ -10,24 +10,28 @@ import com.felwal.markana.data.prefs.Strong
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
+import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.then
 import com.felwal.markana.util.updateDayNight
+import com.felwal.markana.widget.dialog.NumberDialog
 import com.felwal.markana.widget.dialog.RadioDialog
 import com.felwal.markana.widget.dialog.TextDialog
 import com.felwal.markana.widget.dialog.UnaryDialog
 
 private const val DIALOG_THEME = "themeDialog"
+private const val DIALOG_MAX_LINES = "maxLinesDialog"
 private const val DIALOG_ITALIC = "italicDialog"
 private const val DIALOG_BOLD = "boldDialog"
-private const val DIALOG_BULLETLIST = "bulletlistDialog"
+private const val DIALOG_BULLET_LIST = "bulletListDialog"
 private const val DIALOG_HR = "hrDialog"
 
-open class SettingsActivity : BaseSettingsActivity(
+open class SettingsActivity : AbsSettingsActivity(
     dividerMode = DividerMode.IN_SECTION,
     indentEverything = false
 ),
     RadioDialog.DialogListener,
     TextDialog.DialogListener,
+    NumberDialog.DialogListener,
     UnaryDialog.DialogListener
 {
 
@@ -76,10 +80,21 @@ open class SettingsActivity : BaseSettingsActivity(
                     tag = DIALOG_THEME
                 ),
                 BooleanItem(
-                    title = getString(R.string.tv_settings_item_title_color_items),
-                    value = prefs.colorNoteItems,
+                    title = getString(R.string.tv_settings_item_title_preview_color),
+                    value = prefs.notePreviewColor,
                     iconRes = R.drawable.ic_color_24,
-                    onSwitch = { prefs.colorNoteItems = !prefs.colorNoteItems }
+                    onSwitch = { prefs.notePreviewColor = !prefs.notePreviewColor }
+                ),
+                IntItem(
+                    title = getString(R.string.tv_settings_item_title_preview_max_lines),
+                    desc = getQuantityString(
+                        R.plurals.tv_settings_item_desc_preview_max_lines,
+                        prefs.notePreviewMaxLines, prefs.notePreviewMaxLines
+                    ),
+                    value = prefs.notePreviewMaxLines,
+                    hint = "Default: 12",
+                    iconRes = R.drawable.ic_line_spacing_24,
+                    tag = DIALOG_MAX_LINES
                 )
             ),
             ItemSection(
@@ -99,11 +114,11 @@ open class SettingsActivity : BaseSettingsActivity(
                     tag = DIALOG_BOLD
                 ),
                 SingleSelectionItem(
-                    title = getString(R.string.tv_settings_item_title_bulletlist_symbol),
+                    title = getString(R.string.tv_settings_item_title_bullet_list_symbol),
                     values = Bullet.values().map { it.title },
-                    selectedIndex = prefs.bulletlistSymbolInt,
+                    selectedIndex = prefs.bulletListSymbolInt,
                     iconRes = R.drawable.ic_list_bullet_24,
-                    tag = DIALOG_BULLETLIST
+                    tag = DIALOG_BULLET_LIST
                 ),
                 StringItem(
                     title = getString(R.string.tv_settings_item_title_hr_symbol),
@@ -125,7 +140,7 @@ open class SettingsActivity : BaseSettingsActivity(
                 title = "About and other",
                 InfoItem(
                     getString(R.string.tv_settings_item_title_about),
-                    desc = getString(R.string.tv_settings_item_msg_about),
+                    msg = getString(R.string.tv_settings_item_msg_about),
                     dialogBtnRes = R.string.dialog_btn_ok,
                     tag = "aboutDialog"
                 )
@@ -143,7 +158,7 @@ open class SettingsActivity : BaseSettingsActivity(
             }
             DIALOG_ITALIC -> prefs.emphSymbolInt = checkedItem
             DIALOG_BOLD -> prefs.strongSymbolInt = checkedItem
-            DIALOG_BULLETLIST -> prefs.bulletlistSymbolInt = checkedItem
+            DIALOG_BULLET_LIST -> prefs.bulletListSymbolInt = checkedItem
         }
         reflateViews()
     }
@@ -151,6 +166,13 @@ open class SettingsActivity : BaseSettingsActivity(
     override fun onTextDialogPositiveClick(input: String, tag: String) {
         when (tag) {
             DIALOG_HR -> prefs.breakSymbol = input
+        }
+        reflateViews()
+    }
+
+    override fun onNumberDialogPositiveClick(input: Int, tag: String?) {
+        when (tag) {
+            DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input
         }
         reflateViews()
     }

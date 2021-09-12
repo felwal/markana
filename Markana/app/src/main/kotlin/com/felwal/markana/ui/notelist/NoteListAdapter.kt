@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.graphics.ColorUtils
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -24,8 +24,6 @@ import com.felwal.markana.util.FORMATTER_TODAY
 import com.felwal.markana.util.atStartOfYear
 import com.felwal.markana.util.fromEpochSecond
 import com.felwal.markana.util.getColorAttr
-import com.felwal.markana.util.getIntegerArray
-import com.felwal.markana.util.toast
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -84,14 +82,26 @@ class NoteListAdapter(
             currentNote = note
 
             // text
-            binding.tvUri.text = note.uri
             binding.tvTitle.text = note.filename
-            binding.tvBody.text = note.content.trim() // TODO: dont get the full string
+            when {
+                prefs.notePreviewMaxLines <= 0 -> {
+                    binding.tvBody.isGone = true
+                }
+                note.content == "" -> {
+                    binding.tvBody.maxLines = prefs.notePreviewMaxLines
+                    binding.tvBody.isGone = true
+                }
+                else -> {
+                    binding.tvBody.maxLines = prefs.notePreviewMaxLines
+                    binding.tvBody.isGone = false
+                    binding.tvBody.text = note.content.trim() // TODO: dont get the full string
+                }
+            }
 
             // color
             binding.tvTitle.setTextColor(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
-            if (prefs.colorNoteItems) {
+            if (prefs.notePreviewColor) {
                 binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
                 binding.clNote.background.setTint(note.getBackgroundColor(c))
                 markSelection(note.isSelected, note.getBackgroundColor(c))

@@ -12,6 +12,7 @@
         android:id="@+id/cl_note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingVertical="@dimen/spacing_tiny"
         android:background="@drawable/shape_grid_note_bg">
 
         <ImageView
@@ -26,30 +27,11 @@
             app:tint="@color/red_primary" />
 
         <TextView
-            android:id="@+id/tv_uri"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_tiny"
-            android:layout_marginStart="@dimen/spacing_tiny"
-            android:layout_marginEnd="@dimen/spacing_tiny"
-            android:textSize="9sp"
-            android:textStyle="normal"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="url"
-            tools:visibility="visible" />
-
-        <TextView
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_tiny"
             android:layout_marginEnd="@dimen/spacing_tiny"
-            android:layout_marginTop="@dimen/spacing_tiny"
             android:maxLines="3"
             android:ellipsize="end"
             android:textColor="?colorAccent"
@@ -57,7 +39,7 @@
             android:textAppearance="@style/TextAppearance.Markana.Subtitle1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uri"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="note.md" />
 
         <TextView
@@ -67,7 +49,6 @@
             android:layout_marginTop="@dimen/spacing_diminutive"
             android:layout_marginStart="@dimen/spacing_tiny"
             android:layout_marginEnd="@dimen/spacing_tiny"
-            android:layout_marginBottom="@dimen/spacing_tiny"
             android:maxLines="12"
             android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.Markana.Body2"

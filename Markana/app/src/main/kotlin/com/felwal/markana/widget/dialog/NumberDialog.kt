@@ -8,22 +8,26 @@ import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogTextBinding
 import com.felwal.markana.util.string
+import com.felwal.markana.util.toast
+
+const val NO_INT_TEXT = -1
 
 private const val ARG_TEXT = "text"
 private const val ARG_HINT = "hint"
 
-class TextDialog : BaseDialog() {
+class NumberDialog : BaseDialog() {
 
     private lateinit var listener: DialogListener
 
     // args
-    private lateinit var text: String
+    private var text = 0
     private lateinit var hint: String
 
     // DialogFragment
 
     override fun onAttach(c: Context) {
         super.onAttach(c)
+
         listener = try {
             c as DialogListener
         }
@@ -36,17 +40,17 @@ class TextDialog : BaseDialog() {
 
     override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
-            text = getString(ARG_TEXT, "")
+            text = getInt(ARG_TEXT, 0)
             hint = getString(ARG_HINT, "")
         }
     }
 
     override fun buildDialog(): AlertDialog {
         val binding = DialogTextBinding.inflate(inflater)
-        binding.et.inputType = EditorInfo.TYPE_CLASS_TEXT
+        binding.et.inputType = EditorInfo.TYPE_CLASS_NUMBER
 
-        binding.et.setText(text)
         binding.et.hint = hint
+        if (text != NO_INT_TEXT) binding.et.setText(text.toString())
 
         return builder.run {
             setView(binding.root)
@@ -54,8 +58,13 @@ class TextDialog : BaseDialog() {
             if (message != "") setMessage(message)
 
             setPositiveButton(posBtnTxtRes) { _, _ ->
-                val input = binding.et.string.trim { it <= ' ' }
-                listener.onTextDialogPositiveClick(input, dialogTag)
+                try {
+                    val input = binding.et.string.toInt()
+                    listener.onNumberDialogPositiveClick(input, dialogTag)
+                }
+                catch (e: NumberFormatException) {
+                    activity?.toast(getString(R.string.toast_err_no_input))
+                }
             }
             setCancelButton(negBtnTxtRes)
 
@@ -66,21 +75,21 @@ class TextDialog : BaseDialog() {
     //
 
     interface DialogListener {
-        fun onTextDialogPositiveClick(input: String, tag: String)
+        fun onNumberDialogPositiveClick(input: Int, tag: String?)
     }
 }
 
-fun textDialog(
+fun numberDialog(
     title: String,
     message: String = "",
-    text: String = "",
+    text: Int = NO_INT_TEXT,
     hint: String = "",
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): TextDialog = TextDialog().apply {
+): NumberDialog = NumberDialog().apply {
     arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
-        putString(ARG_TEXT, text)
+        putInt(ARG_TEXT, text)
         putString(ARG_HINT, hint)
     }
 }

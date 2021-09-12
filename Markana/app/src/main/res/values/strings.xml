@@ -42,8 +42,8 @@
     <string name="action_code">Code</string>
     <string name="action_heading">Heading</string>
     <string name="action_quote">Quote</string>
-    <string name="action_bulletlist">Bullet list</string>
-    <string name="action_numberlist">Number list</string>
+    <string name="action_bullet_list">Bullet list</string>
+    <string name="action_number_list">Number list</string>
     <string name="action_checklist">Checklist</string>
     <string name="action_horizontal_rule">Thematic break</string>
 
@@ -70,8 +70,13 @@
     <string name="tv_settings_header_appearance">Appearance</string>
     <string name="tv_settings_header_markdown">Markdown</string>
     <string name="tv_settings_item_title_theme">Theme</string>
-    <string name="tv_settings_item_title_color_items">Color note items</string>
-    <string name="tv_settings_item_title_bulletlist_symbol">Bulletlist symbol</string>
+    <string name="tv_settings_item_title_preview_color">Colour note previews</string>
+    <string name="tv_settings_item_title_preview_max_lines">Note preview max lines</string>
+    <plurals name="tv_settings_item_desc_preview_max_lines">
+        <item quantity="one">%d line</item>
+        <item quantity="other">%d lines</item>
+    </plurals>
+    <string name="tv_settings_item_title_bullet_list_symbol">Bullet list symbol</string>
     <string name="tv_settings_item_title_italic_symbol">Italic symbol</string>
     <string name="tv_settings_item_title_bold_symbol">Bold symbol</string>
     <string name="tv_settings_item_title_hr_symbol">Theme break symbol</string>

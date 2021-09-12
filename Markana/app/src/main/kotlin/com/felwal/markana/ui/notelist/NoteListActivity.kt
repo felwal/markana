@@ -60,7 +60,8 @@ class NoteListActivity : AppCompatActivity(),
     private val isSelectionMode: Boolean get() = selectionCount != 0
     private val selectedNote: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
 
-    private var colorNoteItems = true
+    private var notePreviewColor = true
+    private var notePreviewMaxLines = prefs.notePreviewMaxLines
 
     private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
@@ -91,7 +92,7 @@ class NoteListActivity : AppCompatActivity(),
             getDrawableCompat(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
         )
 
-        colorNoteItems = prefs.colorNoteItems
+        notePreviewColor = prefs.notePreviewColor
 
         initFabMenu()
         initRecycler()
@@ -222,9 +223,11 @@ class NoteListActivity : AppCompatActivity(),
         super.onRestart()
         if (fabMenu.isMenuOpen) fabMenu.closeMenu()
 
-        if (colorNoteItems != prefs.colorNoteItems) {
+        // apply updated settings
+        if (notePreviewColor != prefs.notePreviewColor || notePreviewMaxLines != prefs.notePreviewMaxLines) {
             adapter.notifyDataSetChanged()
-            colorNoteItems = prefs.colorNoteItems
+            notePreviewColor = prefs.notePreviewColor
+            notePreviewMaxLines = prefs.notePreviewMaxLines
         }
     }
 
