@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
+import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.Tree
 import com.felwal.markana.util.coToastLog
@@ -58,7 +59,7 @@ class SafDataSource(private val applicationContext: Context) {
             // this also fires if the file has been moved/deleted
             // and in the case of Dropbox, when renamed
             applicationContext
-                .coToastLog(LOG_TAG, "File not found or permission to read not persisted, unlinking note ...")
+                .coToastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_or_perm_read)
 
             // TODO: get option to relink
 
@@ -84,7 +85,7 @@ class SafDataSource(private val applicationContext: Context) {
                 // files from google drive fire this after restart. why?
                 // they aren't caught with not having permissions.
                 applicationContext
-                    .coToastLog(LOG_TAG, "File not found or permissions not persisted, unlinking note ...", e)
+                    .coToastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_or_perm, e)
 
                 return null // unlink note
             }
@@ -92,12 +93,12 @@ class SafDataSource(private val applicationContext: Context) {
             return Note(filename, content, uri = uri.toString())
         }
         catch (e: SecurityException) {
-            applicationContext.coToastLog(LOG_TAG, "Read permission denied for note", e)
+            applicationContext.coToastLog(LOG_TAG, R.string.toast_e_saf_perm_read, e)
         }
         catch (e: IllegalArgumentException) {
             // "Failed to determine if home:Markana/notes/h.txt is child of home:Markana/notes"
             // file was moved, removed or otherwise made unavailable
-            applicationContext.coToastLog(LOG_TAG, "Cannot find file to read", e)
+            applicationContext.coToastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_read, e)
         }
 
         return null // unlink note
@@ -156,7 +157,7 @@ class SafDataSource(private val applicationContext: Context) {
 
     fun writeFile(note: Note) {
         if (false && !hasWritePermission(note.uri)) {
-            applicationContext.toastLog(LOG_TAG, "File not found or permission to write not persisted")
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_or_perm_write)
 
             // TODO: save edits in db and suggest saving copy?
 
@@ -171,13 +172,13 @@ class SafDataSource(private val applicationContext: Context) {
             }
         }
         catch (e: SecurityException) {
-            applicationContext.toastLog(LOG_TAG, "Write permission denied for note", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_perm_write, e)
         }
         catch (e: FileNotFoundException) {
-            applicationContext.toastLog(LOG_TAG, "Cannot find file to write", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_write, e)
         }
         catch (e: IllegalArgumentException) {
-            applicationContext.toastLog(LOG_TAG, "Cannot find file to write", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_write, e)
         }
     }
 
@@ -190,17 +191,17 @@ class SafDataSource(private val applicationContext: Context) {
             }
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.toastLog(LOG_TAG, "Provider does not support rename", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_provider_support_rename, e)
         }
         catch (e: IllegalStateException) {
             applicationContext
                 .toastLog(LOG_TAG, "Could not rename file; '$filename' already exists at the given location", e)
         }
         catch (e: FileNotFoundException) {
-            applicationContext.toastLog(LOG_TAG, "Cannot find file to rename", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_rename, e)
         }
         catch (e: IllegalArgumentException) {
-            applicationContext.toastLog(LOG_TAG, "Cannot find file to rename", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_rename, e)
         }
 
         return null
@@ -211,13 +212,13 @@ class SafDataSource(private val applicationContext: Context) {
             DocumentsContract.deleteDocument(resolver, uri)
         }
         catch (e: UnsupportedOperationException) {
-            applicationContext.toastLog(LOG_TAG, "Provider does not support delete, unlinking note ...", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_provider_support_delete, e)
         }
         catch (e: FileNotFoundException) {
-            applicationContext.toastLog(LOG_TAG, "Cannot find file to delete, unlinking note ...", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_delete, e)
         }
         catch (e: IllegalArgumentException) {
-            applicationContext.toastLog(LOG_TAG, "Cannot find file to delete, unlinking note ...", e)
+            applicationContext.toastLog(LOG_TAG, R.string.toast_e_saf_file_not_found_delete, e)
         }
     }
 
@@ -228,7 +229,7 @@ class SafDataSource(private val applicationContext: Context) {
             return resolver.takePersistableUriPermission(uri, persistPermissionsFlags)
         }
         catch (e: SecurityException) {
-            applicationContext.tryToastLog(LOG_TAG, "Could not persist permissions for file", e)
+            applicationContext.tryToastLog(LOG_TAG, R.string.toast_e_saf_perm_persist, e)
         }
     }
 

@@ -20,7 +20,7 @@ fun Context.copyToClipboard(text: CharSequence) {
     val clipboard = getSystemService(ClipboardManager::class.java)
     val clip = ClipData.newPlainText("label", text)
     clipboard.setPrimaryClip(clip)
-    tryToast(R.string.toast_copied_to_clipboard)
+    tryToast(R.string.toast_i_copied_to_clipboard)
 }
 
 fun Activity.hideKeyboard() {

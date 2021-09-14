@@ -121,7 +121,7 @@ class NoteRepository(
     suspend fun handleOpenedDocument(uri: Uri) = withIO {
         // check if note exists (independently or in tree)
         if (db.noteDao().doesNoteExistIncludeInTree(uri.toUriPathString())) {
-            applicationContext.coToast(R.string.toast_note_already_linled)
+            applicationContext.coToast(R.string.toast_i_db_note_already_linked)
             return@withIO
         }
 
@@ -135,7 +135,7 @@ class NoteRepository(
     suspend fun handleOpenedDocumentTree(uri: Uri) = withIO {
         // check if tree exists (independently or nested)
         if (db.treeDao().doesTreeExistIncludeAsNested(uri.toString())) {
-            applicationContext.coToast(R.string.toast_tree_already_linled)
+            applicationContext.coToast(R.string.toast_i_db_tree_already_linked)
             return@withIO
         }
 

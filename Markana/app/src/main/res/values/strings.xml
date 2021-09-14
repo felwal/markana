@@ -126,11 +126,26 @@
 
     <!-- toast -->
 
-    <string name="toast_copied_to_clipboard">Copied to clipboard.</string>
-    <string name="toast_note_already_linled">Note already linked</string>
-    <string name="toast_tree_already_linled">Folder already linked</string>
+    <!-- info -->
+    <string name="toast_i_copied_to_clipboard">Copied to clipboard.</string>
+    <string name="toast_i_db_note_already_linked">Note already linked</string>
+    <string name="toast_i_db_tree_already_linked">Folder already linked</string>
 
     <!-- error -->
-    <string name="toast_err_no_input">No input</string>
+    <string name="toast_e_input">No input</string>
+    <string name="toast_e_saf_file_not_found_or_perm_read">File not found or permission to read not persisted,
+        unlinking note…</string>
+    <string name="toast_e_saf_file_not_found_or_perm_write">File not found or permission to write not persisted</string>
+    <string name="toast_e_saf_file_not_found_or_perm">File not found or permissions not persisted,
+        unlinking note…</string>
+    <string name="toast_e_saf_file_not_found_read">Could not find file to read</string>
+    <string name="toast_e_saf_file_not_found_write">Could not find file to write</string>
+    <string name="toast_e_saf_file_not_found_rename">Could not find file to rename</string>
+    <string name="toast_e_saf_file_not_found_delete">Could not find file to delete, unlinking note …</string>
+    <string name="toast_e_saf_provider_support_rename">Provider does not support rename</string>
+    <string name="toast_e_saf_provider_support_delete">Provider does not support delete, unlinking note …</string>
+    <string name="toast_e_saf_perm_read">Read permission denied for note</string>
+    <string name="toast_e_saf_perm_write">Write permission denied for note</string>
+    <string name="toast_e_saf_perm_persist">Could not persist permissions for file</string>
 
 </resources>
