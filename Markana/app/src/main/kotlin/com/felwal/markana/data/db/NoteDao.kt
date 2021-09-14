@@ -40,7 +40,7 @@ interface NoteDao {
     }
 
     suspend fun addOrUpdateNote(vararg notes: Note) = notes.forEach {
-        if (doesNoteExist(it.uri)) updateNote(it)
+        if (doesNoteExist(it.id)) updateNote(it)
         else addNote(it)
     }
 
@@ -69,6 +69,11 @@ interface NoteDao {
     suspend fun deleteNotesInDeletedTrees()
 
     // read
+
+    suspend fun doesNoteExist(id: Long) = getNote(id) != null
+
+    @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
+    suspend fun getNote(id: Long): Note?
 
     suspend fun doesNoteExist(uri: String) = getNote(uri) != null
 
