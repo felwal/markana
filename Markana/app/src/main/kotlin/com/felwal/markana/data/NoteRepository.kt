@@ -51,6 +51,9 @@ class NoteRepository(
 
     private suspend fun extractTrees() = withIO {
         db.treeDao().getTrees().forEach { extractTree(it) }
+        // this is neccessary since extractTree extracts trees which should be already deleted
+        // TODO: better solution
+        db.noteDao().deleteNotesInDeletedTrees()
     }
 
     private suspend fun extractTree(tree: Tree) {
@@ -102,7 +105,7 @@ class NoteRepository(
         db.noteDao().deleteNote(uri)
     }
 
-    suspend fun unlinkTree(id: Int) = withIO {
+    suspend fun unlinkTree(id: Long) = withIO {
         db.treeDao().deleteTree(id)
         db.noteDao().deleteNotes(id)
     }
@@ -115,31 +118,43 @@ class NoteRepository(
     // launcher results
 
     suspend fun handleOpenedDocument(uri: Uri) = withIO {
-        // check if exists in tree
+        // check if note exists (independently or in tree)
         if (db.noteDao().doesNoteExistIncludeInTree(uri.toUriPathString())) {
-            applicationContext.coToast("Note already linked (with tree)")
+            applicationContext.coToast("Note already linked")
             return@withIO
         }
 
         saf.persistPermissions(uri)
 
         // read and save to db
-        if (!db.noteDao().doesNoteExist(uri.toString())) {
-            val note = saf.readFile(uri)
-            note?.let {
-                db.noteDao().addNote(it)
-            }
-        }
-        else applicationContext.coToast("Note already linked")
+        val note = saf.readFile(uri)
+        note?.let { db.noteDao().addNote(it) }
     }
 
-    suspend fun handleOpenedDocumentTree(uri: Uri) {
+    suspend fun handleOpenedDocumentTree(uri: Uri) = withIO {
+        // check if tree exists (independently or nested)
+        if (db.treeDao().doesTreeExistIncludeAsNested(uri.toString())) {
+            applicationContext.coToast("Folder already linked")
+            return@withIO
+        }
+
         saf.persistPermissions(uri)
 
         // save tree uri and sync
-        db.treeDao().addTreeIfNotExists(Tree(uri.toString()))
+        addTreeIfNotExists(Tree(uri.toString()))
         val tree = db.treeDao().getTree(uri.toString())
         tree?.let { extractTree(it) }
+    }
+
+    private suspend fun addTreeIfNotExists(tree: Tree)  {
+        // the tree already exists; dont add
+        if (db.treeDao().doesTreeExist(tree.uri)) return
+
+        // the new tree may contain already linked trees; unlink them
+        val nestedTrees = db.treeDao().getNestedTrees(tree.uri)
+        for (nestedTree in nestedTrees) unlinkTree(nestedTree.id)
+
+        db.treeDao().addTree(tree)
     }
 
     // permissions

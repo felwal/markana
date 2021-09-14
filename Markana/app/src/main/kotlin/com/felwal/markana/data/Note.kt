@@ -11,7 +11,7 @@ import com.felwal.markana.R
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.multiplyAlphaComponent
 
-const val NO_ID = 0 // must be 0 to enable autoincrement
+const val NO_ID = 0L // must be 0 to enable autoincrement
 const val URI_DEFAULT = ""
 
 @Entity(tableName = "notes")
@@ -23,8 +23,8 @@ data class Note(
     @ColumnInfo(name = "pinned") var isPinned: Boolean = false,
     @ColumnInfo(name = "color_index") var colorIndex: Int = 0,
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
-    @ColumnInfo(name = "tree_id") var treeId: Int? = null,
-    @PrimaryKey(autoGenerate = true) var id: Int = NO_ID
+    @ColumnInfo(name = "tree_id") var treeId: Long? = null,
+    @PrimaryKey(autoGenerate = true) var id: Long = NO_ID
 ) {
     @Ignore var isSelected: Boolean = false
 

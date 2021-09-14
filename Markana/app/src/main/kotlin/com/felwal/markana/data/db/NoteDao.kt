@@ -18,14 +18,12 @@ interface NoteDao {
     // write
 
     suspend fun addNoteIfNotExists(note: Note) {
-        // the note already exists
+        // the note already exists; dont add
         if (doesNoteExist(note.uri)) return
 
+        // the note already exists independently; copy metadata
         val noteLinkedIndependently = getNoteLinkedIndependently(note.uri.toUriPathString())
-
-        // the note already exists independently
         if (noteLinkedIndependently != null) {
-            // copy metadata
             note.apply {
                 modified = noteLinkedIndependently.modified
                 opened = noteLinkedIndependently.opened
@@ -37,6 +35,7 @@ interface NoteDao {
             deleteNote(noteLinkedIndependently.uri)
         }
 
+        // the note does not exist
         addNote(note)
     }
 
@@ -64,7 +63,10 @@ interface NoteDao {
     suspend fun deleteNote(uri: String)
 
     @Query("DELETE FROM notes WHERE tree_id = :treeId")
-    suspend fun deleteNotes(treeId: Int)
+    suspend fun deleteNotes(treeId: Long)
+
+    @Query("DELETE FROM notes WHERE tree_id IS NOT NULL AND tree_id NOT IN (SELECT id from trees)")
+    suspend fun deleteNotesInDeletedTrees()
 
     // read
 
