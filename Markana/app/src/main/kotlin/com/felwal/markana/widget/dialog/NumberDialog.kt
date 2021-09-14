@@ -63,7 +63,7 @@ class NumberDialog : BaseDialog() {
                     listener.onNumberDialogPositiveClick(input, dialogTag)
                 }
                 catch (e: NumberFormatException) {
-                    activity?.toast(getString(R.string.toast_err_no_input))
+                    activity?.toast(R.string.toast_err_no_input)
                 }
             }
             setCancelButton(negBtnTxtRes)

@@ -12,6 +12,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.MenuRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.felwal.markana.data.prefs.Theme
@@ -42,11 +43,17 @@ fun Context.toast(text: String, long: Boolean = false) =
     Toast.makeText(this, text, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
         .show()
 
+fun Context.toast(@StringRes textRes: Int, long: Boolean = false) =
+    toast(getString(textRes, long))
+
 fun Context.toastLog(tag: String, msg: String, e: Exception? = null) {
     toast(msg, true)
     Log.d(tag, msg, e)
     e?.printStackTrace()
 }
+
+fun Context.toastLog(tag: String, @StringRes msgRes: Int, e: Exception? = null) =
+    toastLog(tag, getString(msgRes), e)
 
 fun Context.tryToast(text: String, long: Boolean = false) {
     try {
@@ -57,15 +64,24 @@ fun Context.tryToast(text: String, long: Boolean = false) {
     }
 }
 
+fun Context.tryToast(@StringRes textRes: Int, long: Boolean = false) =
+    tryToast(getString(textRes, long))
+
 fun Context.tryToastLog(tag: String, msg: String, e: Exception? = null) {
     tryToast(msg, true)
     Log.d(tag, msg, e)
     e?.printStackTrace()
 }
 
+fun Context.tryToastLog(tag: String, @StringRes msgRes: Int, e: Exception? = null) =
+    tryToastLog(tag, getString(msgRes), e)
+
 suspend fun Context.coToast(text: String, long: Boolean = false) = withUI {
     toast(text, long)
 }
+
+suspend fun Context.coToast(@StringRes textRes: Int, long: Boolean = false) =
+    coToast(getString(textRes, long))
 
 suspend fun Context.coToastLog(tag: String, msg: String, e: Exception? = null) {
     coToast(msg, true)
@@ -73,15 +89,25 @@ suspend fun Context.coToastLog(tag: String, msg: String, e: Exception? = null) {
     e?.printStackTrace()
 }
 
+suspend fun Context.coToastLog(tag: String, @StringRes msgRes: Int, e: Exception? = null) =
+    coToastLog(tag, getString(msgRes), e)
+
+
 fun Activity.uiToast(text: String, long: Boolean = false) = runOnUiThread {
     toast(text, long)
 }
+
+fun Activity.uiToast(@StringRes textRes: Int, long: Boolean = false) =
+    uiToast(getString(textRes, long))
 
 fun Activity.uiToastLog(tag: String, msg: String, e: Exception? = null) = runOnUiThread {
     uiToast(msg, true)
     Log.d(tag, msg, e)
     e?.printStackTrace()
 }
+
+fun Activity.uiToastLog(tag: String, @StringRes msgRes: Int, e: Exception? = null) =
+    uiToastLog(tag, getString(msgRes), e)
 
 // popup menu
 
