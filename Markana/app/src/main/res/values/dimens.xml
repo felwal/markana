@@ -30,7 +30,8 @@
     <!-- misc -->
     <dimen name="corner_radius_medium">10dp</dimen>
     <dimen name="corner_radius_dialog">8dp</dimen>
-    <dimen name="width_stroke_small">1dp</dimen>
+    <dimen name="width_stroke_thin">1dp</dimen>
+    <dimen name="width_stroke_wide">2dp</dimen>
     <dimen name="height_divider">1dp</dimen>
 
     <!-- elevation -->

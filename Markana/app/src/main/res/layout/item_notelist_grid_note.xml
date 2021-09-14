@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/spacing_diminutive"
-    android:paddingVertical="@dimen/spacing_diminutive">
+    android:paddingVertical="@dimen/spacing_diminutive"
+    android:clipToPadding="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingVertical="@dimen/spacing_tiny"
-        android:background="@drawable/shape_grid_note_bg">
+        android:background="@drawable/shape_grid_note_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/iv_pin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_diminutive"
             android:layout_marginEnd="@dimen/spacing_diminutive"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_title"
             app:srcCompat="@drawable/ic_pin_16"
             app:tint="@color/red_primary" />
 
@@ -60,4 +65,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/iv_border"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_grid_note_bg_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

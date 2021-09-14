@@ -60,11 +60,11 @@ class NoteListAdapter(
     // viewholder
 
     class GridNoteViewHolder(
-        c: Context,
+        private val c: Context,
         private val binding: ItemNotelistGridNoteBinding,
         private val onClick: (Note) -> Unit,
         private val onLongClick: (Note) -> Unit
-    ) : SelectableViewHolder(c, binding, binding.clNote) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         private var currentNote: Note? = null
 
@@ -101,12 +101,11 @@ class NoteListAdapter(
             // color
             binding.tvTitle.setTextColor(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
-            if (prefs.notePreviewColor) {
-                binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
-                binding.clNote.background.setTint(note.getBackgroundColor(c))
-                markSelection(note.isSelected, note.getBackgroundColor(c))
-            }
-            else markSelection(note.isSelected, c.getColorAttr(R.attr.colorSurface))
+            binding.clNote.background.setTint(
+                if (prefs.notePreviewColor) note.getBackgroundColor(c)
+                else c.getColorAttr(R.attr.colorSurface)
+            )
+            binding.ivBorder.isGone = !note.isSelected
 
             // mark pinned
             binding.ivPin.isInvisible = !note.isPinned
@@ -114,11 +113,11 @@ class NoteListAdapter(
     }
 
     class ListNoteViewHolder(
-        c: Context,
+        private val c: Context,
         private val binding: ItemNotelistListNoteBinding,
         private val onClick: (Note) -> Unit,
         private val onLongClick: (Note) -> Unit
-    ) : SelectableViewHolder(c, binding, binding.clNote) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         private var currentNote: Note? = null
 
@@ -148,24 +147,13 @@ class NoteListAdapter(
             // color
             binding.ivIcon.drawable.setTint(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
-            //binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
-            //binding.clNote.background.setTint(note.getBackgroundColor(c))
+            binding.clNote.background.setTint(
+                if (note.isSelected) c.getColor(R.color.red_accent_trans)
+                else c.getColorAttr(android.R.attr.colorBackground)
+            )
 
-            // mark selected and pinned
-            markSelection(note.isSelected, c.getColorAttr(android.R.attr.colorBackground))
+            // mark pinned
             binding.ivPin.isInvisible = !note.isPinned
-        }
-    }
-
-    abstract class SelectableViewHolder(
-        protected val c: Context,
-        binding: ViewBinding,
-        private var selectableBackground: ConstraintLayout
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        protected fun markSelection(selected: Boolean, @ColorInt defaultColor: Int) {
-            if (selected) selectableBackground.background.setTint(c.getColor(R.color.red_accent_trans))
-            else selectableBackground.background.setTint(defaultColor)
         }
     }
 }
