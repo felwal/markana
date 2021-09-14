@@ -156,6 +156,9 @@ class NoteListActivity : AppCompatActivity(),
                         return false
                     }
                 })
+
+                // swiperefresh
+                binding.srl.isEnabled = true
             }
             1 -> {
                 // set menu
@@ -165,9 +168,15 @@ class NoteListActivity : AppCompatActivity(),
                 // change scroll flags: don't scroll tb
                 disableToolbarScroll()
                 binding.ab.setExpanded(true, false) // anim is not smooth
+
+                // swiperefresh
+                binding.srl.isEnabled = false
             }
             else -> {
                 menuInflater.inflate(R.menu.menu_notelist_tb_selection_multi, menu)
+
+                // swiperefresh
+                binding.srl.isEnabled = false
             }
         }
 
