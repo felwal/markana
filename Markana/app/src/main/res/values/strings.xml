@@ -126,6 +126,10 @@
 
     <!-- toast -->
 
+    <string name="toast_copied_to_clipboard">Copied to clipboard.</string>
+    <string name="toast_note_already_linled">Note already linked</string>
+    <string name="toast_tree_already_linled">Folder already linked</string>
+
     <!-- error -->
     <string name="toast_err_no_input">No input</string>
 

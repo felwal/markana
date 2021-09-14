@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.net.toUri
+import com.felwal.markana.R
 import com.felwal.markana.data.db.DbDataSource
 import com.felwal.markana.data.network.SafDataSource
 import com.felwal.markana.prefs
@@ -120,7 +121,7 @@ class NoteRepository(
     suspend fun handleOpenedDocument(uri: Uri) = withIO {
         // check if note exists (independently or in tree)
         if (db.noteDao().doesNoteExistIncludeInTree(uri.toUriPathString())) {
-            applicationContext.coToast("Note already linked")
+            applicationContext.coToast(applicationContext.getString(R.string.toast_note_already_linled))
             return@withIO
         }
 
@@ -134,7 +135,7 @@ class NoteRepository(
     suspend fun handleOpenedDocumentTree(uri: Uri) = withIO {
         // check if tree exists (independently or nested)
         if (db.treeDao().doesTreeExistIncludeAsNested(uri.toString())) {
-            applicationContext.coToast("Folder already linked")
+            applicationContext.coToast(applicationContext.getString(R.string.toast_tree_already_linled))
             return@withIO
         }
 

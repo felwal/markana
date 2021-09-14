@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.felwal.markana.R
 import com.felwal.markana.displayDensity
 
 // screen
@@ -19,7 +20,7 @@ fun Context.copyToClipboard(text: CharSequence) {
     val clipboard = getSystemService(ClipboardManager::class.java)
     val clip = ClipData.newPlainText("label", text)
     clipboard.setPrimaryClip(clip)
-    tryToast("Copied to clipboard.")
+    tryToast(getString(R.string.toast_copied_to_clipboard))
 }
 
 fun Activity.hideKeyboard() {
