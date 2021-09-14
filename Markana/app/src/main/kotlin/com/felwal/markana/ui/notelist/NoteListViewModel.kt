@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
 import com.felwal.markana.util.withUI
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
@@ -60,9 +59,9 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     fun pinNotes(notes: List<Note>) {
         viewModelScope.launch {
             // determine if to unpin all or pin those not already pinned
-            val unpinAll = notes.all { it.isPinned }
+            val unpin = notes.all { it.isPinned }
             // apply
-            for (note in notes) note.isPinned = !unpinAll
+            for (note in notes) note.isPinned = !unpin
 
             repo.updateNoteMetadata(*notes.toTypedArray())
             loadNotes()

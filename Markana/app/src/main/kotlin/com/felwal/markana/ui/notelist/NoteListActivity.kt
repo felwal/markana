@@ -169,11 +169,18 @@ class NoteListActivity : AppCompatActivity(),
                 disableToolbarScroll()
                 binding.ab.setExpanded(true, false) // anim is not smooth
 
+                // pin action
+                updatePinMenuItem(menu)
+
                 // swiperefresh
                 binding.srl.isEnabled = false
             }
             else -> {
+                // set menu
                 menuInflater.inflate(R.menu.menu_notelist_tb_selection_multi, menu)
+
+                // pin action
+                updatePinMenuItem(menu)
 
                 // swiperefresh
                 binding.srl.isEnabled = false
@@ -393,6 +400,20 @@ class NoteListActivity : AppCompatActivity(),
         binding.ctb.layoutParams = params
     }
 
+    private fun updatePinMenuItem(menu: Menu) {
+        val unpin = model.selectedNotes.all { it.isPinned }
+        val pinItem = menu.findItem(R.id.action_pin)
+
+        if (unpin) {
+            pinItem.setIcon(R.drawable.ic_pin_24)
+            pinItem.tooltipText = getString(R.string.action_unpin)
+        }
+        else {
+            pinItem.setIcon(R.drawable.ic_pin_outline_24)
+            pinItem.tooltipText = getString(R.string.action_pin)
+        }
+    }
+
     // data
 
     private fun copySelection() {
@@ -448,8 +469,8 @@ class NoteListActivity : AppCompatActivity(),
         model.selectionIndices.toggleInclusion(index)
         adapter.notifyItemChanged(index)
 
-        // selection mode just turned off/single/multi; sync tb
-        if (selectionCount in 0..2) invalidateOptionsMenu()
+        // sync tb
+        invalidateOptionsMenu()
         updateToolbarTitle()
     }
 
