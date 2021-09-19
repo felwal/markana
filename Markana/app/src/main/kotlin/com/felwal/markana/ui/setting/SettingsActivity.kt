@@ -89,7 +89,7 @@ open class SettingsActivity : AbsSettingsActivity(
                     title = getString(R.string.tv_settings_item_title_preview_max_lines),
                     desc = getQuantityString(
                         R.plurals.tv_settings_item_desc_preview_max_lines,
-                        prefs.notePreviewMaxLines, prefs.notePreviewMaxLines
+                        prefs.notePreviewMaxLines
                     ),
                     value = prefs.notePreviewMaxLines,
                     hint = "Default: 12",

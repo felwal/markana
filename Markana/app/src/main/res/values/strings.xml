@@ -93,15 +93,15 @@
     <!-- title -->
     <plurals name="dialog_title_delete_notes">
         <item quantity="one">Delete note?</item>
-        <item quantity="other">Delete notes?</item>
+        <item quantity="other">Delete %d notes?</item>
     </plurals>
     <plurals name="dialog_title_unlink_notes">
         <item quantity="one">Unlink note?</item>
-        <item quantity="other">Unlink notes?</item>
+        <item quantity="other">Unlink %d notes?</item>
     </plurals>
     <plurals name="dialog_title_unlink_tree">
         <item quantity="one">Unlink folder?</item>
-        <item quantity="other">Unlink folders?</item>
+        <item quantity="other">Unlink %d folders?</item>
     </plurals>
     <string name="dialog_title_color_notes">Note colour</string>
 

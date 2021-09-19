@@ -26,7 +26,7 @@ fun Context.getDimension(@DimenRes id: Int): Float = resources.getDimension(id)
 fun Context.getInteger(@IntegerRes id: Int): Int = resources.getInteger(id)
 
 fun Context.getQuantityString(@PluralsRes id: Int, quantity: Int, vararg formatArgs: Any?): String =
-    if (formatArgs.isEmpty()) resources.getQuantityString(id, quantity)
+    if (formatArgs.isEmpty()) resources.getQuantityString(id, quantity, quantity)
     else resources.getQuantityString(id, quantity, *formatArgs)
 
 fun Context.getStringArray(@ArrayRes id: Int): Array<String> = resources.getStringArray(id)

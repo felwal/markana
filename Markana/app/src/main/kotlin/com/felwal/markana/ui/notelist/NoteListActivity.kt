@@ -381,7 +381,7 @@ class NoteListActivity : AppCompatActivity(),
         }
         else {
             supportActionBar?.title =
-                getQuantityString(R.plurals.tb_notelist_title_selection, selectionCount, selectionCount)
+                getQuantityString(R.plurals.tb_notelist_title_selection, selectionCount)
         }
     }
 
