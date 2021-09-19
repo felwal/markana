@@ -24,7 +24,7 @@ fun String.indicesOf(string: String, startIndex: Int = 0, ignoreCase: Boolean = 
     val indices = mutableListOf<Int>()
     val keyLen = key.length
 
-    for (index in startIndex.coerceAtLeast(0) until (content.length - keyLen)) {
+    for (index in startIndex.coerceAtLeast(0)..(content.length - keyLen)) {
         if (content.substring(index, index + keyLen) == key) indices.add(index)
     }
 

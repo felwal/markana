@@ -15,6 +15,7 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     val itemsData by lazy { MutableLiveData<MutableList<Note>>() }
     val selectionIndices: MutableList<Int> = mutableListOf()
     var searchQuery: String = ""
+    val searchQueryOrNull get() = if (searchQuery == "") null else searchQuery
 
     val items: List<Note> get() = itemsData.value ?: listOf()
     val selectedNotes: List<Note> get() = items.filter { it.isSelected }

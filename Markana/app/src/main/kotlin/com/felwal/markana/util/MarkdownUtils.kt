@@ -240,7 +240,3 @@ private fun Layout.getParagraphStart(index: Int): Int {
     // the paragraph is the first paragraph; return layout start
     return 0
 }
-
-private fun EditText.coerceSelection(start: Int, stop: Int? = null) =
-    if (stop == null) setSelection(start.coerceIn(0, length()))
-    else setSelection(start.coerceIn(0, length()), stop.coerceIn(0, length()))

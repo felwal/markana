@@ -25,9 +25,11 @@ import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.getInteger
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
+import com.felwal.markana.util.hideKeyboard
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.removeAll
+import com.felwal.markana.util.searchView
 import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.updateDayNight
@@ -143,7 +145,7 @@ class NoteListActivity : AppCompatActivity(),
 
                 // search
                 val searchItem = menu.findItem(R.id.action_search)
-                (searchItem.actionView as SearchView).apply {
+                searchItem.searchView.apply {
                     queryHint = getString(R.string.tv_notelist_search_hint)
 
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -300,7 +302,7 @@ class NoteListActivity : AppCompatActivity(),
         adapter = NoteListAdapter(
             onClick = {
                 if (isSelectionMode) selectNote(it)
-                else NoteDetailActivity.startActivity(this, it.uri)
+                else NoteDetailActivity.startActivity(this, it.uri, model.searchQueryOrNull)
             },
             onLongClick = {
                 selectNote(it)

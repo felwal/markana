@@ -8,11 +8,13 @@ import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.Layout
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import com.felwal.markana.R
 import com.google.android.material.snackbar.Snackbar
@@ -55,6 +57,8 @@ fun View.snackbar(text: String, long: Boolean = true, actionText: String = "", a
 @SuppressLint("RestrictedApi")
 fun Menu.setOptionalIconsVisible(visible: Boolean) = (this as? MenuBuilder)?.setOptionalIconsVisible(visible)
 
+val MenuItem.searchView get() = actionView as SearchView
+
 // edittext
 
 val EditText.string: String get() = text.toString()
@@ -74,6 +78,10 @@ inline fun EditText.updateEditable(block: Editable.() -> Unit) {
 fun EditText.selectStart() = setSelection(0)
 
 fun EditText.selectEnd() = setSelection(string.length)
+
+fun EditText.coerceSelection(start: Int, stop: Int? = null) =
+    if (stop == null) setSelection(start.coerceIn(0, length()))
+    else setSelection(start.coerceIn(0, length()), stop.coerceIn(0, length()))
 
 /**
  * Makes the EditText wrap multiple lines

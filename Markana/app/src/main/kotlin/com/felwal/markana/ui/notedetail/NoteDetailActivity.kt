@@ -11,6 +11,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEach
+import androidx.core.widget.doBeforeTextChanged
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
@@ -18,16 +19,19 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.prefs
+import com.felwal.markana.util.coerceSelection
 import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
+import com.felwal.markana.util.hideKeyboard
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.indicesOf
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.makeMultilinePreventEnter
 import com.felwal.markana.util.multiplyAlphaComponent
 import com.felwal.markana.util.outdent
+import com.felwal.markana.util.searchView
 import com.felwal.markana.util.selectEnd
 import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.showKeyboard
@@ -66,6 +70,7 @@ import java.util.concurrent.Executors
 private const val LOG_TAG = "NoteDetail"
 
 private const val EXTRA_NOTE_URI = "uri"
+private const val EXTRA_FIND_QUERY = "findQuery"
 
 private const val DIALOG_DELETE = "deleteNote"
 private const val DIALOG_COLOR = "colorNote"
@@ -182,7 +187,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
                 }
             })
         }
-        (findItem.actionView as SearchView).apply {
+        findItem.searchView.apply {
             queryHint = getString(R.string.tv_notedetail_find_hint)
 
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -366,7 +371,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
 
         val index = foundIndices[foundIndicesCursor]
         binding.etNoteBody.requestFocus()
-        binding.etNoteBody.setSelection(index, index + foundQueryLength)
+        binding.etNoteBody.coerceSelection(index, index + foundQueryLength)
     }
 
     //
@@ -377,8 +382,28 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     }
 
     private fun loadContent(note: Note) {
+        val isInitialLoad = binding.etNoteTitle.string == "" && binding.etNoteBody.string == ""
+
         binding.etNoteTitle.setText(note.filename)
         binding.etNoteBody.setText(note.content)
+
+        if (isInitialLoad) {
+            // get findQuery extra, open search view and fire search
+            intent.getStringExtra(EXTRA_FIND_QUERY)?.let { query ->
+                binding.tb.menu.findItem(R.id.action_find).apply {
+                    expandActionView()
+                    searchView.setQuery(query, true)
+                }
+            }
+            // collapse find on text changed to avoid out-of-date selection
+            binding.etNoteBody.setOnClickListener {
+                binding.tb.menu
+                    .findItem(R.id.action_find)
+                    .collapseActionView()
+                // collapseActionView hides keyboard; show it again
+                binding.etNoteBody.showKeyboard()
+            }
+        }
     }
 
     private fun saveNote() {
@@ -430,9 +455,10 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
     //
 
     companion object {
-        fun startActivity(c: Context, uri: String? = null) {
+        fun startActivity(c: Context, uri: String? = null, findQuery: String? = null) {
             val intent = Intent(c, NoteDetailActivity::class.java)
-            uri?.let { intent.putExtra(EXTRA_NOTE_URI, it); }
+            uri?.let { intent.putExtra(EXTRA_NOTE_URI, it) }
+            findQuery?.let { intent.putExtra(EXTRA_FIND_QUERY, it) }
             c.startActivity(intent)
         }
     }
