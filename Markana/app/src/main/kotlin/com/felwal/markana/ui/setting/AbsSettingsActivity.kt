@@ -45,11 +45,11 @@ abstract class AbsSettingsActivity(
     /**
      * Call [inflateSections] here.
      */
-    protected abstract fun inflateViews()
+    protected abstract fun inflateSettingItems()
 
     protected fun reflateViews() {
         llItemContainer.removeAllViews()
-        inflateViews()
+        inflateSettingItems()
     }
 
     protected fun inflateSections(vararg sections: ItemSection) {

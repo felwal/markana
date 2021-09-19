@@ -7,18 +7,43 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
+import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.withUI
 import kotlinx.coroutines.launch
 
 class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
+    // primary
     val itemsData by lazy { MutableLiveData<MutableList<Note>>() }
     val selectionIndices: MutableList<Int> = mutableListOf()
-    var searchQuery: String = ""
-    val searchQueryOrNull get() = if (searchQuery == "") null else searchQuery
+    private var searchQuery: String = ""
 
+    // secondary
     val items: List<Note> get() = itemsData.value ?: listOf()
     val selectedNotes: List<Note> get() = items.filter { it.isSelected }
+    val selectionCount: Int get() = selectionIndices.size
+    val treeSelectionCount: Int get() = selectedNotes.mapNotNull { it.treeId }.toSet().size
+    val isSelectionMode: Boolean get() = selectionCount != 0
+    val isSelectionPinned: Boolean get() = selectedNotes.all { it.isPinned }
+    val searchQueryOrNull get() = if (isSearching) searchQuery else null
+    val isSearching: Boolean get() = searchQuery != ""
+
+    // shallow
+
+    fun searchNotes(query: String) {
+        searchQuery = query
+        loadNotes()
+    }
+
+    fun toggleNoteSelection(note: Note): Int {
+        note.isSelected = !note.isSelected
+
+        val index = items.indexOf(note)
+        itemsData.value?.set(index, note)
+        selectionIndices.toggleInclusion(index)
+
+        return index
+    }
 
     // read
 
@@ -57,8 +82,9 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         loadNotes()
     }
 
-    fun pinNotes(notes: List<Note>) {
+    fun pinSelectedNotes() {
         viewModelScope.launch {
+            val notes = selectedNotes
             // determine if to unpin all or pin those not already pinned
             val unpin = notes.all { it.isPinned }
             // apply
@@ -69,8 +95,9 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
-    fun colorNotes(notes: List<Note>, colorIndex: Int) {
+    fun colorSelectedNotes(colorIndex: Int) {
         viewModelScope.launch {
+            val notes = selectedNotes
             for (note in notes) note.colorIndex = colorIndex
 
             repo.updateNoteMetadata(*notes.toTypedArray())
@@ -78,34 +105,34 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
-    fun unlinkNotes(notes: List<Note>) {
+    fun unlinkSelectedNotes() {
         viewModelScope.launch {
-            notes.map { it.uri }.forEach {
+            selectedNotes.map { it.uri }.forEach {
                 repo.unlinkNote(it)
             }
             loadNotes()
         }
     }
 
-    fun unlinkTrees(notes: List<Note>) {
+    fun unlinkSelectedTrees() {
         viewModelScope.launch {
-            notes.mapNotNull { it.treeId }.forEach {
+            selectedNotes.mapNotNull { it.treeId }.forEach {
                 repo.unlinkTree(it)
             }
             loadNotes()
         }
     }
 
-    fun deleteNotes(notes: List<Note>) {
+    fun deleteSelectedNotes() {
         viewModelScope.launch {
-            notes.map { it.uri }.forEach {
+            selectedNotes.map { it.uri }.forEach {
                 repo.deleteNote(it)
             }
             loadNotes()
         }
     }
 
-    fun handleCreatedNote(uri: Uri) {
+    fun handleOpenedDocument(uri: Uri) {
         viewModelScope.launch {
             repo.handleOpenedDocument(uri)
             loadNotes()

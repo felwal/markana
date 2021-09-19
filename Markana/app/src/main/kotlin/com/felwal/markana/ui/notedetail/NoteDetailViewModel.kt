@@ -7,15 +7,41 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
-import kotlinx.coroutines.Dispatchers
+import com.felwal.markana.util.indicesOf
 import kotlinx.coroutines.launch
 
 class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
 
+    // primary
     val noteData by lazy { MutableLiveData<Note>() }
-    val note: Note get() = noteData.value!!
-
     var noteUri: String? = null
+    var isFindInNoteMode = false
+    var findInNoteQueryLength = 0
+    var findInNoteOccurrenceIndices = listOf<Int>()
+    private var findInNoteOccurrenceIndicesCursor = 0
+
+    // secondary
+    val note: Note get() = noteData.value!!
+    val findInNoteOccurrenceIndex: Int get() =
+        findInNoteOccurrenceIndices[findInNoteOccurrenceIndicesCursor]
+
+    // shallow
+
+    fun findInNote(query: String, content: String) {
+        findInNoteQueryLength = query.length
+        findInNoteOccurrenceIndices = content.indicesOf(query, ignoreCase = true)
+        findInNoteOccurrenceIndicesCursor = 0
+    }
+
+    fun decFindInNoteCursor() {
+        if (findInNoteOccurrenceIndicesCursor > 0) findInNoteOccurrenceIndicesCursor -= 1
+        else findInNoteOccurrenceIndicesCursor = findInNoteOccurrenceIndices.size - 1
+    }
+
+    fun incFindInNoteCursor() {
+        if (findInNoteOccurrenceIndicesCursor < findInNoteOccurrenceIndices.size - 1) findInNoteOccurrenceIndicesCursor += 1
+        else findInNoteOccurrenceIndicesCursor = 0
+    }
 
     // read
 
@@ -36,14 +62,15 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
         repo.createNote(createDocumentLauncher)
     }
 
-    fun saveNote(note: Note, rename: Boolean) {
+    fun saveNote(note: Note) {
         viewModelScope.launch {
+            val rename = noteData.value?.let { note.filename != it.filename } ?: false
             repo.saveNote(note, rename)
             loadNote()
         }
     }
 
-    fun syncNote(uri: String) {
+    private fun syncNote(uri: String) {
         viewModelScope.launch {
             repo.syncNote(uri)
         }
@@ -58,7 +85,16 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
         }
     }
 
-    fun persistNotePermissions(uri: Uri) {
+    fun handleCreatedDocument(uri: Uri) {
+        // save the note
         repo.persistPermissions(uri)
+        saveNote(Note(uri = uri.toString()))
+
+        // sync to put filename in db before loading
+        syncNote(uri.toString())
+
+        // load the note
+        noteUri = uri.toString()
+        loadNote()
     }
 }

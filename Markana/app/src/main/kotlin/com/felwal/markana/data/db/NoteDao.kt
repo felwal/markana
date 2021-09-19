@@ -18,7 +18,7 @@ interface NoteDao {
     // write
 
     suspend fun addNoteIfNotExists(note: Note) {
-        // the note already exists; dont add
+        // the note already exists; don't add
         if (doesNoteExist(note.uri)) return
 
         // the note already exists independently; copy metadata

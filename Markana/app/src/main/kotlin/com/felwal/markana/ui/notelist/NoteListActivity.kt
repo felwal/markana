@@ -19,19 +19,16 @@ import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.common
-import com.felwal.markana.util.defaults
 import com.felwal.markana.util.getColorAttr
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.getInteger
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
-import com.felwal.markana.util.hideKeyboard
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.launchActivity
 import com.felwal.markana.util.removeAll
 import com.felwal.markana.util.searchView
 import com.felwal.markana.util.setOptionalIconsVisible
-import com.felwal.markana.util.toggleInclusion
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.felwal.markana.widget.dialog.BinaryDialog
@@ -52,24 +49,24 @@ class NoteListActivity : AppCompatActivity(),
     ColorDialog.DialogListener,
     SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var binding: ActivityNotelistBinding
-    private lateinit var adapter: NoteListAdapter
-
+    // data
     private lateinit var model: NoteListViewModel
 
-    private val selectionCount: Int get() = model.selectionIndices.size
-    private val treeSelectionCount: Int get() = model.selectedNotes.mapNotNull { it.treeId }.toSet().size
-    private val isSelectionMode: Boolean get() = selectionCount != 0
-    private val selectedNote: Note? get() = if (selectionCount > 0) model.selectedNotes[0] else null
+    // view
+    private lateinit var binding: ActivityNotelistBinding
+    private lateinit var adapter: NoteListAdapter
+    private lateinit var fabMenu: FabMenu
 
-    private var notePreviewColor = true
+    // settings helper
+    private var notePreviewColor = prefs.notePreviewColor
     private var notePreviewMaxLines = prefs.notePreviewMaxLines
 
+    // saf result launcher
     private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
         Log.i(LOG_TAG, "open document uri result: $uri")
 
-        model.handleCreatedNote(uri)
+        model.handleOpenedDocument(uri)
     }
     private val openDocumentTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         uri ?: return@registerForActivityResult
@@ -78,9 +75,7 @@ class NoteListActivity : AppCompatActivity(),
         model.handleOpenedTree(uri)
     }
 
-    private lateinit var fabMenu: FabMenu
-
-    // Activity
+    // lifecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateDayNight()
@@ -88,26 +83,38 @@ class NoteListActivity : AppCompatActivity(),
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // init tb
-        setSupportActionBar(binding.tb)
-        supportActionBar?.setHomeAsUpIndicator(
-            getDrawableCompat(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
-        )
-
-        notePreviewColor = prefs.notePreviewColor
-
+        initToolbar()
         initFabMenu()
         initRecycler()
         initRefreshLayout()
+        initData()
+    }
 
-        // data
-        val container = (application as App).appContainer
-        model = container.noteListViewModel
+    override fun onRestart() {
+        super.onRestart()
+        if (fabMenu.isMenuOpen) fabMenu.closeMenu()
 
-        model.itemsData.observe(this) { items ->
-            submitItems(items)
+        // apply updated settings
+        if (notePreviewColor != prefs.notePreviewColor || notePreviewMaxLines != prefs.notePreviewMaxLines) {
+            adapter.notifyDataSetChanged()
+            notePreviewColor = prefs.notePreviewColor
+            notePreviewMaxLines = prefs.notePreviewMaxLines
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        model.loadNotes()
+        onRefresh()
+    }
+
+    override fun onBackPressed() = when {
+        fabMenu.isMenuOpen -> fabMenu.closeMenu()
+        model.isSelectionMode -> emptySelection()
+        else -> super.onBackPressed()
+    }
+
+    // menu
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.apply {
@@ -133,7 +140,7 @@ class NoteListActivity : AppCompatActivity(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        when (selectionCount) {
+        when (model.selectionCount) {
             0 -> {
                 // set menu
                 menuInflater.inflate(R.menu.menu_notelist_tb, menu)
@@ -146,6 +153,7 @@ class NoteListActivity : AppCompatActivity(),
                 // search
                 val searchItem = menu.findItem(R.id.action_search)
                 searchItem.searchView.apply {
+                    // xml attribute doesn't work
                     queryHint = getString(R.string.tv_notelist_search_hint)
 
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -155,8 +163,7 @@ class NoteListActivity : AppCompatActivity(),
                         }
 
                         override fun onQueryTextChange(newText: String): Boolean {
-                            model.searchQuery = newText
-                            model.loadNotes()
+                            model.searchNotes(newText)
                             return true
                         }
                     })
@@ -197,82 +204,60 @@ class NoteListActivity : AppCompatActivity(),
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
-        // normal tb
-        R.id.action_settings -> launchActivity<SettingsActivity>()
-        R.id.action_view_toggle -> {
-            adapter.invertViewType()
-            setAdapterAndManager()
-            invalidateOptionsMenu() // update icon
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            // normal tb
+            R.id.action_settings -> launchActivity<SettingsActivity>()
+            R.id.action_view_toggle -> {
+                adapter.invertViewType()
+                setAdapterAndManager()
+                invalidateOptionsMenu() // update icon
+            }
 
-        // normal tb: sort submenu
-        R.id.action_sort_name -> {
-            prefs.sortByInt = SortBy.NAME.ordinal
-            onOptionsRadioItemSelected(item)
-        }
-        R.id.action_sort_modified -> {
-            prefs.sortByInt = SortBy.MODIFIED.ordinal
-            onOptionsRadioItemSelected(item)
-        }
-        R.id.action_sort_opened -> {
-            prefs.sortByInt = SortBy.OPENED.ordinal
-            onOptionsRadioItemSelected(item)
-        }
-        R.id.action_sort_asc -> {
-            item.isChecked = !item.isChecked
-            prefs.ascending = item.isChecked
-            model.loadNotes()
-        }
+            // normal tb: sort submenu
+            R.id.action_sort_name -> {
+                prefs.sortByInt = SortBy.NAME.ordinal
+                onOptionsRadioItemSelected(item)
+            }
+            R.id.action_sort_modified -> {
+                prefs.sortByInt = SortBy.MODIFIED.ordinal
+                onOptionsRadioItemSelected(item)
+            }
+            R.id.action_sort_opened -> {
+                prefs.sortByInt = SortBy.OPENED.ordinal
+                onOptionsRadioItemSelected(item)
+            }
+            R.id.action_sort_asc -> {
+                item.isChecked = !item.isChecked
+                prefs.ascending = item.isChecked
+                model.loadNotes()
+            }
 
-        // single selection tb
-        //R.id.action_copy -> copySelection()
+            // single selection tb
+            //R.id.action_copy -> copySelection()
 
-        // multi selection tb
-        android.R.id.home -> emptySelection()
-        R.id.action_pin -> pinSelection()
-        R.id.action_color -> colorSelection()
-        R.id.action_select_all -> selectAll()
-        R.id.action_unlink -> unlinkSelection()
-        R.id.action_unlink_tree -> unlinkSelectionTrees()
-        R.id.action_delete -> deleteSelection()
+            // multi selection tb
+            android.R.id.home -> emptySelection()
+            R.id.action_pin -> pinSelection()
+            R.id.action_color -> colorSelection()
+            R.id.action_select_all -> selectAll()
+            R.id.action_unlink -> unlinkSelection()
+            R.id.action_unlink_tree -> unlinkSelectionTrees()
+            R.id.action_delete -> deleteSelection()
 
-        else -> super.onOptionsItemSelected(item)
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
-
-    override fun onRestart() {
-        super.onRestart()
-        if (fabMenu.isMenuOpen) fabMenu.closeMenu()
-
-        // apply updated settings
-        if (notePreviewColor != prefs.notePreviewColor || notePreviewMaxLines != prefs.notePreviewMaxLines) {
-            adapter.notifyDataSetChanged()
-            notePreviewColor = prefs.notePreviewColor
-            notePreviewMaxLines = prefs.notePreviewMaxLines
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        model.loadNotes()
-        onRefresh()
-    }
-
-    override fun onBackPressed() = when {
-        fabMenu.isMenuOpen -> fabMenu.closeMenu()
-        isSelectionMode -> emptySelection()
-        else -> super.onBackPressed()
-    }
-
-    //
 
     private fun onOptionsRadioItemSelected(item: MenuItem) {
         item.isChecked = true
         model.loadNotes()
-        adapter.notifyDataSetChanged() // rebind to update modified/opened tv
+        // rebind to update modified/opened tv
+        adapter.notifyDataSetChanged()
     }
 
-    // SwipeRefreshLayout
+    // swiperefresh
 
     private fun initRefreshLayout() {
         binding.srl.setOnRefreshListener(this)
@@ -301,7 +286,7 @@ class NoteListActivity : AppCompatActivity(),
         // adapter
         adapter = NoteListAdapter(
             onClick = {
-                if (isSelectionMode) selectNote(it)
+                if (model.isSelectionMode) selectNote(it)
                 else NoteDetailActivity.startActivity(this, it.uri, model.searchQueryOrNull)
             },
             onLongClick = {
@@ -329,17 +314,17 @@ class NoteListActivity : AppCompatActivity(),
         if (items.isEmpty()) {
             binding.inEmpty.root.isGone = false
 
-            // set new use empty page
-            if (model.searchQuery == "") {
-                binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_new_title)
-                binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_new_message)
-                binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_note_24, R.attr.colorAccent))
-            }
             // set search empty page
-            else {
+            if (model.isSearching) {
                 binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_search_title)
                 binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_search_message)
                 binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_search_24, R.attr.colorAccent))
+            }
+            // set new user empty page
+            else {
+                binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_new_title)
+                binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_new_message)
+                binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_note_24, R.attr.colorAccent))
             }
         }
         else binding.inEmpty.root.isGone = true
@@ -380,13 +365,20 @@ class NoteListActivity : AppCompatActivity(),
 
     // toolbar
 
+    private fun initToolbar() {
+        setSupportActionBar(binding.tb)
+        supportActionBar?.setHomeAsUpIndicator(
+            getDrawableCompat(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
+        )
+    }
+
     private fun updateToolbarTitle() {
-        if (selectionCount == 0) {
+        if (!model.isSelectionMode) {
             supportActionBar?.title = getString(R.string.title_activity_notelist)
         }
         else {
             supportActionBar?.title =
-                getQuantityString(R.plurals.tb_notelist_title_selection, selectionCount)
+                getQuantityString(R.plurals.tb_notelist_title_selection, model.selectionCount)
         }
     }
 
@@ -406,10 +398,10 @@ class NoteListActivity : AppCompatActivity(),
     }
 
     private fun updatePinMenuItem(menu: Menu) {
-        val unpin = model.selectedNotes.all { it.isPinned }
+        val unpinSelection = model.isSelectionPinned
         val pinItem = menu.findItem(R.id.action_pin)
 
-        if (unpin) {
+        if (unpinSelection) {
             pinItem.setIcon(R.drawable.ic_pin_24)
             pinItem.tooltipText = getString(R.string.action_unpin)
         }
@@ -421,6 +413,15 @@ class NoteListActivity : AppCompatActivity(),
 
     // data
 
+    private fun initData() {
+        val container = (application as App).appContainer
+        model = container.noteListViewModel
+
+        model.itemsData.observe(this) { items ->
+            submitItems(items)
+        }
+    }
+
     private fun copySelection() {
         // TODO: needs createAndSave
         /*selectedNote?.let {
@@ -431,7 +432,7 @@ class NoteListActivity : AppCompatActivity(),
     }
 
     private fun pinSelection() {
-        model.pinNotes(model.selectedNotes)
+        model.pinSelectedNotes()
         emptySelection()
     }
 
@@ -443,21 +444,21 @@ class NoteListActivity : AppCompatActivity(),
     ).show(supportFragmentManager)
 
     private fun unlinkSelection() = binaryDialog(
-        title = getQuantityString(R.plurals.dialog_title_unlink_notes, selectionCount),
-        message = getQuantityString(R.plurals.dialog_msg_unlink_notes, selectionCount),
+        title = getQuantityString(R.plurals.dialog_title_unlink_notes, model.selectionCount),
+        message = getQuantityString(R.plurals.dialog_msg_unlink_notes, model.selectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK
     ).show(supportFragmentManager)
 
     private fun unlinkSelectionTrees() = binaryDialog(
-        title = getQuantityString(R.plurals.dialog_title_unlink_tree, treeSelectionCount),
-        message = getQuantityString(R.plurals.dialog_msg_unlink_trees, treeSelectionCount),
+        title = getQuantityString(R.plurals.dialog_title_unlink_tree, model.treeSelectionCount),
+        message = getQuantityString(R.plurals.dialog_msg_unlink_trees, model.treeSelectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK_TREE
     ).show(supportFragmentManager)
 
     private fun deleteSelection() = binaryDialog(
-        title = getQuantityString(R.plurals.dialog_title_delete_notes, selectionCount),
+        title = getQuantityString(R.plurals.dialog_title_delete_notes, model.selectionCount),
         message = getString(R.string.dialog_msg_delete_notes),
         posBtnTxtRes = R.string.dialog_btn_delete,
         tag = DIALOG_DELETE
@@ -466,12 +467,8 @@ class NoteListActivity : AppCompatActivity(),
     // selection
 
     private fun selectNote(note: Note) {
-        note.isSelected = !note.isSelected
-
         // sync with data and adapter
-        val index = model.items.indexOf(note)
-        model.itemsData.value?.set(index, note)
-        model.selectionIndices.toggleInclusion(index)
+        val index = model.toggleNoteSelection(note)
         adapter.notifyItemChanged(index)
 
         // sync tb
@@ -483,12 +480,9 @@ class NoteListActivity : AppCompatActivity(),
         for (note in model.items) {
             if (note.isSelected) continue
 
-            note.isSelected = true
-            val index = model.items.indexOf(note)
-            model.itemsData.value?.set(index, note)
+            // sync with data and adapter
+            val index = model.toggleNoteSelection(note)
             adapter.notifyItemChanged(index)
-
-            model.selectionIndices.add(index)
         }
 
         // sync tb
@@ -516,15 +510,15 @@ class NoteListActivity : AppCompatActivity(),
     override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
             DIALOG_DELETE -> {
-                model.deleteNotes(model.selectedNotes)
+                model.deleteSelectedNotes()
                 emptySelection()
             }
             DIALOG_UNLINK -> {
-                model.unlinkNotes(model.selectedNotes)
+                model.unlinkSelectedNotes()
                 emptySelection()
             }
             DIALOG_UNLINK_TREE -> {
-                model.unlinkTrees(model.selectedNotes)
+                model.unlinkSelectedTrees()
                 emptySelection()
             }
         }
@@ -533,7 +527,7 @@ class NoteListActivity : AppCompatActivity(),
     override fun onColorDialogItemClick(checkedItem: Int, tag: String) {
         when (tag) {
             DIALOG_COLOR -> {
-                model.colorNotes(model.selectedNotes, checkedItem)
+                model.colorSelectedNotes(checkedItem)
                 emptySelection()
             }
         }

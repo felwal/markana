@@ -52,7 +52,7 @@ class NoteRepository(
 
     private suspend fun extractTrees() = withIO {
         db.treeDao().getTrees().forEach { extractTree(it) }
-        // this is neccessary since extractTree extracts trees which should be already deleted
+        // this is necessary since extractTree extracts trees which should be already deleted
         // TODO: better solution
         db.noteDao().deleteNotesInDeletedTrees()
     }
@@ -148,7 +148,7 @@ class NoteRepository(
     }
 
     private suspend fun addTreeIfNotExists(tree: Tree)  {
-        // the tree already exists; dont add
+        // the tree already exists; don't add
         if (db.treeDao().doesTreeExist(tree.uri)) return
 
         // the new tree may contain already linked trees; unlink them

@@ -11,7 +11,6 @@ import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.getQuantityString
-import com.felwal.markana.util.then
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.dialog.NumberDialog
 import com.felwal.markana.widget.dialog.RadioDialog
@@ -32,12 +31,13 @@ open class SettingsActivity : AbsSettingsActivity(
     RadioDialog.DialogListener,
     TextDialog.DialogListener,
     NumberDialog.DialogListener,
-    UnaryDialog.DialogListener
-{
+    UnaryDialog.DialogListener {
 
+    // view
     private lateinit var binding: ActivitySettingsBinding
-
     override val llItemContainer: LinearLayout get() = binding.ll
+
+    // lifecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateDayNight()
@@ -45,6 +45,24 @@ open class SettingsActivity : AbsSettingsActivity(
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initViews()
+        inflateSettingItems()
+    }
+
+    // menu
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    // view
+
+    private fun initViews() {
         // init tb
         setSupportActionBar(binding.tb)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -53,22 +71,9 @@ open class SettingsActivity : AbsSettingsActivity(
         binding.nsv.setOnScrollChangeListener { _, _, _, _, _ ->
             binding.ab.isSelected = binding.nsv.canScrollVertically(-1)
         }
-
-        inflateViews()
     }
 
-    // Activity
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            android.R.id.home -> finish() then true
-
-            else -> super.onOptionsItemSelected(item)
-        }
-
-    //
-
-    override fun inflateViews() {
+    override fun inflateSettingItems() {
         inflateSections(
             ItemSection(
                 title = getString(R.string.tv_settings_header_appearance),

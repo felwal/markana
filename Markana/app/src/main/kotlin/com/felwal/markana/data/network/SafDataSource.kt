@@ -53,8 +53,8 @@ class SafDataSource(private val applicationContext: Context) {
     fun openFile(openDocumentResultLauncher: ActivityResultLauncher<Array<String>>) =
         openDocumentResultLauncher.launch(arrayOf(MIME_TEXT)) // TODO: markdown isn't recognized as text
 
-    fun openTree(openDocuementTreeLauncher: ActivityResultLauncher<Uri>, initialUri: Uri?) =
-        openDocuementTreeLauncher.launch(initialUri)
+    fun openTree(openDocumentTreeLauncher: ActivityResultLauncher<Uri>, initialUri: Uri?) =
+        openDocumentTreeLauncher.launch(initialUri)
 
     suspend fun readFile(uri: Uri): Note? {
         if (false && !hasReadPermission(uri.toString())) {
@@ -118,7 +118,7 @@ class SafDataSource(private val applicationContext: Context) {
             // check mime TODO: markdown isn't recognized as text
             if (true || file.type?.isMime(MIME_TEXT_TYPE) == true) {
                 readFile(file.uri)?.let { note ->
-                    //persistPermissions(note.uri.toUri()) // TODO: not working / not neccessary?
+                    //persistPermissions(note.uri.toUri()) // TODO: not working / not necessary?
                     note.treeId = tree.id
                     notes.add(note)
                 }

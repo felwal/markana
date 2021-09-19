@@ -14,7 +14,7 @@ interface TreeDao {
     suspend fun addTree(tree: Tree): Long
 
     @Query("DELETE FROM trees WHERE id = :id")
-    suspend fun deleteTree(id: Long);
+    suspend fun deleteTree(id: Long)
 
     // read
 

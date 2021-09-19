@@ -11,7 +11,6 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEach
-import androidx.core.widget.doBeforeTextChanged
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
@@ -21,12 +20,9 @@ import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.coerceSelection
 import com.felwal.markana.util.copyToClipboard
-import com.felwal.markana.util.defaults
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
-import com.felwal.markana.util.hideKeyboard
 import com.felwal.markana.util.indent
-import com.felwal.markana.util.indicesOf
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.makeMultilinePreventEnter
 import com.felwal.markana.util.multiplyAlphaComponent
@@ -36,7 +32,6 @@ import com.felwal.markana.util.selectEnd
 import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
-import com.felwal.markana.util.then
 import com.felwal.markana.util.toEpochSecond
 import com.felwal.markana.util.toast
 import com.felwal.markana.util.toggleBulletList
@@ -75,49 +70,28 @@ private const val EXTRA_FIND_QUERY = "findQuery"
 private const val DIALOG_DELETE = "deleteNote"
 private const val DIALOG_COLOR = "colorNote"
 
-class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, ColorDialog.DialogListener {
+class NoteDetailActivity : AppCompatActivity(),
+    BinaryDialog.DialogListener,
+    ColorDialog.DialogListener {
 
-    private lateinit var binding: ActivityNotedetailBinding
-
+    // data
     private lateinit var appContainer: AppContainer
     private lateinit var model: NoteDetailViewModel
 
-    private var findMode = false
-    private var foundQueryLength = 0
-    private var foundIndices = listOf<Int>()
-    private var foundIndicesCursor = 0
-
-    private val etCurrentFocus: EditText?
-        get() = if (currentFocus is EditText) currentFocus as EditText else null
-
-    private val hasAnyFocus: Boolean
-        get() = binding.etNoteTitle.hasFocus() || binding.etNoteBody.hasFocus()
-
-    private val haveChangesBeenMade: Boolean
-        get() = binding.etNoteTitle.string != model.note.filename || binding.etNoteBody.string != model.note.content
-
+    // view
+    private lateinit var binding: ActivityNotedetailBinding
     private lateinit var contentHistoryManager: UndoRedoManager
 
+    // saf result launcher
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
+        // the user didn't pick a location; cancel activity
+        uri ?: finish().also { return@registerForActivityResult }
         Log.i(LOG_TAG, "create document uri result: $uri")
 
-        // the user didn't pick a location; cancel activity
-        if (uri == null) {
-            finish()
-            return@registerForActivityResult
-        }
-
-        // save the note
-        model.persistNotePermissions(uri)
-        model.saveNote(Note(uri = uri.toString()), false)
-        model.syncNote(uri.toString()) // sync to put filename in db before loading
-
-        // load the note
-        model.noteUri = uri.toString()
-        model.loadNote()
+        model.handleCreatedDocument(uri)
     }
 
-    // Activity
+    // lifecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateDayNight()
@@ -125,25 +99,123 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         binding = ActivityNotedetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // init tb
-        setSupportActionBar(binding.tb)
-        supportActionBar?.title = ""
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initToolbar()
+        initViews()
+        initData()
+    }
 
-        // enable clicking on links
-        // TODO: this also moves focus to start of et on scroll
-        //binding.etNoteBody.movementMethod = LinkMovementMethod.getInstance()
+    override fun onBackPressed() {
+        if (binding.etNoteTitle.hasFocus() || binding.etNoteBody.hasFocus()) clearAllFocus()
+        else {
+            saveNote()
+            super.onBackPressed()
+        }
+    }
 
-        // bab menu listener
-        binding.bab.setOnMenuItemClickListener(::onOptionsItemSelected)
+    override fun onPause() {
+        saveNote()
+        super.onPause()
+    }
 
-        // focus body on outside click
-        binding.vEmpty.setOnClickListener {
-            binding.etNoteBody.showKeyboard()
-            binding.etNoteBody.selectEnd()
+    override fun onDestroy() {
+        appContainer.noteDetailContainer = null
+        super.onDestroy()
+    }
+
+    // menu
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_notedetail_tb, menu)
+
+        // find in note
+        val findItem = menu.findItem(R.id.action_find).apply {
+            setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    setFindInNoteMode(true)
+                    return true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    setFindInNoteMode(false)
+                    return true
+                }
+            })
+        }
+        findItem.searchView.apply {
+            // xml attribute doesn't work
+            queryHint = getString(R.string.tv_notedetail_find_hint)
+
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    model.findInNote(query, binding.etNoteBody.string)
+
+                    toast(getQuantityString(R.plurals.toast_i_occurrences_found, model.findInNoteOccurrenceIndices.size))
+                    selectFindInNoteOccurrence()
+
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean = true
+            })
         }
 
-        // data
+        menu.setOptionalIconsVisible(true)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val etCurrentFocus = currentFocus as? EditText
+
+        when (item.itemId) {
+            // normal tb
+            android.R.id.home -> {
+                if (model.isFindInNoteMode) setFindInNoteMode(false)
+                else {
+                    saveNote()
+                    finish()
+                }
+            }
+            R.id.action_undo -> contentHistoryManager.undo()
+            R.id.action_redo -> contentHistoryManager.redo()
+            R.id.action_color -> colorDialog(
+                title = getString(R.string.dialog_title_color_notes),
+                items = getIntegerArray(R.array.note_palette),
+                checkedItem = model.note.colorIndex,
+                tag = DIALOG_COLOR
+            ).show(supportFragmentManager)
+            R.id.action_find_previous -> selectPreviousFindInNoteOccurrence()
+            R.id.action_find_next -> selectNextFindInNoteOccurrence()
+            R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
+            R.id.action_delete -> binaryDialog(
+                title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
+                message = getString(R.string.dialog_msg_delete_notes),
+                posBtnTxtRes = R.string.dialog_btn_delete,
+                tag = DIALOG_DELETE
+            ).show(supportFragmentManager)
+
+            // bab
+            R.id.action_bold -> etCurrentFocus?.toggleStrong()
+            R.id.action_italic -> etCurrentFocus?.toggleEmph()
+            R.id.action_strikethrough -> etCurrentFocus?.toggleStrikethrough()
+            R.id.action_code -> etCurrentFocus?.toggleCode()
+            R.id.action_heading -> etCurrentFocus?.toggleHeader()
+            R.id.action_quote -> etCurrentFocus?.toggleQuote()
+            R.id.action_bullet_list -> etCurrentFocus?.toggleBulletList()
+            R.id.action_number_list -> etCurrentFocus?.toggleNumberList()
+            R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
+            R.id.action_outdent -> etCurrentFocus?.outdent()
+            R.id.action_indent -> etCurrentFocus?.indent()
+            R.id.action_scenebreak -> etCurrentFocus?.insertThematicBreak()
+
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    // data
+
+    private fun initData() {
         appContainer = (application as App).appContainer
         appContainer.noteDetailContainer = NoteDetailContainer(appContainer.noteRepository)
         model = appContainer.noteDetailContainer!!.noteDetailViewModel
@@ -161,116 +233,31 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         }
         model.noteUri ?: model.createNote(createDocument)
         model.loadNote()
+    }
+
+    // edittext
+
+    private fun initViews() {
+        binding.etNoteTitle.makeMultilinePreventEnter()
+
+        // enable clicking on links
+        // TODO: this also moves focus to start of et on scroll
+        //binding.etNoteBody.movementMethod = LinkMovementMethod.getInstance()
+
+        // focus body on outside click
+        binding.vEmpty.setOnClickListener {
+            binding.etNoteBody.showKeyboard()
+            binding.etNoteBody.selectEnd()
+        }
+
+        // bab menu listener
+        binding.bab.setOnMenuItemClickListener(::onOptionsItemSelected)
 
         // animate tb elevation on scroll
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
             binding.ab.isSelected = binding.nsvNote.canScrollVertically(-1)
         }
-
-        binding.etNoteTitle.makeMultilinePreventEnter()
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_notedetail_tb, menu)
-
-        // find in note
-        val findItem = menu.findItem(R.id.action_find).apply {
-            setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                    setFindMode(true)
-                    return true
-                }
-
-                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                    setFindMode(false)
-                    return true
-                }
-            })
-        }
-        findItem.searchView.apply {
-            queryHint = getString(R.string.tv_notedetail_find_hint)
-
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    foundQueryLength = query.length
-                    foundIndices = binding.etNoteBody.string.indicesOf(query, ignoreCase = true)
-                    foundIndicesCursor = 0
-
-                    toast(getQuantityString(R.plurals.toast_i_occurrences_found, foundIndices.size))
-                    selectOccurrence()
-
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String): Boolean = true
-            })
-        }
-
-        menu.setOptionalIconsVisible(true)
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
-        // normal tb
-        android.R.id.home -> {
-            if (findMode) setFindMode(false)
-            else saveNote() then finish()
-        }
-        R.id.action_undo -> contentHistoryManager.undo()
-        R.id.action_redo -> contentHistoryManager.redo()
-        R.id.action_color -> colorDialog(
-            title = getString(R.string.dialog_title_color_notes),
-            items = getIntegerArray(R.array.note_palette),
-            checkedItem = model.note.colorIndex,
-            tag = DIALOG_COLOR
-        ).show(supportFragmentManager)
-        R.id.action_find_previous -> selectPreviousOccurrence()
-        R.id.action_find_next -> selectNextOccurrence()
-        R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
-        R.id.action_delete -> binaryDialog(
-            title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
-            message = getString(R.string.dialog_msg_delete_notes),
-            posBtnTxtRes = R.string.dialog_btn_delete,
-            tag = DIALOG_DELETE
-        ).show(supportFragmentManager)
-
-        // bab
-        R.id.action_bold -> etCurrentFocus?.toggleStrong()
-        R.id.action_italic -> etCurrentFocus?.toggleEmph()
-        R.id.action_strikethrough -> etCurrentFocus?.toggleStrikethrough()
-        R.id.action_code -> etCurrentFocus?.toggleCode()
-        R.id.action_heading -> etCurrentFocus?.toggleHeader()
-        R.id.action_quote -> etCurrentFocus?.toggleQuote()
-        R.id.action_bullet_list -> etCurrentFocus?.toggleBulletList()
-        R.id.action_number_list -> etCurrentFocus?.toggleNumberList()
-        R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
-        R.id.action_outdent -> etCurrentFocus?.outdent()
-        R.id.action_indent -> etCurrentFocus?.indent()
-        R.id.action_scenebreak -> etCurrentFocus?.insertThematicBreak()
-
-        else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        if (hasAnyFocus) clearAllFocus()
-        else {
-            saveNote()
-            super.onBackPressed()
-        }
-    }
-
-    override fun onPause() {
-        saveNote()
-        super.onPause()
-    }
-
-    override fun onDestroy() {
-        appContainer.noteDetailContainer = null
-        super.onDestroy()
-    }
-
-    // init
 
     private fun initMarkwon(note: Note) {
         val theme = MarkwonTheme.builderWithDefaults(this).run {
@@ -312,6 +299,32 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         )
     }
 
+    private fun loadContent(note: Note) {
+        val isInitialLoad = binding.etNoteTitle.string == "" && binding.etNoteBody.string == ""
+
+        // set content
+        binding.etNoteTitle.setText(note.filename)
+        binding.etNoteBody.setText(note.content)
+
+        if (isInitialLoad) {
+            // find action: get findQuery extra, open search view and fire search
+            intent.getStringExtra(EXTRA_FIND_QUERY)?.let { query ->
+                binding.tb.menu.findItem(R.id.action_find).apply {
+                    expandActionView()
+                    searchView.setQuery(query, true)
+                }
+            }
+            // find action: collapse find on text changed to avoid out-of-date selection
+            binding.etNoteBody.setOnClickListener {
+                binding.tb.menu
+                    .findItem(R.id.action_find)
+                    .collapseActionView()
+                // collapseActionView hides keyboard; show it again
+                binding.etNoteBody.showKeyboard()
+            }
+        }
+    }
+
     private fun initUndoRedo(note: Note) {
         val colorEnabled = note.getColor(this@NoteDetailActivity)
         val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
@@ -335,79 +348,11 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         }
     }
 
-    // toolbar
-
-    private fun setFindMode(enabled: Boolean) {
-        findMode = enabled
-
-        binding.tb.menu.run {
-            findItem(R.id.action_find_previous).isVisible = enabled
-            findItem(R.id.action_find_next).isVisible = enabled
-
-            findItem(R.id.action_undo).isVisible = !enabled
-            findItem(R.id.action_redo).isVisible = !enabled
-            findItem(R.id.action_color).isVisible = !enabled
-            findItem(R.id.action_clipboard).isVisible = !enabled
-            findItem(R.id.action_delete).isVisible = !enabled
-        }
-    }
-
-    // find in note
-
-    private fun selectPreviousOccurrence() {
-        if (foundIndicesCursor > 0) foundIndicesCursor -= 1
-        else foundIndicesCursor = foundIndices.size - 1
-        selectOccurrence()
-    }
-
-    private fun selectNextOccurrence() {
-        if (foundIndicesCursor < foundIndices.size - 1) foundIndicesCursor += 1
-        else foundIndicesCursor = 0
-        selectOccurrence()
-    }
-
-    private fun selectOccurrence() {
-        if (foundIndices.isEmpty()) return
-
-        val index = foundIndices[foundIndicesCursor]
-        binding.etNoteBody.requestFocus()
-        binding.etNoteBody.coerceSelection(index, index + foundQueryLength)
-    }
-
-    //
-
-    private fun clearAllFocus() {
-        binding.etNoteTitle.clearFocus()
-        binding.etNoteBody.clearFocus()
-    }
-
-    private fun loadContent(note: Note) {
-        val isInitialLoad = binding.etNoteTitle.string == "" && binding.etNoteBody.string == ""
-
-        binding.etNoteTitle.setText(note.filename)
-        binding.etNoteBody.setText(note.content)
-
-        if (isInitialLoad) {
-            // get findQuery extra, open search view and fire search
-            intent.getStringExtra(EXTRA_FIND_QUERY)?.let { query ->
-                binding.tb.menu.findItem(R.id.action_find).apply {
-                    expandActionView()
-                    searchView.setQuery(query, true)
-                }
-            }
-            // collapse find on text changed to avoid out-of-date selection
-            binding.etNoteBody.setOnClickListener {
-                binding.tb.menu
-                    .findItem(R.id.action_find)
-                    .collapseActionView()
-                // collapseActionView hides keyboard; show it again
-                binding.etNoteBody.showKeyboard()
-            }
-        }
-    }
-
     private fun saveNote() {
         model.noteData.value ?: return
+        val haveChangesBeenMade =
+            binding.etNoteTitle.string != model.note.filename
+            || binding.etNoteBody.string != model.note.content
 
         val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string
@@ -415,7 +360,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         val modified = if (haveChangesBeenMade) now else model.note.modified
         val note = model.note.copy(filename = title, content = body, modified = modified, opened = now)
 
-        model.saveNote(note, title != model.note.filename)
+        model.saveNote(note)
 
         Log.i(LOG_TAG, "note saved: $note")
     }
@@ -435,11 +380,62 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         }
     }
 
+    private fun clearAllFocus() {
+        binding.etNoteTitle.clearFocus()
+        binding.etNoteBody.clearFocus()
+    }
+
+    // toolbar
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.tb)
+        supportActionBar?.title = ""
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun setFindInNoteMode(enabled: Boolean) {
+        model.isFindInNoteMode = enabled
+
+        binding.tb.menu.run {
+            findItem(R.id.action_find_previous).isVisible = enabled
+            findItem(R.id.action_find_next).isVisible = enabled
+
+            findItem(R.id.action_undo).isVisible = !enabled
+            findItem(R.id.action_redo).isVisible = !enabled
+            findItem(R.id.action_color).isVisible = !enabled
+            findItem(R.id.action_clipboard).isVisible = !enabled
+            findItem(R.id.action_delete).isVisible = !enabled
+        }
+    }
+
+    // find in note
+
+    private fun selectPreviousFindInNoteOccurrence() {
+        model.decFindInNoteCursor()
+        selectFindInNoteOccurrence()
+    }
+
+    private fun selectNextFindInNoteOccurrence() {
+        model.incFindInNoteCursor()
+        selectFindInNoteOccurrence()
+    }
+
+    private fun selectFindInNoteOccurrence() {
+        if (model.findInNoteOccurrenceIndices.isEmpty()) return
+
+        val index = model.findInNoteOccurrenceIndex
+        binding.etNoteBody.requestFocus()
+        binding.etNoteBody.coerceSelection(index, index + model.findInNoteQueryLength)
+    }
+
     // dialog
 
     override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
-            DIALOG_DELETE -> model.deleteNote() then finish()
+            DIALOG_DELETE -> {
+                model.deleteNote()
+                finish()
+            }
         }
     }
 
@@ -452,13 +448,15 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         }
     }
 
-    //
+    // object
 
     companion object {
         fun startActivity(c: Context, uri: String? = null, findQuery: String? = null) {
             val intent = Intent(c, NoteDetailActivity::class.java)
+
             uri?.let { intent.putExtra(EXTRA_NOTE_URI, it) }
             findQuery?.let { intent.putExtra(EXTRA_FIND_QUERY, it) }
+
             c.startActivity(intent)
         }
     }
