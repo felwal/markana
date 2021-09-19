@@ -101,10 +101,11 @@ class NoteListAdapter(
             // color
             binding.tvTitle.setTextColor(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
-            binding.clNote.background.setTint(
-                if (prefs.notePreviewColor) note.getBackgroundColor(c)
-                else c.getColorAttr(R.attr.colorSurface)
-            )
+            if (prefs.notePreviewColor) {
+                binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+                binding.clNote.background.setTint(note.getBackgroundColor(c))
+            }
+            else binding.clNote.background.setTint(c.getColorAttr(R.attr.colorSurface))
             binding.ivBorder.isGone = !note.isSelected
 
             // mark pinned

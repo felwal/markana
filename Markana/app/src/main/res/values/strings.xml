@@ -66,6 +66,7 @@
     <string name="tv_notelist_fab_create">Create note</string>
     <string name="tv_notelist_fab_link">Link file</string>
     <string name="tv_notelist_fab_link_folder">Link folder</string>
+    <string name="tv_notelist_search_hint">Search</string>
 
     <!-- settings -->
     <string name="tv_settings_header_appearance">Appearance</string>

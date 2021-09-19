@@ -9,5 +9,5 @@ class Tree(
     @ColumnInfo(name = "uri") var uri: String,
 ) {
     
-    @PrimaryKey(autoGenerate = true) var id: Long = NO_ID
+    @PrimaryKey(autoGenerate = true) var id: Long = ID_AUTO_GENERATE
 }

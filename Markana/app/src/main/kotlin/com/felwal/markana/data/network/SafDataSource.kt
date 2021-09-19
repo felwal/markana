@@ -27,8 +27,10 @@ import java.io.InputStreamReader
 
 private const val LOG_TAG = "Saf"
 private const val MIME_TEXT_TYPE = "text"
+private const val MIME_ANY = "*/*"
 private const val MIME_TEXT = "text/*"
 private const val MIME_TEXT_PLAIN = "text/plain"
+private const val MIME_TEXT_MARKDOWN = "text/markdown"
 
 class SafDataSource(private val applicationContext: Context) {
 
@@ -49,7 +51,7 @@ class SafDataSource(private val applicationContext: Context) {
     // read
 
     fun openFile(openDocumentResultLauncher: ActivityResultLauncher<Array<String>>) =
-        openDocumentResultLauncher.launch(arrayOf(MIME_TEXT))
+        openDocumentResultLauncher.launch(arrayOf(MIME_TEXT)) // TODO: markdown isn't recognized as text
 
     fun openTree(openDocuementTreeLauncher: ActivityResultLauncher<Uri>, initialUri: Uri?) =
         openDocuementTreeLauncher.launch(initialUri)
@@ -113,7 +115,6 @@ class SafDataSource(private val applicationContext: Context) {
         var wrongMimeCount = 0
 
         for (file in docFiles) {
-            file.uri
             // check mime TODO: markdown isn't recognized as text
             if (true || file.type?.isMime(MIME_TEXT_TYPE) == true) {
                 readFile(file.uri)?.let { note ->

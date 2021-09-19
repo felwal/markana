@@ -2,7 +2,6 @@ package com.felwal.markana.data
 
 import android.content.Context
 import androidx.annotation.ColorInt
-import androidx.core.graphics.ColorUtils
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -11,7 +10,7 @@ import com.felwal.markana.R
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.multiplyAlphaComponent
 
-const val NO_ID = 0L // must be 0 to enable autoincrement
+const val ID_AUTO_GENERATE = 0L // must be 0 to enable autoincrement
 const val URI_DEFAULT = ""
 
 @Entity(tableName = "notes")
@@ -24,7 +23,7 @@ data class Note(
     @ColumnInfo(name = "color_index") var colorIndex: Int = 0,
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
     @ColumnInfo(name = "tree_id") var treeId: Long? = null,
-    @PrimaryKey(autoGenerate = true) var id: Long = NO_ID
+    @PrimaryKey(autoGenerate = true) var id: Long = ID_AUTO_GENERATE
 ) {
     @Ignore var isSelected: Boolean = false
 

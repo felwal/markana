@@ -139,7 +139,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             note ?: finish() // the note was not found or had not granted access
             note?.let {
                 applyNoteColor(it)
-                initMarkwon(it)
+                //initMarkwon(it)
                 loadContent(it)
                 initUndoRedo(it)
             }

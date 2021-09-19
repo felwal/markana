@@ -144,7 +144,7 @@ class NoteListActivity : AppCompatActivity(),
                 // search
                 val searchItem = menu.findItem(R.id.action_search)
                 val searchView = searchItem.actionView as SearchView
-                searchView.queryHint = "Search"
+                searchView.queryHint = getString(R.string.tv_notelist_search_hint)
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         searchView.clearFocus()
