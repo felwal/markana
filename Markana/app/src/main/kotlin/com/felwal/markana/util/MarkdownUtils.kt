@@ -27,7 +27,7 @@ fun EditText.toggleStrikethrough() = formatSelectedText(strikethrough)
 
 fun EditText.toggleCode() = formatSelectedText(code)
 
-fun EditText.toggleHeader() = formatSelectedLines(
+fun EditText.toggleHeader() = formatSelectedParagraphs(
     header(1),
     header(1) to header(2),
     header(2) to header(3),
@@ -37,21 +37,21 @@ fun EditText.toggleHeader() = formatSelectedLines(
     header(6) to "",
 )
 
-fun EditText.toggleQuote() = formatSelectedLines { quote }
+fun EditText.toggleQuote() = formatSelectedParagraphs { quote }
 
-fun EditText.toggleBulletList() = formatSelectedLines { bullet }
+fun EditText.toggleBulletList() = formatSelectedParagraphs { bullet }
 
-fun EditText.toggleNumberList() = formatSelectedLines { number(it) }
+fun EditText.toggleNumberList() = formatSelectedParagraphs { number(it) }
 
-fun EditText.toggleChecklist() = formatSelectedLines(
+fun EditText.toggleChecklist() = formatSelectedParagraphs(
     checkbox(false),
     checkbox(false) to checkbox(true),
     checkbox(true) to ""
 )
 
-fun EditText.outdent() = formatSelectedLines("", indent to "")
+fun EditText.outdent() = formatSelectedParagraphs("", indent to "")
 
-fun EditText.indent() = formatSelectedLines(indent)
+fun EditText.indent() = formatSelectedParagraphs(indent)
 
 fun EditText.insertThematicBreak() = insertAtCursor(thematicBreak)
 
@@ -103,96 +103,112 @@ private fun EditText.formatSelectedText(marker: String) {
     coerceSelection(start + marker.length, end + marker.length)
 }
 
-// TODO: rules
-private fun EditText.formatSelectedLines(defaultMarker: String, vararg markerRules: Pair<String, String>) {
+private fun EditText.formatSelectedParagraphs(defaultMarker: String, vararg markerRules: Pair<String, String>) {
     val textCopy = text.copy()
     val start = selectionStart
     val end = selectionEnd
 
     val startLine = layout.getLineForOffset(start)
     val endLine = layout.getLineForOffset(end)
+    val paragraphStarts = (endLine downTo startLine)
+        .map { layout.getParagraphStart(layout.getLineStart(it)) }
+        .toSet()
 
     var startOffset = 0
     var endOffset = 0
 
-    for (line in endLine downTo startLine) {
-        val lineStart = layout.getLineStart(line)
-        val lineIndex = line - startLine
+    // go backwards to not alter index of earlier paragraph
+    for ((reversedIndex, paragraphStart) in paragraphStarts.withIndex()) {
+        val paragraphIndex = paragraphStarts.size - 1 - reversedIndex
 
+        // cycle through rules until a matching one is found and executed
         var ruleApplied = false
         for (rule in markerRules) {
-            if (isLineMarked(textCopy, rule.first, lineStart)) {
-                textCopy.delete(lineStart, lineStart + rule.first.length)
-                textCopy.insert(lineStart, rule.second)
+            if (isParagraphMarked(textCopy, rule.first, paragraphStart)) {
+                textCopy.delete(paragraphStart, paragraphStart + rule.first.length)
+                textCopy.insert(paragraphStart, rule.second)
 
+                // offset selection
                 endOffset += rule.second.length - rule.first.length
-                if (line == startLine) startOffset += rule.second.length - rule.first.length
+                if (paragraphIndex == 0) startOffset += rule.second.length - rule.first.length
 
                 ruleApplied = true
                 break
             }
         }
+        // ... or execute default rule
         if (!ruleApplied) {
-            textCopy.insert(lineStart, defaultMarker)
+            textCopy.insert(paragraphStart, defaultMarker)
 
+            // offset selection
             endOffset += defaultMarker.length
-            if (line == startLine) startOffset += defaultMarker.length
+            if (paragraphIndex == 0) startOffset += defaultMarker.length
         }
     }
 
     // apply
     text = textCopy
-    coerceSelection(start + startOffset, end + endOffset)
+    val newStart = (start + startOffset).coerceAtLeast(paragraphStarts.last())
+    val newEnd = (end + endOffset).coerceAtLeast(paragraphStarts.last())
+    coerceSelection(newStart, newEnd)
 }
 
-private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
+// TODO: rules
+private fun EditText.formatSelectedParagraphs(marker: (paragraphIndex: Int) -> String) {
     val textCopy = text.copy()
     val start = selectionStart
     val end = selectionEnd
 
     val startLine = layout.getLineForOffset(start)
     val endLine = layout.getLineForOffset(end)
-
-    val removeMarkerActions = mutableListOf<() -> Unit>()
-    val addMarkerActions = mutableListOf<() -> Unit>()
+    val paragraphStarts = (endLine downTo startLine)
+        .map { layout.getParagraphStart(layout.getLineStart(it)) }
+        .toSet()
 
     var startOffset = 0
     var endOffset = 0
 
-    // go backwards to not alter index of earlier lines
-    for (line in endLine downTo startLine) {
-        val lineStart = layout.getLineStart(line)
-        val lineIndex = line - startLine
+    // storing actions and executing later is neccessary to determine if to toggle on or off
+    val removeMarkerActions = mutableListOf<() -> Unit>()
+    val addMarkerActions = mutableListOf<() -> Unit>()
+
+    // go backwards to not alter index of earlier paragraph
+    for ((reversedIndex, paragraphStart) in paragraphStarts.withIndex()) {
+        val paragraphIndex = paragraphStarts.size - 1 - reversedIndex
 
         // TODO: toggle between different list types
 
         // toggle: remove marker
-        if (isLineMarked(textCopy, marker(lineIndex), lineStart)) {
+        if (isParagraphMarked(textCopy, marker(paragraphIndex), paragraphStart)) {
             removeMarkerActions.add {
-                textCopy.delete(lineStart, lineStart + marker(lineIndex).length)
+                textCopy.delete(paragraphStart, paragraphStart + marker(paragraphIndex).length)
 
-                endOffset -= marker(lineIndex).length
-                if (line == startLine) startOffset -= marker(startLine).length
+                // offset selection
+                endOffset -= marker(paragraphIndex).length
+                if (paragraphIndex == 0) startOffset -= marker(paragraphIndex).length
             }
         }
         // toggle: add marker
         else {
             addMarkerActions.add {
-                textCopy.insert(lineStart, marker(lineIndex))
+                textCopy.insert(paragraphStart, marker(paragraphIndex))
 
-                endOffset += marker(lineIndex).length
-                if (line == startLine) startOffset += marker(startLine).length
+                // offset selection
+                endOffset += marker(paragraphIndex).length
+                if (paragraphIndex == 0) startOffset += marker(paragraphIndex).length
             }
         }
     }
 
-    // prioritize toggling on unmarked lines before toggling off marked lines
+    // prioritize toggling on unmarked paragraphs before toggling off marked paragraph
     if (addMarkerActions.size > 0) addMarkerActions.forEach { it() }
     else removeMarkerActions.forEach { it() }
 
     // apply
     text = textCopy
-    coerceSelection(start + startOffset, end + endOffset)
+    val newStart = (start + startOffset).coerceAtLeast(paragraphStarts.last())
+    val newEnd = (end + endOffset).coerceAtLeast(paragraphStarts.last())
+    coerceSelection(newStart, newEnd)
 }
 
 // tool
@@ -214,14 +230,15 @@ private fun removeTextMarker(
     return false
 }
 
-private fun isLineMarked(editable: Editable, marker: String, lineStart: Int): Boolean =
-    editable.coerceSubstring(lineStart, lineStart + marker.length) == marker
+private fun isParagraphMarked(editable: Editable, marker: String, paragraphStart: Int): Boolean =
+    editable.coerceSubstring(paragraphStart, paragraphStart + marker.length) == marker
 
 private fun Layout.getParagraphStart(index: Int): Int {
     for (i in index downTo 0) {
-        if (text.substring(i, i + 1) == "\n") return i
+        if (text.coerceSubstring(i - 1, i) == "\n") return i
     }
-    return -1
+    // the paragraph is the first paragraph; return layout start
+    return 0
 }
 
 private fun EditText.coerceSelection(start: Int, stop: Int? = null) =
