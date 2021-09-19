@@ -143,19 +143,22 @@ class NoteListActivity : AppCompatActivity(),
 
                 // search
                 val searchItem = menu.findItem(R.id.action_search)
-                val searchView = searchItem.actionView as SearchView
-                searchView.queryHint = getString(R.string.tv_notelist_search_hint)
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String): Boolean {
-                        searchView.clearFocus()
-                        return false
-                    }
-                    override fun onQueryTextChange(newText: String): Boolean {
-                        model.searchQuery = newText
-                        model.loadNotes()
-                        return false
-                    }
-                })
+                (searchItem.actionView as SearchView).apply {
+                    queryHint = getString(R.string.tv_notelist_search_hint)
+
+                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String): Boolean {
+                            clearFocus()
+                            return true
+                        }
+
+                        override fun onQueryTextChange(newText: String): Boolean {
+                            model.searchQuery = newText
+                            model.loadNotes()
+                            return true
+                        }
+                    })
+                }
 
                 // swiperefresh
                 binding.srl.isEnabled = true

@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEach
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
@@ -22,6 +23,7 @@ import com.felwal.markana.util.defaults
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.indent
+import com.felwal.markana.util.indicesOf
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.makeMultilinePreventEnter
 import com.felwal.markana.util.multiplyAlphaComponent
@@ -32,6 +34,7 @@ import com.felwal.markana.util.showKeyboard
 import com.felwal.markana.util.string
 import com.felwal.markana.util.then
 import com.felwal.markana.util.toEpochSecond
+import com.felwal.markana.util.toast
 import com.felwal.markana.util.toggleBulletList
 import com.felwal.markana.util.toggleChecklist
 import com.felwal.markana.util.toggleCode
@@ -73,6 +76,11 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
 
     private lateinit var appContainer: AppContainer
     private lateinit var model: NoteDetailViewModel
+
+    private var findMode = false
+    private var foundQueryLength = 0
+    private var foundIndices = listOf<Int>()
+    private var foundIndicesCursor = 0
 
     private val etCurrentFocus: EditText?
         get() = if (currentFocus is EditText) currentFocus as EditText else null
@@ -159,13 +167,51 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_notedetail_tb, menu)
+
+        // find in note
+        val findItem = menu.findItem(R.id.action_find).apply {
+            setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    setFindMode(true)
+                    return true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    setFindMode(false)
+                    return true
+                }
+            })
+        }
+        (findItem.actionView as SearchView).apply {
+            queryHint = getString(R.string.tv_notedetail_find_hint)
+
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    foundQueryLength = query.length
+                    foundIndices = binding.etNoteBody.string.indicesOf(query, ignoreCase = true)
+                    foundIndicesCursor = 0
+
+                    toast(getQuantityString(R.plurals.toast_i_occurrences_found, foundIndices.size))
+                    selectOccurrence()
+
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean = true
+            })
+        }
+
         menu.setOptionalIconsVisible(true)
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = true defaults when (item.itemId) {
-        // tb
-        android.R.id.home -> saveNote() then finish()
+        // normal tb
+        android.R.id.home -> {
+            if (findMode) setFindMode(false)
+            else saveNote() then finish()
+        }
         R.id.action_undo -> contentHistoryManager.undo()
         R.id.action_redo -> contentHistoryManager.redo()
         R.id.action_color -> colorDialog(
@@ -174,6 +220,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             checkedItem = model.note.colorIndex,
             tag = DIALOG_COLOR
         ).show(supportFragmentManager)
+        R.id.action_find_previous -> selectPreviousOccurrence()
+        R.id.action_find_next -> selectNextOccurrence()
         R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
         R.id.action_delete -> binaryDialog(
             title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
@@ -217,7 +265,7 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         super.onDestroy()
     }
 
-    //
+    // init
 
     private fun initMarkwon(note: Note) {
         val theme = MarkwonTheme.builderWithDefaults(this).run {
@@ -281,6 +329,47 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
             }
         }
     }
+
+    // toolbar
+
+    private fun setFindMode(enabled: Boolean) {
+        findMode = enabled
+
+        binding.tb.menu.run {
+            findItem(R.id.action_find_previous).isVisible = enabled
+            findItem(R.id.action_find_next).isVisible = enabled
+
+            findItem(R.id.action_undo).isVisible = !enabled
+            findItem(R.id.action_redo).isVisible = !enabled
+            findItem(R.id.action_color).isVisible = !enabled
+            findItem(R.id.action_clipboard).isVisible = !enabled
+            findItem(R.id.action_delete).isVisible = !enabled
+        }
+    }
+
+    // find in note
+
+    private fun selectPreviousOccurrence() {
+        if (foundIndicesCursor > 0) foundIndicesCursor -= 1
+        else foundIndicesCursor = foundIndices.size - 1
+        selectOccurrence()
+    }
+
+    private fun selectNextOccurrence() {
+        if (foundIndicesCursor < foundIndices.size - 1) foundIndicesCursor += 1
+        else foundIndicesCursor = 0
+        selectOccurrence()
+    }
+
+    private fun selectOccurrence() {
+        if (foundIndices.isEmpty()) return
+
+        val index = foundIndices[foundIndicesCursor]
+        binding.etNoteBody.requestFocus()
+        binding.etNoteBody.setSelection(index, index + foundQueryLength)
+    }
+
+    //
 
     private fun clearAllFocus() {
         binding.etNoteTitle.clearFocus()

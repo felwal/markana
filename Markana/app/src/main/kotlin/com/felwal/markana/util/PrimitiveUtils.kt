@@ -4,8 +4,6 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 // string
@@ -19,6 +17,19 @@ fun CharSequence.split(vararg delimiters: String, lowerLimit: Int, ignoreCase: B
 
 fun CharSequence.coerceSubstring(startIndex: Int, endIndex: Int): String =
     substring(startIndex.coerceIn(0, length), endIndex.coerceIn(0, length))
+
+fun String.indicesOf(string: String, startIndex: Int = 0, ignoreCase: Boolean = false): List<Int> {
+    val key = if (ignoreCase) string.lowercase() else string
+    val content = if (ignoreCase) lowercase() else this
+    val indices = mutableListOf<Int>()
+    val keyLen = key.length
+
+    for (index in startIndex.coerceAtLeast(0) until (content.length - keyLen)) {
+        if (content.substring(index, index + keyLen) == key) indices.add(index)
+    }
+
+    return indices
+}
 
 // int
 

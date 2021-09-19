@@ -37,6 +37,13 @@
     <string name="action_undo">Undo</string>
     <string name="action_redo">Redo</string>
     <string name="action_clipboard">Copy to clipboard</string>
+
+    <!-- notedetail find -->
+    <string name="action_find">Find</string>
+    <string name="action_find_previous">Previous</string>
+    <string name="action_find_next">Next</string>
+
+    <!-- notedetail bab -->
     <string name="action_bold">Bold</string>
     <string name="action_italic">Italic</string>
     <string name="action_strikethrough">Strikethrough</string>
@@ -55,6 +62,7 @@
     <!-- notedetail -->
     <string name="et_notedetail_title_hint">note.txt</string>
     <string name="et_notedetail_body_hint">Note</string>
+    <string name="tv_notedetail_find_hint">Find …</string>
 
     <!-- notelist -->
     <plurals name="tb_notelist_title_selection">
@@ -68,7 +76,7 @@
     <string name="tv_notelist_fab_create">Create note</string>
     <string name="tv_notelist_fab_link">Link file</string>
     <string name="tv_notelist_fab_link_folder">Link folder</string>
-    <string name="tv_notelist_search_hint">Search</string>
+    <string name="tv_notelist_search_hint">Search …</string>
 
     <!-- settings -->
     <string name="tv_settings_header_appearance">Appearance</string>
@@ -132,6 +140,10 @@
 
     <!-- info -->
     <string name="toast_i_copied_to_clipboard">Copied to clipboard.</string>
+    <plurals name="toast_i_occurrences_found">
+        <item quantity="one">%d occurrence found</item>
+        <item quantity="other">%d occurrences found</item>
+    </plurals>
     <string name="toast_i_db_note_already_linked">Note already linked</string>
     <string name="toast_i_db_tree_already_linked">Folder already linked</string>
 
