@@ -21,9 +21,11 @@ import com.felwal.markana.util.copyToClipboard
 import com.felwal.markana.util.defaults
 import com.felwal.markana.util.getIntegerArray
 import com.felwal.markana.util.getQuantityString
+import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.makeMultilinePreventEnter
 import com.felwal.markana.util.multiplyAlphaComponent
+import com.felwal.markana.util.outdent
 import com.felwal.markana.util.selectEnd
 import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.showKeyboard
@@ -190,6 +192,8 @@ class NoteDetailActivity : AppCompatActivity(), BinaryDialog.DialogListener, Col
         R.id.action_bullet_list -> etCurrentFocus?.toggleBulletList()
         R.id.action_number_list -> etCurrentFocus?.toggleNumberList()
         R.id.action_checklist -> etCurrentFocus?.toggleChecklist()
+        R.id.action_outdent -> etCurrentFocus?.outdent()
+        R.id.action_indent -> etCurrentFocus?.indent()
         R.id.action_scenebreak -> etCurrentFocus?.insertThematicBreak()
 
         else -> super.onOptionsItemSelected(item)

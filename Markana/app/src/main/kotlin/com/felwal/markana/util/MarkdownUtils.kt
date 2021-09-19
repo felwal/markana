@@ -9,12 +9,13 @@ private val emph get() = prefs.emphSymbol
 private val strong get() = prefs.strongSymbol
 private const val strikethrough = "~~"
 private const val code = "`"
-private fun header(level: Int) = "${"#".repeat(level)} "
+private fun header(level: Int) = "#".repeat(level) + " "
 private const val quote = "> "
-private val bullet get() = "${prefs.bulletListSymbol} "
+private val bullet get() = prefs.bulletListSymbol + " "
 private fun number(i: Int) = "${i + 1}. "
 private fun checkbox(checked: Boolean) = "$bullet[${if (checked) "x" else if (prefs.checkboxSpace) " " else ""}] "
-private val thematicBreak get() = "${prefs.breakSymbol}\n"
+private const val indent = "  "
+private val thematicBreak get() = prefs.breakSymbol + "\n"
 
 // specific
 
@@ -48,6 +49,10 @@ fun EditText.toggleChecklist() = formatSelectedLines(
     checkbox(true) to ""
 )
 
+fun EditText.outdent() = formatSelectedLines("", indent to "")
+
+fun EditText.indent() = formatSelectedLines(indent)
+
 fun EditText.insertThematicBreak() = insertAtCursor(thematicBreak)
 
 // general
@@ -59,7 +64,7 @@ private fun EditText.insertAtCursor(marker: String) {
         insert(end, marker)
     }
 
-    setSelection(end + marker.length)
+    coerceSelection(end + marker.length)
 }
 
 private fun EditText.formatSelectedText(marker: String) {
@@ -76,13 +81,13 @@ private fun EditText.formatSelectedText(marker: String) {
     // toggle: remove marker outside selection, ie **|hi|**
     if (removeTextMarker(textCopy, marker, start - marker.length, start, end, end + marker.length)) {
         text = textCopy
-        setSelection(start - marker.length, end - marker.length)
+        coerceSelection(start - marker.length, end - marker.length)
         return
     }
     // toggle: remove marker inside selection, ie |**hi**|
     if (removeTextMarker(textCopy, marker, start, start + marker.length, end - marker.length, end)) {
         text = textCopy
-        setSelection(start, end - 2 * marker.length)
+        coerceSelection(start, end - 2 * marker.length)
         return
     }
     // TODO: also toggle |**hi|**, *|*hi|** and *|*hi*|*
@@ -95,7 +100,7 @@ private fun EditText.formatSelectedText(marker: String) {
 
     // apply
     text = textCopy
-    setSelection(start + marker.length, end + marker.length)
+    coerceSelection(start + marker.length, end + marker.length)
 }
 
 // TODO: rules
@@ -137,7 +142,7 @@ private fun EditText.formatSelectedLines(defaultMarker: String, vararg markerRul
 
     // apply
     text = textCopy
-    setSelection(start + startOffset, end + endOffset)
+    coerceSelection(start + startOffset, end + endOffset)
 }
 
 private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
@@ -187,7 +192,7 @@ private fun EditText.formatSelectedLines(marker: (lineIndex: Int) -> String) {
 
     // apply
     text = textCopy
-    setSelection(start + startOffset, end + endOffset)
+    coerceSelection(start + startOffset, end + endOffset)
 }
 
 // tool
@@ -218,3 +223,7 @@ private fun Layout.getParagraphStart(index: Int): Int {
     }
     return -1
 }
+
+private fun EditText.coerceSelection(start: Int, stop: Int? = null) =
+    if (stop == null) setSelection(start.coerceIn(0, length()))
+    else setSelection(start.coerceIn(0, length()), stop.coerceIn(0, length()))

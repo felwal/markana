@@ -46,6 +46,8 @@
     <string name="action_bullet_list">Bullet list</string>
     <string name="action_number_list">Number list</string>
     <string name="action_checklist">Checklist</string>
+    <string name="action_outdent">Outdent</string>
+    <string name="action_indent">Indent</string>
     <string name="action_horizontal_rule">Thematic break</string>
 
     <!-- view -->

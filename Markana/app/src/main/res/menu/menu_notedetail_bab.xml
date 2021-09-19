@@ -66,6 +66,18 @@
             android:icon="@drawable/ic_list_check_24"
             app:showAsAction="always" />
 
+        <item
+            android:id="@+id/action_outdent"
+            android:title="@string/action_outdent"
+            android:icon="@drawable/ic_indent_dec_24"
+            app:showAsAction="always" />
+
+        <item
+            android:id="@+id/action_indent"
+            android:title="@string/action_indent"
+            android:icon="@drawable/ic_indent_inc_24"
+            app:showAsAction="always" />
+
     </group>
 
     <group

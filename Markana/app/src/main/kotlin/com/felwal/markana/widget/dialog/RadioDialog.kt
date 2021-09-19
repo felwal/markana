@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
-import com.felwal.markana.util.clamp
 
 private const val ARG_ITEMS = "items"
 private const val ARG_CHECKED_ITEM = "checkedItem"
@@ -36,7 +35,7 @@ class RadioDialog : BaseDialog() {
     override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
             items = getStringArray(ARG_ITEMS).orEmpty()
-            checkedItem = getInt(ARG_CHECKED_ITEM, 0).clamp(0, items.size)
+            checkedItem = getInt(ARG_CHECKED_ITEM, 0).coerceIn(0, items.size)
         }
     }
 

@@ -11,7 +11,6 @@ import com.felwal.markana.R
 import com.felwal.markana.databinding.DialogColorBinding
 import com.felwal.markana.databinding.ItemDialogColorBinding
 import com.felwal.markana.util.backgroundTint
-import com.felwal.markana.util.clamp
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.isPortrait
 import com.felwal.markana.util.orEmpty
@@ -48,7 +47,7 @@ class ColorDialog : BaseDialog() {
     override fun unpackBundle(bundle: Bundle?) {
         bundle?.apply {
             items = getIntArray(ARG_ITEMS).orEmpty()
-            checkedItem = getInt(ARG_CHECKED_ITEM, 0).clamp(-1, items.size)
+            checkedItem = getInt(ARG_CHECKED_ITEM, 0).coerceIn(-1, items.size)
         }
     }
 

@@ -18,19 +18,14 @@ fun CharSequence.split(vararg delimiters: String, lowerLimit: Int, ignoreCase: B
 }
 
 fun CharSequence.coerceSubstring(startIndex: Int, endIndex: Int): String =
-    substring(startIndex.coerceIn(0, length - 1), endIndex.coerceIn(0, length - 1))
+    substring(startIndex.coerceIn(0, length), endIndex.coerceIn(0, length))
 
 // int
-
-/**
- * Clamp an Int to the range [[min], [max]]
- */
-fun Int.clamp(min: Int, max: Int): Int = max(min, min(this, max))
 
 fun Int.toColorStateList() = ColorStateList.valueOf(this)
 
 @ColorInt
 fun Int.multiplyAlphaComponent(@FloatRange(from = 0.0, to = 1.0) factor: Float): Int {
-    val alpha = (Color.alpha(this) * factor).roundToInt().clamp(0, 255)
+    val alpha = (Color.alpha(this) * factor).roundToInt().coerceIn(0, 255)
     return Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
 }
