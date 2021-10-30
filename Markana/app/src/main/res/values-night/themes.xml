@@ -9,12 +9,7 @@
         <item name="colorSurface">@color/surface_dk</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="android:strokeColor">@color/divider_dk</item>
-    </style>
-
-    <!-- overlay -->
-
-    <style name="ThemeOverlay.Markana.ActionBarPopup" parent="ThemeOverlay.AppCompat.DayNight">
-        <!-- popup bg color uses ?colorSurface, but with an overlay of ~11% -->
+        <item name="colorNoteBase">@color/notebase_dk</item>
     </style>
 
 </resources>

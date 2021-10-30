@@ -43,7 +43,6 @@
     </style>
 
     <style name="ThemeOverlay.Markana.ActionBarPopup" parent="ThemeOverlay.AppCompat.DayNight">
-        <item name="colorSurface">?android:colorBackground</item>
         <item name="searchViewStyle">@style/Widget.Markana.SearchView</item>
     </style>
 

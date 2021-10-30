@@ -20,22 +20,20 @@
     <color name="grey7">#F5F5F5</color> <!-- lt surface -->
     <color name="white">#FFFFFF</color>
 
-    <!-- variants -->
-    <color name="grey4_minus_11_percent">#14171B</color>
-    <color name="grey4_minus_15_percent">#0A0C0E</color>
-
     <!-- application -->
 
     <!-- dark -->
     <color name="background_dk">@color/grey2</color>
-    <color name="surface_dk">@color/grey3</color>
+    <color name="surface_dk">@color/grey4</color>
     <color name="divider_dk">@color/grey5</color>
     <color name="text_primary_dk">#DDFFFFFF</color>
+    <color name="notebase_dk">@color/grey3</color>
 
     <!-- light -->
     <color name="background_lt">@color/white</color>
     <color name="surface_lt">@color/grey7</color>
     <color name="divider_lt">@color/grey6</color>
     <color name="text_primary_lt">#DD000000</color>
+    <color name="notebase_lt">@color/grey7</color>
 
 </resources>

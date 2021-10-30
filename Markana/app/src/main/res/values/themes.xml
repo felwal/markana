@@ -6,6 +6,13 @@
         <item name="android:statusBarColor" tools:targetApi="l">?android:colorBackground</item>
         <item name="android:navigationBarColor">?android:colorBackground</item>
 
+        <!-- no action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <!-- remove the MaterialComponents automatic brightening of surface color in dark mode -->
+        <item name="elevationOverlayEnabled">false</item>
+
         <!-- color -->
         <item name="colorPrimary">@color/red_primary</item>
         <item name="colorPrimaryVariant">@color/red_primary_dark</item>
@@ -20,7 +27,7 @@
         <!-- theme/style -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Markana.Dialog</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Markana.ActionBar</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
+        <!--<item name="actionBarPopupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>-->
         <item name="android:textViewStyle">@style/Widget.Markana.TextView</item>
         <item name="android:editTextStyle">@style/Widget.Markana.EditText</item>
     </style>
@@ -32,13 +39,7 @@
 
         <item name="colorSurface">@color/surface_lt</item>
         <item name="android:strokeColor">@color/divider_lt</item>
-    </style>
-
-    <!-- theme extensions -->
-
-    <style name="Theme.Markana.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="colorNoteBase">@color/notebase_lt</item>
     </style>
 
 </resources>
