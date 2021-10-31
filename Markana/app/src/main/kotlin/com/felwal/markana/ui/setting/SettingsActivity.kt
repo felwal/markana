@@ -12,10 +12,10 @@ import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.updateDayNight
-import com.felwal.markana.widget.dialog.NumberDialog
-import com.felwal.markana.widget.dialog.RadioDialog
-import com.felwal.markana.widget.dialog.TextDialog
-import com.felwal.markana.widget.dialog.UnaryDialog
+import com.felwal.android.widget.dialog.NumberDialog
+import com.felwal.android.widget.dialog.RadioDialog
+import com.felwal.android.widget.dialog.TextDialog
+import com.felwal.android.widget.dialog.UnaryDialog
 
 private const val DIALOG_THEME = "themeDialog"
 private const val DIALOG_MAX_LINES = "maxLinesDialog"

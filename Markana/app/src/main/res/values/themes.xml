@@ -25,7 +25,7 @@
         <item name="textAllCaps">false</item>
 
         <!-- theme/style -->
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Markana.Dialog</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Felwal.Dialog</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Markana.ActionBar</item>
         <!--<item name="actionBarPopupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>-->
         <item name="android:textViewStyle">@style/Widget.Markana.TextView</item>

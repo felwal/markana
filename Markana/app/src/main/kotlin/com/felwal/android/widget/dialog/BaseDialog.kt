@@ -1,10 +1,9 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
@@ -76,8 +75,8 @@ abstract class BaseDialog : DialogFragment() {
     // build
 
     private fun styleDialog(dialog: AlertDialog): AlertDialog = dialog.apply {
-        setTitleTextAppearanceAppCompat(resources, R.style.TextAppearance_Markana_Headline2)
-        setMessageTextAppearance(R.style.TextAppearance_Markana_Body1)
+        setTitleTextAppearanceAppCompat(resources, R.style.TextAppearance_Felwal_Dialog_Title)
+        setMessageTextAppearance(R.style.TextAppearance_Felwal_Dialog_Body)
     }
 
     protected abstract fun buildDialog(): AlertDialog

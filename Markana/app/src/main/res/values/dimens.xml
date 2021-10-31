@@ -16,11 +16,6 @@
     <dimen name="spacing_settings_item_horizontal">@dimen/spacing_small</dimen>
     <dimen name="spacing_settings_item_vertical">@dimen/spacing_small</dimen>
 
-    <!-- dialog -->
-    <dimen name="spacing_dialog_top">@dimen/spacing_tiny</dimen>
-    <dimen name="spacing_dialog_horizontal">20dp</dimen>
-    <dimen name="spacing_dialog_horizontal_minus_4">16dp</dimen>
-
     <!-- layout -->
 
     <!-- settings item -->
@@ -29,7 +24,6 @@
 
     <!-- misc -->
     <dimen name="corner_radius_medium">10dp</dimen>
-    <dimen name="corner_radius_dialog">8dp</dimen>
     <dimen name="width_stroke_thin">1dp</dimen>
     <dimen name="width_stroke_wide">2dp</dimen>
     <dimen name="height_divider">1dp</dimen>

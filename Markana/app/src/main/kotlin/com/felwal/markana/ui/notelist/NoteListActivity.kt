@@ -31,10 +31,10 @@ import com.felwal.markana.util.searchView
 import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
-import com.felwal.markana.widget.dialog.BinaryDialog
-import com.felwal.markana.widget.dialog.ColorDialog
-import com.felwal.markana.widget.dialog.binaryDialog
-import com.felwal.markana.widget.dialog.colorDialog
+import com.felwal.android.widget.dialog.BinaryDialog
+import com.felwal.android.widget.dialog.ColorDialog
+import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.colorDialog
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"

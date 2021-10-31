@@ -1,4 +1,4 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -77,6 +77,26 @@ class NumberDialog : BaseDialog() {
     interface DialogListener {
         fun onNumberDialogPositiveClick(input: Int, tag: String?)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            text: Int = NO_INT_TEXT,
+            hint: String = "",
+            @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+            @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
+            tag: String
+        ): NumberDialog = NumberDialog().apply {
+            arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
+                putInt(ARG_TEXT, text)
+                putString(ARG_HINT, hint)
+            }
+        }
+    }
 }
 
 fun numberDialog(
@@ -87,9 +107,4 @@ fun numberDialog(
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): NumberDialog = NumberDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
-        putInt(ARG_TEXT, text)
-        putString(ARG_HINT, hint)
-    }
-}
+): NumberDialog = NumberDialog.newInstance(title, message, text, hint, posBtnTxtRes, negBtnTxtRes, tag)

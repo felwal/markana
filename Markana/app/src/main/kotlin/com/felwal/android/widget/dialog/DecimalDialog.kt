@@ -1,4 +1,4 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -77,6 +77,26 @@ class DecimalDialog : BaseDialog() {
     interface DialogListener {
         fun onDecimalDialogPositiveClick(input: Float, tag: String?)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            text: Float = NO_FLOAT_TEXT,
+            hint: String = "",
+            @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+            @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
+            tag: String
+        ): DecimalDialog = DecimalDialog().apply {
+            arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
+                putFloat(ARG_TEXT, text)
+                putString(ARG_HINT, hint)
+            }
+        }
+    }
 }
 
 fun decimalDialog(
@@ -87,9 +107,4 @@ fun decimalDialog(
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): DecimalDialog = DecimalDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
-        putFloat(ARG_TEXT, text)
-        putString(ARG_HINT, hint)
-    }
-}
+): DecimalDialog = DecimalDialog.newInstance(title, message, text, hint, posBtnTxtRes, negBtnTxtRes, tag)

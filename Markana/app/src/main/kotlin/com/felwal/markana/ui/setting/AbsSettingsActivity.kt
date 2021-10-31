@@ -17,14 +17,14 @@ import com.felwal.markana.util.getDimension
 import com.felwal.markana.util.getDrawableCompat
 import com.felwal.markana.util.hideOrRemove
 import com.felwal.markana.util.setTextRemoveIfEmpty
-import com.felwal.markana.widget.dialog.BaseDialog
-import com.felwal.markana.widget.dialog.NO_RES
-import com.felwal.markana.widget.dialog.binaryDialog
-import com.felwal.markana.widget.dialog.decimalDialog
-import com.felwal.markana.widget.dialog.numberDialog
-import com.felwal.markana.widget.dialog.radioDialog
-import com.felwal.markana.widget.dialog.textDialog
-import com.felwal.markana.widget.dialog.unaryDialog
+import com.felwal.android.widget.dialog.BaseDialog
+import com.felwal.android.widget.dialog.NO_RES
+import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.decimalDialog
+import com.felwal.android.widget.dialog.numberDialog
+import com.felwal.android.widget.dialog.radioDialog
+import com.felwal.android.widget.dialog.textDialog
+import com.felwal.android.widget.dialog.unaryDialog
 
 abstract class AbsSettingsActivity(
     private val dividerMode: DividerMode,

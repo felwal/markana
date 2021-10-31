@@ -46,10 +46,10 @@ import com.felwal.markana.util.toggleStrong
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.util.useEditHandler
 import com.felwal.markana.widget.UndoRedoManager
-import com.felwal.markana.widget.dialog.BinaryDialog
-import com.felwal.markana.widget.dialog.ColorDialog
-import com.felwal.markana.widget.dialog.binaryDialog
-import com.felwal.markana.widget.dialog.colorDialog
+import com.felwal.android.widget.dialog.BinaryDialog
+import com.felwal.android.widget.dialog.ColorDialog
+import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.colorDialog
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import io.noties.markwon.core.MarkwonTheme

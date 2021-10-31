@@ -129,8 +129,6 @@
     </plurals>
 
     <!-- button -->
-    <string name="dialog_btn_ok">OK</string>
-    <string name="dialog_btn_cancel">Cancel</string>
     <string name="dialog_btn_continue">Continue</string>
     <string name="dialog_btn_set">Set</string>
     <string name="dialog_btn_delete">Delete</string>

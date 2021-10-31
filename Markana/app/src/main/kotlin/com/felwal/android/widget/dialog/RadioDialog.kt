@@ -1,4 +1,4 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -57,6 +57,25 @@ class RadioDialog : BaseDialog() {
     interface DialogListener {
         fun onRadioDialogItemClick(checkedItem: Int, tag: String)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            items: List<String>,
+            checkedItem: Int,
+            @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
+            tag: String
+        ): RadioDialog = RadioDialog().apply {
+            arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
+                putStringArray(ARG_ITEMS, items.toTypedArray())
+                putInt(ARG_CHECKED_ITEM, checkedItem)
+            }
+        }
+    }
 }
 
 fun radioDialog(
@@ -66,9 +85,4 @@ fun radioDialog(
     checkedItem: Int,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): RadioDialog = RadioDialog().apply {
-    arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
-        putStringArray(ARG_ITEMS, items.toTypedArray())
-        putInt(ARG_CHECKED_ITEM, checkedItem)
-    }
-}
+): RadioDialog = RadioDialog.newInstance(title, message, items, checkedItem, negBtnTxtRes, tag)

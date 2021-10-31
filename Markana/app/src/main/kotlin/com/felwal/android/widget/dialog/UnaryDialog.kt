@@ -1,12 +1,10 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.felwal.markana.R
-
-private const val ARG_PASS_VALUE = "passValue"
 
 class UnaryDialog : BaseDialog() {
 
@@ -47,6 +45,20 @@ class UnaryDialog : BaseDialog() {
     interface DialogListener {
         fun onUnaryDialogClick(tag: String)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            @StringRes btnTxtRes: Int = R.string.dialog_btn_ok,
+            tag: String
+        ): UnaryDialog = UnaryDialog().apply {
+            arguments = putBaseBundle(title, message, btnTxtRes, tag = tag)
+        }
+    }
 }
 
 fun unaryDialog(
@@ -54,6 +66,4 @@ fun unaryDialog(
     message: String = "",
     @StringRes btnTxtRes: Int = R.string.dialog_btn_ok,
     tag: String
-): UnaryDialog = UnaryDialog().apply {
-    arguments = putBaseBundle(title, message, btnTxtRes, tag = tag)
-}
+): UnaryDialog = UnaryDialog.newInstance(title, message, btnTxtRes, tag)

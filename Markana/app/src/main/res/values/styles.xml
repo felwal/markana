@@ -1,40 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- dialog -->
-
-    <style name="ThemeOverlay.Markana.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <!-- shape -->
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Markana.Dialog</item>
-        <!-- title -->
-        <item name="materialAlertDialogTitleTextStyle">@style/Widget.Markana.TextView.Dialog.Title</item>
-        <!-- message -->
-        <item name="materialAlertDialogBodyTextStyle">@style/Widget.Markana.TextView.Dialog.Body</item>
-        <!-- list item -->
-        <item name="android:checkedTextViewStyle">@style/Widget.Markana.TextView.Dialog.Item</item>
-
-        <!-- <item name="android:background">?colorSurface</item> -->
-    </style>
-    
-    <style name="ShapeAppearanceOverlay.Markana.Dialog" parent="">
-        <item name="cornerSize">@dimen/corner_radius_dialog</item>
-    </style>
-    
-    <style name="Widget.Markana.TextView.Dialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textAppearance">@style/TextAppearance.Markana.Headline2</item>
-    </style>
-
-    <style name="Widget.Markana.TextView.Dialog.Body" parent="">
-        <item name="android:textColor">?android:textColorSecondary</item>
-        <item name="android:textAppearance">@style/TextAppearance.Markana.Body1</item>
-    </style>
-
-    <style name="Widget.Markana.TextView.Dialog.Item" parent="Widget.MaterialComponents.CheckedTextView">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textAppearance">@style/TextAppearance.Markana.Subtitle1</item>
-    </style>
-
     <!-- appbar -->
 
     <style name="ThemeOverlay.Markana.ActionBar" parent="">
@@ -46,11 +12,9 @@
         <item name="searchViewStyle">@style/Widget.Markana.SearchView</item>
     </style>
 
-    <style name="Widget.Markana.SearchView.ActionBar" parent="Widget.AppCompat.SearchView.ActionBar">
-    </style>
+    <style name="Widget.Markana.SearchView.ActionBar" parent="Widget.AppCompat.SearchView.ActionBar" />
 
-    <style name="Widget.Markana.SearchView" parent="Widget.AppCompat.SearchView">
-    </style>
+    <style name="Widget.Markana.SearchView" parent="Widget.AppCompat.SearchView" />
 
     <style name="Widget.Markana.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?android:colorBackground</item>

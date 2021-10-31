@@ -1,4 +1,4 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -68,6 +68,26 @@ class TextDialog : BaseDialog() {
     interface DialogListener {
         fun onTextDialogPositiveClick(input: String, tag: String)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            text: String = "",
+            hint: String = "",
+            @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+            @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
+            tag: String
+        ): TextDialog = TextDialog().apply {
+            arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
+                putString(ARG_TEXT, text)
+                putString(ARG_HINT, hint)
+            }
+        }
+    }
 }
 
 fun textDialog(
@@ -78,9 +98,4 @@ fun textDialog(
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): TextDialog = TextDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
-        putString(ARG_TEXT, text)
-        putString(ARG_HINT, hint)
-    }
-}
+): TextDialog = TextDialog.newInstance(title, message, text, hint, posBtnTxtRes, negBtnTxtRes, tag)

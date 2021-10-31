@@ -1,4 +1,4 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -106,6 +106,25 @@ class ColorDialog : BaseDialog() {
     interface DialogListener {
         fun onColorDialogItemClick(checkedItem: Int, tag: String)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            @ColorInt items: IntArray,
+            checkedItem: Int? = null,
+            @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
+            tag: String
+        ): ColorDialog = ColorDialog().apply {
+            arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
+                putIntArray(ARG_ITEMS, items)
+                putInt(ARG_CHECKED_ITEM, checkedItem ?: NULL_INT)
+            }
+        }
+    }
 }
 
 fun colorDialog(
@@ -115,9 +134,4 @@ fun colorDialog(
     checkedItem: Int? = null,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): ColorDialog = ColorDialog().apply {
-    arguments = putBaseBundle(title, message, NO_RES, negBtnTxtRes = negBtnTxtRes, tag = tag).apply {
-        putIntArray(ARG_ITEMS, items)
-        putInt(ARG_CHECKED_ITEM, checkedItem ?: NULL_INT)
-    }
-}
+): ColorDialog = ColorDialog.newInstance(title, message, items, checkedItem, negBtnTxtRes, tag)

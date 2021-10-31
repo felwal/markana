@@ -1,4 +1,4 @@
-package com.felwal.markana.widget.dialog
+package com.felwal.android.widget.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -61,6 +61,25 @@ class CheckDialog : BaseDialog() {
     interface DialogListener {
         fun onCheckDialogPositiveClick(checkedItems: BooleanArray, tag: String)
     }
+
+    //
+
+    companion object {
+        @JvmStatic
+        fun newInstance(
+            title: String,
+            message: String = "",
+            vararg items: Pair<String, Boolean>,
+            @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
+            @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
+            tag: String
+        ): CheckDialog = CheckDialog().apply {
+            arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
+                putStringArray(ARG_ITEMS, items.firsts.toTypedArray())
+                putBooleanArray(ARG_CHECKED_ITEMS, items.seconds.toBooleanArray())
+            }
+        }
+    }
 }
 
 fun checkDialog(
@@ -70,9 +89,5 @@ fun checkDialog(
     @StringRes posBtnTxtRes: Int = R.string.dialog_btn_ok,
     @StringRes negBtnTxtRes: Int = R.string.dialog_btn_cancel,
     tag: String
-): CheckDialog = CheckDialog().apply {
-    arguments = putBaseBundle(title, message, posBtnTxtRes, negBtnTxtRes, tag).apply {
-        putStringArray(ARG_ITEMS, items.firsts.toTypedArray())
-        putBooleanArray(ARG_CHECKED_ITEMS, items.seconds.toBooleanArray())
-    }
-}
+): CheckDialog =
+    CheckDialog.newInstance(title, message, *items, posBtnTxtRes = posBtnTxtRes, negBtnTxtRes = negBtnTxtRes, tag = tag)
