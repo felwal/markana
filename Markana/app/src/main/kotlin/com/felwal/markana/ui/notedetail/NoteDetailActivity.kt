@@ -396,6 +396,10 @@ class NoteDetailActivity : AppCompatActivity(),
     private fun setFindInNoteMode(enabled: Boolean) {
         model.isFindInNoteMode = enabled
 
+        // remove selection
+        if (!enabled) binding.etNoteBody.clearFocus()
+
+        // update tb
         binding.tb.menu.run {
             findItem(R.id.action_find_previous).isVisible = enabled
             findItem(R.id.action_find_next).isVisible = enabled

@@ -37,12 +37,40 @@ fun Context.getStyle(@StyleRes id: Int): Int = resources.getIdentifier("CustomDi
 
 // get attr res
 
+/**
+ * Gets resource id from attribute [id].
+ */
+fun Context.getIdAttr(@AttrRes id: Int): Int {
+    val attrs = intArrayOf(id)
+    val typedArray = obtainStyledAttributes(attrs)
+    val backgroundResource = typedArray.getResourceId(0, 0)
+    typedArray.recycle()
+    return backgroundResource
+}
+
 @ColorInt
 fun Context.getColorAttr(@AttrRes id: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(id, typedValue, true)
     return typedValue.data
 }
+
+fun Context.getDrawableAttr(@AttrRes id: Int): Drawable? = getDrawableCompat(getIdAttr(id))
+
+fun Context.getBooleanAttr(@AttrRes id: Int): Boolean = getBoolean(getIdAttr(id))
+
+fun Context.getDimensionAttr(@AttrRes id: Int): Float = getDimension(getIdAttr(id))
+
+fun Context.getIntegerAttr(@AttrRes id: Int): Int = getInteger(getIdAttr(id))
+
+fun Context.getQuantityStringAttr(@AttrRes id: Int, quantity: Int, vararg formatArgs: Any?): String =
+    getQuantityString(getIdAttr(id), quantity, formatArgs)
+
+fun Context.getStringArrayAttr(@AttrRes id: Int): Array<String> = getStringArray(getIdAttr(id))
+
+fun Context.getIntegerArrayAttr(@AttrRes id: Int): IntArray = getIntegerArray(getIdAttr(id))
+
+fun Context.getStyleAttr(@AttrRes id: Int): Int = getStyle(getIdAttr(id))
 
 // combination
 

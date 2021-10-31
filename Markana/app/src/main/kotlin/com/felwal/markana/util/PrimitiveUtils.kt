@@ -18,7 +18,7 @@ fun CharSequence.split(vararg delimiters: String, lowerLimit: Int, ignoreCase: B
 fun CharSequence.coerceSubstring(startIndex: Int, endIndex: Int): String =
     substring(startIndex.coerceIn(0, length), endIndex.coerceIn(0, length))
 
-fun String.indicesOf(string: String, startIndex: Int = 0, ignoreCase: Boolean = false): List<Int> {
+fun String.findAll(string: String, startIndex: Int = 0, ignoreCase: Boolean = false): List<Int> {
     val key = if (ignoreCase) string.lowercase() else string
     val content = if (ignoreCase) lowercase() else this
     val indices = mutableListOf<Int>()

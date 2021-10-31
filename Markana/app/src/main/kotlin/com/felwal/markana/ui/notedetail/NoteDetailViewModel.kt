@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
-import com.felwal.markana.util.indicesOf
+import com.felwal.markana.util.findAll
 import kotlinx.coroutines.launch
 
 class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
@@ -29,7 +29,7 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
 
     fun findInNote(query: String, content: String) {
         findInNoteQueryLength = query.length
-        findInNoteOccurrenceIndices = content.indicesOf(query, ignoreCase = true)
+        findInNoteOccurrenceIndices = content.findAll(query, ignoreCase = true)
         findInNoteOccurrenceIndicesCursor = 0
     }
 
