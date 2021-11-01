@@ -2,7 +2,6 @@ package com.felwal.markana.util
 
 import android.text.Editable
 import android.text.Spanned
-import android.text.style.MetricAffectingSpan
 import io.noties.markwon.editor.AbstractEditHandler
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorUtils

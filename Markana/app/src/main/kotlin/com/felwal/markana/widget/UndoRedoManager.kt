@@ -3,9 +3,8 @@ package com.felwal.markana.widget
 import android.widget.EditText
 import androidx.core.widget.doBeforeTextChanged
 import androidx.core.widget.doOnTextChanged
-import com.felwal.markana.util.updateEditable
-import com.felwal.markana.util.removeAll
-import kotlin.collections.ArrayDeque
+import com.felwal.android.util.removeAll
+import com.felwal.android.util.updateEditable
 
 class UndoRedoManager(private val et: EditText) {
 

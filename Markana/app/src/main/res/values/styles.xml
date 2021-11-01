@@ -50,13 +50,7 @@
     <style name="Widget.Markana.EditText.NoTint">
         <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
-
-    <style name="Widget.Markana.Divider" parent="">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/height_divider</item>
-        <item name="android:background">?android:listDivider</item>
-    </style>
-
+    
     <!-- textappearance -->
 
     <style name="TextAppearance.Markana" parent="TextAppearance.AppCompat">

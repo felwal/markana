@@ -11,6 +11,22 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEach
+import com.felwal.android.util.coerceSelection
+import com.felwal.android.util.copyToClipboard
+import com.felwal.android.util.getIntegerArray
+import com.felwal.android.util.getQuantityString
+import com.felwal.android.util.makeMultilinePreventEnter
+import com.felwal.android.util.multiplyAlphaComponent
+import com.felwal.android.util.searchView
+import com.felwal.android.util.selectEnd
+import com.felwal.android.util.setOptionalIconsVisible
+import com.felwal.android.util.showKeyboard
+import com.felwal.android.util.string
+import com.felwal.android.util.toast
+import com.felwal.android.widget.dialog.BinaryDialog
+import com.felwal.android.widget.dialog.ColorDialog
+import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.colorDialog
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
@@ -18,22 +34,10 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.prefs
-import com.felwal.markana.util.coerceSelection
-import com.felwal.markana.util.copyToClipboard
-import com.felwal.markana.util.getIntegerArray
-import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
-import com.felwal.markana.util.makeMultilinePreventEnter
-import com.felwal.markana.util.multiplyAlphaComponent
 import com.felwal.markana.util.outdent
-import com.felwal.markana.util.searchView
-import com.felwal.markana.util.selectEnd
-import com.felwal.markana.util.setOptionalIconsVisible
-import com.felwal.markana.util.showKeyboard
-import com.felwal.markana.util.string
 import com.felwal.markana.util.toEpochSecond
-import com.felwal.markana.util.toast
 import com.felwal.markana.util.toggleBulletList
 import com.felwal.markana.util.toggleChecklist
 import com.felwal.markana.util.toggleCode
@@ -46,10 +50,6 @@ import com.felwal.markana.util.toggleStrong
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.util.useEditHandler
 import com.felwal.markana.widget.UndoRedoManager
-import com.felwal.android.widget.dialog.BinaryDialog
-import com.felwal.android.widget.dialog.ColorDialog
-import com.felwal.android.widget.dialog.binaryDialog
-import com.felwal.android.widget.dialog.colorDialog
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import io.noties.markwon.core.MarkwonTheme
@@ -149,7 +149,12 @@ class NoteDetailActivity : AppCompatActivity(),
                 override fun onQueryTextSubmit(query: String): Boolean {
                     model.findInNote(query, binding.etNoteBody.string)
 
-                    toast(getQuantityString(R.plurals.toast_i_occurrences_found, model.findInNoteOccurrenceIndices.size))
+                    toast(
+                        getQuantityString(
+                            R.plurals.toast_i_occurrences_found,
+                            model.findInNoteOccurrenceIndices.size
+                        )
+                    )
                     selectFindInNoteOccurrence()
 
                     return true
@@ -271,7 +276,9 @@ class NoteDetailActivity : AppCompatActivity(),
 
         val editor = MarkwonEditor.builder(markwon).run {
             // change color
-            punctuationSpan(ForegroundColorSpan::class.java) { ForegroundColorSpan(note.getColor(this@NoteDetailActivity)) }
+            punctuationSpan(ForegroundColorSpan::class.java) {
+                ForegroundColorSpan(note.getColor(this@NoteDetailActivity))
+            }
 
             // emphasis
             useEditHandler(StrongEmphasisSpan(), "**", "__")
@@ -352,7 +359,7 @@ class NoteDetailActivity : AppCompatActivity(),
         model.noteData.value ?: return
         val haveChangesBeenMade =
             binding.etNoteTitle.string != model.note.filename
-            || binding.etNoteBody.string != model.note.content
+                || binding.etNoteBody.string != model.note.content
 
         val title = binding.etNoteTitle.string
         val body = binding.etNoteBody.string

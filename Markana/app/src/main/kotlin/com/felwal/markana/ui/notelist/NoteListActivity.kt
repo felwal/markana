@@ -10,6 +10,21 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.felwal.android.util.common
+import com.felwal.android.util.getColorAttr
+import com.felwal.android.util.getDrawableCompat
+import com.felwal.android.util.getInteger
+import com.felwal.android.util.getIntegerArray
+import com.felwal.android.util.getQuantityString
+import com.felwal.android.util.isPortrait
+import com.felwal.android.util.launchActivity
+import com.felwal.android.util.removeAll
+import com.felwal.android.util.searchView
+import com.felwal.android.util.setOptionalIconsVisible
+import com.felwal.android.widget.dialog.BinaryDialog
+import com.felwal.android.widget.dialog.ColorDialog
+import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.colorDialog
 import com.felwal.markana.App
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
@@ -18,23 +33,8 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
-import com.felwal.markana.util.common
-import com.felwal.markana.util.getColorAttr
-import com.felwal.markana.util.getDrawableCompat
-import com.felwal.markana.util.getInteger
-import com.felwal.markana.util.getIntegerArray
-import com.felwal.markana.util.getQuantityString
-import com.felwal.markana.util.isPortrait
-import com.felwal.markana.util.launchActivity
-import com.felwal.markana.util.removeAll
-import com.felwal.markana.util.searchView
-import com.felwal.markana.util.setOptionalIconsVisible
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
-import com.felwal.android.widget.dialog.BinaryDialog
-import com.felwal.android.widget.dialog.ColorDialog
-import com.felwal.android.widget.dialog.binaryDialog
-import com.felwal.android.widget.dialog.colorDialog
 import com.google.android.material.appbar.AppBarLayout
 
 private const val LOG_TAG = "NoteList"
@@ -489,7 +489,7 @@ class NoteListActivity : AppCompatActivity(),
         invalidateOptionsMenu()
         updateToolbarTitle()
     }
-    
+
     private fun emptySelection() {
         for (note in model.selectedNotes) {
             note.isSelected = false

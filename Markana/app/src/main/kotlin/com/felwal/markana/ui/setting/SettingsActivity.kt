@@ -3,6 +3,11 @@ package com.felwal.markana.ui.setting
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
+import com.felwal.android.util.getQuantityString
+import com.felwal.android.widget.dialog.NumberDialog
+import com.felwal.android.widget.dialog.RadioDialog
+import com.felwal.android.widget.dialog.TextDialog
+import com.felwal.android.widget.dialog.UnaryDialog
 import com.felwal.markana.R
 import com.felwal.markana.data.prefs.Bullet
 import com.felwal.markana.data.prefs.Emph
@@ -10,12 +15,7 @@ import com.felwal.markana.data.prefs.Strong
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
-import com.felwal.markana.util.getQuantityString
 import com.felwal.markana.util.updateDayNight
-import com.felwal.android.widget.dialog.NumberDialog
-import com.felwal.android.widget.dialog.RadioDialog
-import com.felwal.android.widget.dialog.TextDialog
-import com.felwal.android.widget.dialog.UnaryDialog
 
 private const val DIALOG_THEME = "themeDialog"
 private const val DIALOG_MAX_LINES = "maxLinesDialog"

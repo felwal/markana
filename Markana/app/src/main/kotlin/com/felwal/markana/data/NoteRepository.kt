@@ -4,13 +4,13 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.net.toUri
+import com.felwal.android.util.coToast
+import com.felwal.android.util.withIO
 import com.felwal.markana.R
 import com.felwal.markana.data.db.DbDataSource
 import com.felwal.markana.data.network.SafDataSource
 import com.felwal.markana.prefs
-import com.felwal.markana.util.coToast
 import com.felwal.markana.util.toUriPathString
-import com.felwal.markana.util.withIO
 
 class NoteRepository(
     private val applicationContext: Context,
@@ -147,7 +147,7 @@ class NoteRepository(
         tree?.let { extractTree(it) }
     }
 
-    private suspend fun addTreeIfNotExists(tree: Tree)  {
+    private suspend fun addTreeIfNotExists(tree: Tree) {
         // the tree already exists; don't add
         if (db.treeDao().doesTreeExist(tree.uri)) return
 

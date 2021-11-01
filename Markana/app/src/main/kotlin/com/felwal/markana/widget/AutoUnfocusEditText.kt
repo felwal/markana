@@ -3,7 +3,7 @@ package com.felwal.markana.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
-import com.felwal.markana.util.hideKeyboard
+import com.felwal.android.util.hideKeyboard
 
 /**
  * An EditText which clears focus and hides keyboard on back press.

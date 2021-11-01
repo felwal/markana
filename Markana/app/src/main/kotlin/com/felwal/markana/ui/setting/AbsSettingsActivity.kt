@@ -8,15 +8,11 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.core.view.updateLayoutParams
-import com.felwal.markana.R
-import com.felwal.markana.databinding.ItemSettingsHeaderBinding
-import com.felwal.markana.databinding.ItemSettingsSwitchBinding
-import com.felwal.markana.databinding.ItemSettingsTextBinding
-import com.felwal.markana.util.enableRipple
-import com.felwal.markana.util.getDimension
-import com.felwal.markana.util.getDrawableCompat
-import com.felwal.markana.util.hideOrRemove
-import com.felwal.markana.util.setTextRemoveIfEmpty
+import com.felwal.android.util.enableRipple
+import com.felwal.android.util.getDimension
+import com.felwal.android.util.getDrawableCompat
+import com.felwal.android.util.hideOrRemove
+import com.felwal.android.util.setTextRemoveIfEmpty
 import com.felwal.android.widget.dialog.BaseDialog
 import com.felwal.android.widget.dialog.NO_RES
 import com.felwal.android.widget.dialog.binaryDialog
@@ -25,6 +21,10 @@ import com.felwal.android.widget.dialog.numberDialog
 import com.felwal.android.widget.dialog.radioDialog
 import com.felwal.android.widget.dialog.textDialog
 import com.felwal.android.widget.dialog.unaryDialog
+import com.felwal.markana.R
+import com.felwal.markana.databinding.ItemSettingsHeaderBinding
+import com.felwal.markana.databinding.ItemSettingsSwitchBinding
+import com.felwal.markana.databinding.ItemSettingsTextBinding
 
 abstract class AbsSettingsActivity(
     private val dividerMode: DividerMode,

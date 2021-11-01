@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- spacing -->
+
+    <!-- general -->
+    <dimen name="spacing_colossal">128dp</dimen>
+    <dimen name="spacing_gargantuan">64dp</dimen>
+    <dimen name="spacing_huge">48dp</dimen>
+    <dimen name="spacing_large">32dp</dimen>
+    <dimen name="spacing_medium">24dp</dimen>
+    <dimen name="spacing_small">16dp</dimen>
+    <dimen name="spacing_tiny">8dp</dimen>
+    <dimen name="spacing_diminutive">4dp</dimen>
+
+    <!-- dialog -->
+    <dimen name="spacing_dialog_top">@dimen/spacing_tiny</dimen>
+    <dimen name="spacing_dialog_horizontal">20dp</dimen>
+    <dimen name="spacing_dialog_horizontal_minus_4">16dp</dimen>
+
+    <!-- layout -->
+
+    <dimen name="height_divider">1dp</dimen>
+
+    <!-- corner -->
+    <dimen name="corner_radius_dialog">8dp</dimen>
+
+    <!-- typography -->
+
+    <!-- dialog -->
+    <dimen name="type_dialog_title">20sp</dimen>
+    <dimen name="type_dialog_body">16sp</dimen>
+    <dimen name="type_dialog_item">16sp</dimen>
+
+</resources>

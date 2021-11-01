@@ -1,2 +1,3 @@
 rootProject.name = "Markana"
 include ':app'
+include ':android'

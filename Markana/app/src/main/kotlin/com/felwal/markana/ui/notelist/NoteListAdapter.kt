@@ -4,26 +4,23 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
+import com.felwal.android.util.getColorAttr
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
+import com.felwal.markana.data.prefs.SortBy
 import com.felwal.markana.databinding.ItemNotelistGridNoteBinding
 import com.felwal.markana.databinding.ItemNotelistListNoteBinding
 import com.felwal.markana.prefs
-import com.felwal.markana.data.prefs.SortBy
 import com.felwal.markana.util.FORMATTER_EARLIER
 import com.felwal.markana.util.FORMATTER_THIS_YEAR
 import com.felwal.markana.util.FORMATTER_TODAY
 import com.felwal.markana.util.atStartOfYear
 import com.felwal.markana.util.fromEpochSecond
-import com.felwal.markana.util.getColorAttr
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -48,7 +45,6 @@ class NoteListAdapter(
             val binding = ItemNotelistListNoteBinding.inflate(inflater)
             ListNoteViewHolder(parent.context, binding, onClick, onLongClick)
         }
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

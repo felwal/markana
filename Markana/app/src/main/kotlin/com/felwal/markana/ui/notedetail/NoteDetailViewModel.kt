@@ -5,9 +5,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.felwal.android.util.findAll
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
-import com.felwal.markana.util.findAll
 import kotlinx.coroutines.launch
 
 class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
@@ -22,8 +22,9 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
 
     // secondary
     val note: Note get() = noteData.value!!
-    val findInNoteOccurrenceIndex: Int get() =
-        findInNoteOccurrenceIndices[findInNoteOccurrenceIndicesCursor]
+    val findInNoteOccurrenceIndex: Int
+        get() =
+            findInNoteOccurrenceIndices[findInNoteOccurrenceIndicesCursor]
 
     // shallow
 

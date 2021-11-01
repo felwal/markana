@@ -137,7 +137,6 @@
     <!-- toast -->
 
     <!-- info -->
-    <string name="toast_i_copied_to_clipboard">Copied to clipboard.</string>
     <plurals name="toast_i_occurrences_found">
         <item quantity="one">%d occurrence found</item>
         <item quantity="other">%d occurrences found</item>
