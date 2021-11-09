@@ -1,1 +1,5 @@
 /build
+
+# dont ignore library aar build
+!*.aar
+!/libs/
