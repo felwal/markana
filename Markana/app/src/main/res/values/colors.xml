@@ -10,17 +10,57 @@
     <color name="red_primary_dark">@color/material_red_600</color>
 
     <!-- greyscale -->
-    <color name="grey3">#27292B</color>
-    <color name="grey7">#F5F5F5</color>
+    <color name="grey16">#27292B</color>
+    <color name="grey96">#F5F5F5</color>
 
     <!-- application -->
 
     <!-- dark -->
     <color name="text_primary_dk">#DDFFFFFF</color>
-    <color name="notebase_dk">@color/grey3</color>
+    <color name="semiSurface_mono_dk">@color/grey16</color>
+    <!-- 26 = 15% opacity -->
+    <color name="semiSurface_red_dk">#26D32F2F</color>
+    <color name="semiSurface_pink_dk">#26C2185B</color>
+    <color name="semiSurface_purple_dk">#267B1FA2</color>
+    <color name="semiSurface_purpleDeep_dk">#26512DA8</color>
+    <color name="semiSurface_indigo_dk">#26303F9F</color>
+    <color name="semiSurface_blue_dk">#261976D2</color>
+    <color name="semiSurface_blueLight_dk">#260288D1</color>
+    <color name="semiSurface_cyan_dk">#260097A7</color>
+    <color name="semiSurface_teal_dk">#2600796B</color>
+    <color name="semiSurface_green_dk">#26388E3C</color>
+    <color name="semiSurface_greenLight_dk">#26689F38</color>
+    <color name="semiSurface_lime_dk">#26AFB42B</color>
+    <color name="semiSurface_yellow_dk">#26FBC02D</color>
+    <color name="semiSurface_amber_dk">#26FFA000</color>
+    <color name="semiSurface_orange_dk">#26F57C00</color>
+    <color name="semiSurface_orangeDeep_dk">#26E64A19</color>
+    <color name="semiSurface_brown_dk">#265D4037</color>
+    <color name="semiSurface_grey_dk">#26616161</color>
+    <color name="semiSurface_greyBlue_dk">#26455A64</color>
 
     <!-- light -->
     <color name="text_primary_lt">#DD000000</color>
-    <color name="notebase_lt">@color/grey7</color>
+    <color name="semiSurface_mono_lt">@color/grey96</color>
+    <!-- 26 = 15% opacity -->
+    <color name="semiSurface_red_lt">#26EF9A9A</color>
+    <color name="semiSurface_pink_lt">#26F48FB1</color>
+    <color name="semiSurface_purple_lt">#26CE93D8</color>
+    <color name="semiSurface_purpleDeep_lt">#26B39DDB</color>
+    <color name="semiSurface_indigo_lt">#269FA8DA</color>
+    <color name="semiSurface_blue_lt">#2690CAF9</color>
+    <color name="semiSurface_blueLight_lt">#2681D4FA</color>
+    <color name="semiSurface_cyan_lt">#2680DEEA</color>
+    <color name="semiSurface_teal_lt">#2680CBC4</color>
+    <color name="semiSurface_green_lt">#26A5D6A7</color>
+    <color name="semiSurface_greenLight_lt">#26C5E1A5</color>
+    <color name="semiSurface_lime_lt">#26E6EE9C</color>
+    <color name="semiSurface_yellow_lt">#26FFF59D</color>
+    <color name="semiSurface_amber_lt">#26FFE082</color>
+    <color name="semiSurface_orange_lt">#26FFCC80</color>
+    <color name="semiSurface_orangeDeep_lt">#26FFAB91</color>
+    <color name="semiSurface_brown_lt">#26BCAAA4</color>
+    <color name="semiSurface_grey_lt">#26EEEEEE</color>
+    <color name="semiSurface_greyBlue_lt">#26B0BEC5</color>
 
 </resources>

@@ -1,7 +1,10 @@
 package com.felwal.markana.util
 
+import android.content.Context
 import android.content.res.Resources
+import android.content.res.TypedArray
 import android.util.TypedValue
+import androidx.annotation.ArrayRes
 import androidx.appcompat.app.AppCompatDelegate
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.prefs
@@ -15,6 +18,15 @@ fun updateDayNight() = AppCompatDelegate.setDefaultNightMode(
         Theme.BATTERY -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
     }
 )
+
+fun Context.getResIdArray(@ArrayRes id: Int): IntArray {
+    val typedArray: TypedArray = resources.obtainTypedArray(id)
+    val resIds = IntArray(typedArray.length()) { i ->
+        typedArray.getResourceId(i, 0)
+    }
+    typedArray.recycle()
+    return resIds
+}
 
 val Int.px: Int get() = round(toFloat().px).toInt()
 

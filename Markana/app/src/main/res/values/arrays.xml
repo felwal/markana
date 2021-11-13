@@ -3,6 +3,29 @@
 
     <!-- note color -->
 
+    <array name="note_themes">
+        <item>@style/Theme.Markana.Note.Mono</item>
+        <item>@style/Theme.Markana.Note.Red</item>
+        <item>@style/Theme.Markana.Note.Pink</item>
+        <item>@style/Theme.Markana.Note.Purple</item>
+        <item>@style/Theme.Markana.Note.PurpleDeep</item>
+        <item>@style/Theme.Markana.Note.Indigo</item>
+        <item>@style/Theme.Markana.Note.Blue</item>
+        <item>@style/Theme.Markana.Note.BlueLight</item>
+        <item>@style/Theme.Markana.Note.Cyan</item>
+        <item>@style/Theme.Markana.Note.Teal</item>
+        <item>@style/Theme.Markana.Note.Green</item>
+        <item>@style/Theme.Markana.Note.GreenLight</item>
+        <item>@style/Theme.Markana.Note.Lime</item>
+        <item>@style/Theme.Markana.Note.Yellow</item>
+        <item>@style/Theme.Markana.Note.Amber</item>
+        <item>@style/Theme.Markana.Note.Orange</item>
+        <item>@style/Theme.Markana.Note.OrangeDeep</item>
+        <item>@style/Theme.Markana.Note.Brown</item>
+        <item>@style/Theme.Markana.Note.Grey</item>
+        <item>@style/Theme.Markana.Note.GreyBlue</item>
+    </array>
+
     <array name="note_palette">
         <item>@color/text_primary_lt</item>
         <item>@color/material_red_500</item>
@@ -27,7 +50,7 @@
     </array>
 
     <array name="note_palette_bg">
-        <item>@color/notebase_lt</item>
+        <item>@color/semiSurface_mono_lt</item>
         <item>@color/material_red_200</item>
         <item>@color/material_pink_200</item>
         <item>@color/material_purple_200</item>

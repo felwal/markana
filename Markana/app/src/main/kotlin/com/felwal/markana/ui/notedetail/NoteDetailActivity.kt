@@ -35,6 +35,7 @@ import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
 import com.felwal.markana.prefs
+import com.felwal.markana.util.getResIdArray
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.outdent
@@ -65,6 +66,7 @@ import java.util.concurrent.Executors
 
 private const val LOG_TAG = "NoteDetail"
 
+private const val EXTRA_COLOR_INDEX = "colorIndex"
 private const val EXTRA_NOTE_URI = "uri"
 private const val EXTRA_FIND_QUERY = "findQuery"
 
@@ -96,6 +98,8 @@ class NoteDetailActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateDayNight()
+        initTheme()
+
         super.onCreate(savedInstanceState)
         binding = ActivityNotedetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -219,6 +223,14 @@ class NoteDetailActivity : AppCompatActivity(),
         return true
     }
 
+    //
+
+    private fun initTheme() {
+        val themes = getResIdArray(R.array.note_themes)
+        val theme = themes[intent.getIntExtra(EXTRA_COLOR_INDEX, 0)]
+        setTheme(theme)
+    }
+
     // data
 
     private fun initData() {
@@ -231,7 +243,6 @@ class NoteDetailActivity : AppCompatActivity(),
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
             note?.let {
-                applyNoteColor(it)
                 //initMarkwon(it)
                 loadContent(it)
                 initUndoRedo(it)
@@ -277,9 +288,9 @@ class NoteDetailActivity : AppCompatActivity(),
 
         val editor = MarkwonEditor.builder(markwon).run {
             // change color
-            punctuationSpan(ForegroundColorSpan::class.java) {
+            /*punctuationSpan(ForegroundColorSpan::class.java) {
                 ForegroundColorSpan(note.getColor(this@NoteDetailActivity))
-            }
+            }*/
 
             // emphasis
             useEditHandler(StrongEmphasisSpan(), "**", "__")
@@ -373,24 +384,6 @@ class NoteDetailActivity : AppCompatActivity(),
         Log.i(LOG_TAG, "note saved: $note")
     }
 
-    private fun applyNoteColor(note: Note) {
-        val fgColor = note.getColor(this)
-        val bgColor = note.getBackgroundColor(this).multiplyAlphaComponent(0.65f)
-
-        binding.etNoteTitle.setTextColor(fgColor)
-        binding.tb.menu.forEach { it.icon?.setTint(fgColor) }
-        binding.bab.menu.forEach { it.icon?.setTint(fgColor) }
-
-        if (prefs.notePreviewColor) {
-            //binding.root.setBackgroundColor(bgColor)
-            //binding.tb.setBackgroundColor(bgColor)
-            binding.bab.setBackgroundColor(bgColor)
-        }
-        else {
-            binding.bab.setBackgroundColor(getColorAttr(R.attr.colorNoteBase))
-        }
-    }
-
     private fun clearAllFocus() {
         binding.etNoteTitle.clearFocus()
         binding.etNoteBody.clearFocus()
@@ -458,7 +451,9 @@ class NoteDetailActivity : AppCompatActivity(),
         when (tag) {
             DIALOG_COLOR -> {
                 model.note.colorIndex = selectedIndex
-                applyNoteColor(model.note)
+                // recreate to apply new theme
+                intent.putExtra(EXTRA_COLOR_INDEX, selectedIndex)
+                recreate()
             }
         }
     }
@@ -466,10 +461,11 @@ class NoteDetailActivity : AppCompatActivity(),
     // object
 
     companion object {
-        fun startActivity(c: Context, uri: String? = null, findQuery: String? = null) {
+        fun startActivity(c: Context, uri: String? = null, colorIndex: Int = 0, findQuery: String? = null) {
             val intent = Intent(c, NoteDetailActivity::class.java)
 
             uri?.let { intent.putExtra(EXTRA_NOTE_URI, it) }
+            intent.putExtra(EXTRA_COLOR_INDEX, colorIndex)
             findQuery?.let { intent.putExtra(EXTRA_FIND_QUERY, it) }
 
             c.startActivity(intent)

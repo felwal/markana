@@ -22,7 +22,6 @@ import com.felwal.android.util.removeAll
 import com.felwal.android.util.searchView
 import com.felwal.android.util.setOptionalIconsVisible
 import com.felwal.android.widget.dialog.AlertDialog
-import com.felwal.android.widget.dialog.ColorDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
 import com.felwal.android.widget.dialog.alertDialog
 import com.felwal.android.widget.dialog.colorDialog
@@ -288,7 +287,7 @@ class NoteListActivity : AppCompatActivity(),
         adapter = NoteListAdapter(
             onClick = {
                 if (model.isSelectionMode) selectNote(it)
-                else NoteDetailActivity.startActivity(this, it.uri, model.searchQueryOrNull)
+                else NoteDetailActivity.startActivity(this, it.uri, it.colorIndex, model.searchQueryOrNull)
             },
             onLongClick = {
                 selectNote(it)

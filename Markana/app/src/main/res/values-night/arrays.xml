@@ -27,7 +27,7 @@
     </array>
 
     <array name="note_palette_bg">
-        <item>@color/notebase_dk</item>
+        <item>@color/semiSurface_mono_dk</item>
         <item>@color/material_red_700</item>
         <item>@color/material_pink_700</item>
         <item>@color/material_purple_700</item>

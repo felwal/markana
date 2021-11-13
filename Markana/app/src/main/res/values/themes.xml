@@ -31,7 +31,113 @@
     <style name="Theme.Markana" parent="Theme.Default">
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="colorNoteBase">@color/notebase_lt</item>
+        <item name="colorSemiSurface">@color/semiSurface_mono_lt</item>
+    </style>
+
+    <!-- note themes -->
+
+    <style name="Theme.Markana.Note">
+        <item name="colorSecondary">?colorPrimary</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Mono">
+        <item name="colorPrimary">@color/text_primary_lt</item>
+        <item name="colorSemiSurface">@color/semiSurface_mono_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Red">
+        <item name="colorPrimary">@color/material_red_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_red_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Pink">
+        <item name="colorPrimary">@color/material_pink_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_pink_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Purple">
+        <item name="colorPrimary">@color/material_purple_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_purple_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.PurpleDeep">
+        <item name="colorPrimary">@color/material_purple_deep_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_purpleDeep_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Indigo">
+        <item name="colorPrimary">@color/material_indigo_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_indigo_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Blue">
+        <item name="colorPrimary">@color/material_blue_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_blue_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.BlueLight">
+        <item name="colorPrimary">@color/material_blue_light_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_blueLight_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Cyan">
+        <item name="colorPrimary">@color/material_cyan_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_cyan_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Teal">
+        <item name="colorPrimary">@color/material_teal_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_teal_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Green">
+        <item name="colorPrimary">@color/material_green_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_green_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.GreenLight">
+        <item name="colorPrimary">@color/material_green_light_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_greenLight_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Lime">
+        <item name="colorPrimary">@color/material_lime_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_lime_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Yellow">
+        <item name="colorPrimary">@color/material_yellow_700</item>
+        <item name="colorSemiSurface">@color/semiSurface_yellow_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Amber">
+        <item name="colorPrimary">@color/material_amber_600</item>
+        <item name="colorSemiSurface">@color/semiSurface_amber_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Orange">
+        <item name="colorPrimary">@color/material_orange_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_orange_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.OrangeDeep">
+        <item name="colorPrimary">@color/material_orange_deep_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_orangeDeep_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Brown">
+        <item name="colorPrimary">@color/material_brown_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_brown_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.Grey">
+        <item name="colorPrimary">@color/material_grey_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_grey_lt</item>
+    </style>
+
+    <style name="Theme.Markana.Note.GreyBlue">
+        <item name="colorPrimary">@color/material_grey_blue_500</item>
+        <item name="colorSemiSurface">@color/semiSurface_greyBlue_lt</item>
     </style>
 
 </resources>
