@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.felwal.android.util.getColorAttr
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.markana.R
@@ -32,7 +33,8 @@ data class Note(
 
     @ColorInt
     fun getBackgroundColor(c: Context) =
-        c.getIntegerArray(R.array.note_palette_bg)[colorIndex].multiplyAlphaComponent(0.15f)
+        if (colorIndex == 0) c.getIntegerArray(R.array.note_palette_bg)[colorIndex]
+        else c.getIntegerArray(R.array.note_palette_bg)[colorIndex].multiplyAlphaComponent(0.15f)
 
     override fun toString(): String = "$filename: $content"
 }

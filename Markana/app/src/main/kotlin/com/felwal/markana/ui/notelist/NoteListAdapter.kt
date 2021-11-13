@@ -2,6 +2,7 @@ package com.felwal.markana.ui.notelist
 
 import android.content.Context
 import android.graphics.PorterDuff
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
@@ -9,6 +10,7 @@ import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.felwal.android.util.backgroundTint
 import com.felwal.android.util.getColorAttr
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
@@ -20,7 +22,9 @@ import com.felwal.markana.util.FORMATTER_EARLIER
 import com.felwal.markana.util.FORMATTER_THIS_YEAR
 import com.felwal.markana.util.FORMATTER_TODAY
 import com.felwal.markana.util.atStartOfYear
+import com.felwal.markana.util.dp
 import com.felwal.markana.util.fromEpochSecond
+import com.felwal.markana.util.px
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -37,14 +41,17 @@ class NoteListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
-        return if (prefs.gridView) {
+        val binding = ItemNotelistGridNoteBinding.inflate(inflater)
+        return GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
+
+        /*return if (prefs.gridView) {
             val binding = ItemNotelistGridNoteBinding.inflate(inflater)
             GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
         }
         else {
             val binding = ItemNotelistListNoteBinding.inflate(inflater)
             ListNoteViewHolder(parent.context, binding, onClick, onLongClick)
-        }
+        }*/
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -97,14 +104,33 @@ class NoteListAdapter(
             // color
             binding.tvTitle.setTextColor(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
+            binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+
+            // fill
             if (prefs.notePreviewColor) {
-                binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+                binding.ivBorder.isGone = true
                 binding.clNote.background.setTint(note.getBackgroundColor(c))
             }
-            else binding.clNote.background.setTint(c.getColorAttr(R.attr.colorSurface))
-            binding.ivBorder.isGone = !note.isSelected
+            // stroke
+            else {
+                binding.ivBorder.isGone = false
+                binding.clNote.background.setTint(c.getColorAttr(android.R.attr.colorBackground))
 
-            // mark pinned
+                // check to not set stroke twice
+                if (!note.isSelected) {
+                    (binding.ivBorder.background as GradientDrawable)
+                        .setStroke(1.px, c.getColorAttr(android.R.attr.listDivider))
+                }
+            }
+
+            // mark selected (with stroke)
+            if (note.isSelected) {
+                binding.ivBorder.isGone = false
+                (binding.ivBorder.background as GradientDrawable)
+                    .setStroke(1.px, c.getColorAttr(R.attr.colorOnBackground))
+            }
+
+            // mark pinned (with icon)
             binding.ivPin.isInvisible = !note.isPinned
         }
     }
