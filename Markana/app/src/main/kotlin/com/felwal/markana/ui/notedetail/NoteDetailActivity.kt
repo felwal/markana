@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEach
 import com.felwal.android.util.coerceSelection
 import com.felwal.android.util.copyToClipboard
+import com.felwal.android.util.getColorAttr
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
 import com.felwal.android.util.makeMultilinePreventEnter
@@ -23,9 +24,9 @@ import com.felwal.android.util.setOptionalIconsVisible
 import com.felwal.android.util.showKeyboard
 import com.felwal.android.util.string
 import com.felwal.android.util.toast
-import com.felwal.android.widget.dialog.BinaryDialog
-import com.felwal.android.widget.dialog.ColorDialog
-import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.AlertDialog
+import com.felwal.android.widget.dialog.SingleChoiceDialog
+import com.felwal.android.widget.dialog.alertDialog
 import com.felwal.android.widget.dialog.colorDialog
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
@@ -71,8 +72,8 @@ private const val DIALOG_DELETE = "deleteNote"
 private const val DIALOG_COLOR = "colorNote"
 
 class NoteDetailActivity : AppCompatActivity(),
-    BinaryDialog.DialogListener,
-    ColorDialog.DialogListener {
+    AlertDialog.DialogListener,
+    SingleChoiceDialog.DialogListener {
 
     // data
     private lateinit var appContainer: AppContainer
@@ -185,14 +186,14 @@ class NoteDetailActivity : AppCompatActivity(),
             R.id.action_redo -> contentHistoryManager.redo()
             R.id.action_color -> colorDialog(
                 title = getString(R.string.dialog_title_color_notes),
-                items = getIntegerArray(R.array.note_palette),
-                checkedItem = model.note.colorIndex,
+                colors = getIntegerArray(R.array.note_palette),
+                checkedIndex = model.note.colorIndex,
                 tag = DIALOG_COLOR
             ).show(supportFragmentManager)
             R.id.action_find_previous -> selectPreviousFindInNoteOccurrence()
             R.id.action_find_next -> selectNextFindInNoteOccurrence()
             R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
-            R.id.action_delete -> binaryDialog(
+            R.id.action_delete -> alertDialog(
                 title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
                 message = getString(R.string.dialog_msg_delete_notes),
                 posBtnTxtRes = R.string.dialog_btn_delete,
@@ -385,6 +386,9 @@ class NoteDetailActivity : AppCompatActivity(),
             //binding.tb.setBackgroundColor(bgColor)
             binding.bab.setBackgroundColor(bgColor)
         }
+        else {
+            binding.bab.setBackgroundColor(getColorAttr(R.attr.colorNoteBase))
+        }
     }
 
     private fun clearAllFocus() {
@@ -441,7 +445,7 @@ class NoteDetailActivity : AppCompatActivity(),
 
     // dialog
 
-    override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
+    override fun onAlertDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
             DIALOG_DELETE -> {
                 model.deleteNote()
@@ -450,10 +454,10 @@ class NoteDetailActivity : AppCompatActivity(),
         }
     }
 
-    override fun onColorDialogItemClick(checkedItem: Int, tag: String) {
+    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
         when (tag) {
             DIALOG_COLOR -> {
-                model.note.colorIndex = checkedItem
+                model.note.colorIndex = selectedIndex
                 applyNoteColor(model.note)
             }
         }

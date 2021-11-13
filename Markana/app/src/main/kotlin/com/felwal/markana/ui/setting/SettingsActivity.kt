@@ -5,9 +5,8 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import com.felwal.android.util.getQuantityString
 import com.felwal.android.widget.dialog.NumberDialog
-import com.felwal.android.widget.dialog.RadioDialog
+import com.felwal.android.widget.dialog.SingleChoiceDialog
 import com.felwal.android.widget.dialog.TextDialog
-import com.felwal.android.widget.dialog.UnaryDialog
 import com.felwal.markana.R
 import com.felwal.markana.data.prefs.Bullet
 import com.felwal.markana.data.prefs.Emph
@@ -28,10 +27,9 @@ open class SettingsActivity : AbsSettingsActivity(
     dividerMode = DividerMode.IN_SECTION,
     indentEverything = false
 ),
-    RadioDialog.DialogListener,
+    SingleChoiceDialog.DialogListener,
     TextDialog.DialogListener,
-    NumberDialog.DialogListener,
-    UnaryDialog.DialogListener {
+    NumberDialog.DialogListener {
 
     // view
     private lateinit var binding: ActivitySettingsBinding
@@ -146,7 +144,7 @@ open class SettingsActivity : AbsSettingsActivity(
                 InfoItem(
                     getString(R.string.tv_settings_item_title_about),
                     msg = getString(R.string.tv_settings_item_msg_about),
-                    dialogBtnRes = R.string.dialog_btn_ok,
+                    dialogBtnRes = R.string.fw_dialog_btn_ok,
                     tag = "aboutDialog"
                 )
             )
@@ -155,15 +153,15 @@ open class SettingsActivity : AbsSettingsActivity(
 
     // dialog
 
-    override fun onRadioDialogItemClick(checkedItem: Int, tag: String) {
+    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
         when (tag) {
             DIALOG_THEME -> {
-                prefs.themeInt = checkedItem
+                prefs.themeInt = selectedIndex
                 updateDayNight()
             }
-            DIALOG_ITALIC -> prefs.emphSymbolInt = checkedItem
-            DIALOG_BOLD -> prefs.strongSymbolInt = checkedItem
-            DIALOG_BULLET_LIST -> prefs.bulletListSymbolInt = checkedItem
+            DIALOG_ITALIC -> prefs.emphSymbolInt = selectedIndex
+            DIALOG_BOLD -> prefs.strongSymbolInt = selectedIndex
+            DIALOG_BULLET_LIST -> prefs.bulletListSymbolInt = selectedIndex
         }
         reflateViews()
     }
@@ -175,12 +173,10 @@ open class SettingsActivity : AbsSettingsActivity(
         reflateViews()
     }
 
-    override fun onNumberDialogPositiveClick(input: Int, tag: String?) {
+    override fun onNumberDialogPositiveClick(input: Int, tag: String) {
         when (tag) {
             DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input
         }
         reflateViews()
     }
-
-    override fun onUnaryDialogClick(tag: String) {}
 }

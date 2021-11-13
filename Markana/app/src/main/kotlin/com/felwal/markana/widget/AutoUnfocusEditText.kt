@@ -13,11 +13,10 @@ class AutoUnfocusEditText(
     attrs: AttributeSet? = null
 ) : androidx.appcompat.widget.AppCompatEditText(context, attrs) {
 
-    override fun onKeyPreIme(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyPreIme(keyCode: Int, event: KeyEvent): Boolean =
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             hideKeyboard()
-            return true
+            true
         }
-        return false
-    }
+        else false
 }

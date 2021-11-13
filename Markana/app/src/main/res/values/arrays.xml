@@ -27,7 +27,7 @@
     </array>
 
     <array name="note_palette_bg">
-        <item>@android:color/transparent</item>
+        <item>@color/notebase_lt</item>
         <item>@color/material_red_200</item>
         <item>@color/material_pink_200</item>
         <item>@color/material_purple_200</item>

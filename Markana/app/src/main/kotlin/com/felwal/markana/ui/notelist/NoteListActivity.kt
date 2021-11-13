@@ -21,9 +21,10 @@ import com.felwal.android.util.launchActivity
 import com.felwal.android.util.removeAll
 import com.felwal.android.util.searchView
 import com.felwal.android.util.setOptionalIconsVisible
-import com.felwal.android.widget.dialog.BinaryDialog
+import com.felwal.android.widget.dialog.AlertDialog
 import com.felwal.android.widget.dialog.ColorDialog
-import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.SingleChoiceDialog
+import com.felwal.android.widget.dialog.alertDialog
 import com.felwal.android.widget.dialog.colorDialog
 import com.felwal.markana.App
 import com.felwal.markana.R
@@ -45,8 +46,8 @@ private const val DIALOG_UNLINK_TREE = "unlinkTrees"
 private const val DIALOG_COLOR = "colorNotes"
 
 class NoteListActivity : AppCompatActivity(),
-    BinaryDialog.DialogListener,
-    ColorDialog.DialogListener,
+    AlertDialog.DialogListener,
+    SingleChoiceDialog.DialogListener,
     SwipeRefreshLayout.OnRefreshListener {
 
     // data
@@ -211,7 +212,7 @@ class NoteListActivity : AppCompatActivity(),
             R.id.action_view_toggle -> {
                 adapter.invertViewType()
                 setAdapterAndManager()
-                invalidateOptionsMenu() // update icon
+                invalidateOptionsMenu() // update action icon
             }
 
             // normal tb: sort submenu
@@ -301,10 +302,15 @@ class NoteListActivity : AppCompatActivity(),
         binding.rv.adapter = adapter
 
         // set manager
-        val spanCount = if (!prefs.gridView) getInteger(R.integer.quantity_notelist_list_columns)
-        else if (isPortrait) getInteger(R.integer.quantity_notelist_grid_columns_portrait)
-        else getInteger(R.integer.quantity_notelist_grid_columns_landscape)
-        binding.rv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+        val spanCount =
+            if (!prefs.gridView) getInteger(R.integer.quantity_notelist_list_columns)
+            else if (isPortrait) getInteger(R.integer.quantity_notelist_grid_columns_portrait)
+            else getInteger(R.integer.quantity_notelist_grid_columns_landscape)
+
+        val manager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+        manager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+
+        binding.rv.layoutManager = manager
     }
 
     private fun submitItems(items: List<Note>) {
@@ -438,26 +444,26 @@ class NoteListActivity : AppCompatActivity(),
 
     private fun colorSelection() = colorDialog(
         title = getString(R.string.dialog_title_color_notes),
-        items = getIntegerArray(R.array.note_palette),
-        checkedItem = model.selectedNotes.common { it.colorIndex },
+        colors = getIntegerArray(R.array.note_palette),
+        checkedIndex = model.selectedNotes.common { it.colorIndex },
         tag = DIALOG_COLOR
     ).show(supportFragmentManager)
 
-    private fun unlinkSelection() = binaryDialog(
+    private fun unlinkSelection() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_unlink_notes, model.selectionCount),
         message = getQuantityString(R.plurals.dialog_msg_unlink_notes, model.selectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK
     ).show(supportFragmentManager)
 
-    private fun unlinkSelectionTrees() = binaryDialog(
+    private fun unlinkSelectionTrees() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_unlink_tree, model.treeSelectionCount),
         message = getQuantityString(R.plurals.dialog_msg_unlink_trees, model.treeSelectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK_TREE
     ).show(supportFragmentManager)
 
-    private fun deleteSelection() = binaryDialog(
+    private fun deleteSelection() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_delete_notes, model.selectionCount),
         message = getString(R.string.dialog_msg_delete_notes),
         posBtnTxtRes = R.string.dialog_btn_delete,
@@ -507,7 +513,7 @@ class NoteListActivity : AppCompatActivity(),
 
     // dialog
 
-    override fun onBinaryDialogPositiveClick(passValue: String?, tag: String) {
+    override fun onAlertDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
             DIALOG_DELETE -> {
                 model.deleteSelectedNotes()
@@ -524,10 +530,10 @@ class NoteListActivity : AppCompatActivity(),
         }
     }
 
-    override fun onColorDialogItemClick(checkedItem: Int, tag: String) {
+    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
         when (tag) {
             DIALOG_COLOR -> {
-                model.colorSelectedNotes(checkedItem)
+                model.colorSelectedNotes(selectedIndex)
                 emptySelection()
             }
         }

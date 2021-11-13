@@ -5,10 +5,6 @@
     <style name="Theme.Markana" parent="Theme.Default">
         <item name="android:windowLightStatusBar">false</item>
 
-        <item name="android:colorBackground">@color/background_dk</item>
-        <item name="colorSurface">@color/surface_dk</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="android:strokeColor">@color/divider_dk</item>
         <item name="colorNoteBase">@color/notebase_dk</item>
     </style>
 

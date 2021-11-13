@@ -15,12 +15,11 @@ import com.felwal.android.util.hideOrRemove
 import com.felwal.android.util.setTextRemoveIfEmpty
 import com.felwal.android.widget.dialog.BaseDialog
 import com.felwal.android.widget.dialog.NO_RES
-import com.felwal.android.widget.dialog.binaryDialog
+import com.felwal.android.widget.dialog.alertDialog
 import com.felwal.android.widget.dialog.decimalDialog
 import com.felwal.android.widget.dialog.numberDialog
 import com.felwal.android.widget.dialog.radioDialog
 import com.felwal.android.widget.dialog.textDialog
-import com.felwal.android.widget.dialog.unaryDialog
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemSettingsHeaderBinding
 import com.felwal.markana.databinding.ItemSettingsSwitchBinding
@@ -169,7 +168,6 @@ abstract class AbsSettingsActivity(
     protected inner class SingleSelectionItem(
         title: String,
         private val desc: String? = null,
-        private val msg: String = "",
         private val values: List<String>,
         private val selectedIndex: Int,
         @DrawableRes iconRes: Int = NO_RES,
@@ -182,8 +180,8 @@ abstract class AbsSettingsActivity(
             inflateDialogItem(
                 title, desc ?: value, hideDivider, iconRes,
                 radioDialog(
-                    title = title, message = msg,
-                    items = values, checkedItem = selectedIndex,
+                    title = title, posBtnTxtRes = NO_RES,
+                    labels = values, checkedIndex = selectedIndex,
                     tag = tag
                 )
             )
@@ -202,7 +200,7 @@ abstract class AbsSettingsActivity(
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, desc, hideDivider, iconRes,
-                binaryDialog(
+                alertDialog(
                     title = title, message = msg,
                     posBtnTxtRes = dialogPosBtnRes,
                     tag = tag
@@ -223,7 +221,7 @@ abstract class AbsSettingsActivity(
         override fun inflate(hideDivider: Boolean) {
             inflateDialogItem(
                 title, desc, hideDivider, iconRes,
-                unaryDialog(title, msg, dialogBtnRes, tag)
+                alertDialog(title, msg, dialogBtnRes, NO_RES, tag = tag)
             )
         }
     }
@@ -270,7 +268,7 @@ abstract class AbsSettingsActivity(
         value: String,
         hideDivider: Boolean,
         @DrawableRes iconRes: Int,
-        dialog: BaseDialog
+        dialog: BaseDialog<*>
     ) {
         val itemBinding = inflateTextView(title, value, hideDivider, iconRes)
         itemBinding.root.setOnClickListener {
