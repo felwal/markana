@@ -15,6 +15,9 @@
         <item name="colorSecondaryVariant">@color/red_primary</item>
         <item name="colorOnSecondary">?android:colorBackground</item>
 
+        <!-- drawable -->
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_24</item>
+
         <!-- theme/style -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Felwal.Dialog</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Markana.ActionBar</item>
