@@ -18,12 +18,14 @@
         <!-- drawable -->
         <item name="homeAsUpIndicator">@drawable/ic_arrow_back_24</item>
 
-        <!-- theme/style -->
+        <!-- style -->
+        <item name="android:textViewStyle">@style/Widget.Markana.TextView</item>
+        <item name="android:editTextStyle">@style/Widget.Markana.EditText</item>
+
+        <!-- theme -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Felwal.Dialog</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Markana.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
-        <item name="android:textViewStyle">@style/Widget.Markana.TextView</item>
-        <item name="android:editTextStyle">@style/Widget.Markana.EditText</item>
     </style>
 
     <!-- light theme -->
