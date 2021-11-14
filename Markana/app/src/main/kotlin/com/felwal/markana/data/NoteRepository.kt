@@ -17,7 +17,6 @@ class NoteRepository(
     private val db: DbDataSource,
     private val saf: SafDataSource
 ) {
-
     // read
 
     suspend fun getNotes(searchQuery: String): List<Note> = withIO {

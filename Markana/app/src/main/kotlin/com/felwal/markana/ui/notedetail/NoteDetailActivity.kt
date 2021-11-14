@@ -73,7 +73,8 @@ private const val EXTRA_FIND_QUERY = "findQuery"
 private const val DIALOG_DELETE = "deleteNote"
 private const val DIALOG_COLOR = "colorNote"
 
-class NoteDetailActivity : AppCompatActivity(),
+class NoteDetailActivity :
+    AppCompatActivity(),
     AlertDialog.DialogListener,
     SingleChoiceDialog.DialogListener {
 

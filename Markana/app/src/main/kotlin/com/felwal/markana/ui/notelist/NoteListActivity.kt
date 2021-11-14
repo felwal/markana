@@ -44,7 +44,8 @@ private const val DIALOG_UNLINK = "unlinkNotes"
 private const val DIALOG_UNLINK_TREE = "unlinkTrees"
 private const val DIALOG_COLOR = "colorNotes"
 
-class NoteListActivity : AppCompatActivity(),
+class NoteListActivity :
+    AppCompatActivity(),
     AlertDialog.DialogListener,
     SingleChoiceDialog.DialogListener,
     SwipeRefreshLayout.OnRefreshListener {

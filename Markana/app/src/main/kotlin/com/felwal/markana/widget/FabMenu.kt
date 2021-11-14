@@ -29,7 +29,6 @@ class FabMenu(
     private val inflater: LayoutInflater,
     parent: ViewGroup
 ) {
-
     private val binding = ItemFabMenuBinding.inflate(inflater, parent, true)
     private val overlayBinding = ItemFabMenuOverlayBinding.inflate(inflater, parent, true)
     private var itemBindings: MutableList<ItemFabMenuItemBinding> = mutableListOf()
