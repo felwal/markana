@@ -103,7 +103,7 @@ class FabMenu(
         else {
             fromColor = closedColor
             toColor = openColor
-            toIcon = context.getDrawableCompatFilter(R.drawable.ic_clear_24, R.attr.colorControlActivated)
+            toIcon = context.getDrawableCompatFilter(R.drawable.ic_close_24, R.attr.colorControlActivated)
         }
 
         binding.fab.animateFab(fromColor, toColor, toIcon)

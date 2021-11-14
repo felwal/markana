@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
@@ -33,6 +35,7 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
+import com.felwal.markana.util.setCloseIcon
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
@@ -154,10 +157,14 @@ class NoteListActivity :
                 // search
                 val searchItem = menu.findItem(R.id.action_search)
                 searchItem.searchView.apply {
-                    // xml attribute doesn't work
+                    // set hint (xml attribute doesn't work)
                     queryHint = getString(R.string.tv_notelist_search_hint)
 
-                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    // set close icon (the default is not of 'round' style)
+                    setCloseIcon(R.drawable.ic_close_24)
+
+                    // set listener
+                    setOnQueryTextListener(object : SearchView.OnQueryTextListener{
                         override fun onQueryTextSubmit(query: String): Boolean {
                             clearFocus()
                             return true

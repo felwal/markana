@@ -39,6 +39,7 @@ import com.felwal.markana.util.getResIdArray
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.outdent
+import com.felwal.markana.util.setCloseIcon
 import com.felwal.markana.util.toEpochSecond
 import com.felwal.markana.util.toggleBulletList
 import com.felwal.markana.util.toggleChecklist
@@ -148,9 +149,13 @@ class NoteDetailActivity :
             })
         }
         findItem.searchView.apply {
-            // xml attribute doesn't work
+            // set hint (xml attribute doesn't work)
             queryHint = getString(R.string.tv_notedetail_find_hint)
 
+            // set close icon (the default is not of 'round' style)
+            setCloseIcon(R.drawable.ic_close_24)
+
+            // set listener
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     model.findInNote(query, binding.etNoteBody.string)

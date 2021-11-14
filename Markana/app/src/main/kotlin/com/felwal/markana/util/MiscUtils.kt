@@ -4,8 +4,11 @@ import android.content.Context
 import android.content.res.Resources
 import android.content.res.TypedArray
 import android.util.TypedValue
+import android.widget.ImageView
 import androidx.annotation.ArrayRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SearchView
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.prefs
 import kotlin.math.round
@@ -37,3 +40,8 @@ val Float.px: Float get() =
 
 val Float.dp: Float get() =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, this, Resources.getSystem().displayMetrics)
+
+fun SearchView.setCloseIcon(@DrawableRes resId: Int) {
+    val ivClose = findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+    ivClose.setImageResource(resId)
+}
