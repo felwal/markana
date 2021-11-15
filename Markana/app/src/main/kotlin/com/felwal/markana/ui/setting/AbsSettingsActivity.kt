@@ -19,6 +19,7 @@ import com.felwal.android.widget.dialog.alertDialog
 import com.felwal.android.widget.dialog.decimalDialog
 import com.felwal.android.widget.dialog.numberDialog
 import com.felwal.android.widget.dialog.radioDialog
+import com.felwal.android.widget.dialog.sliderDialog
 import com.felwal.android.widget.dialog.textDialog
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemSettingsHeaderBinding
@@ -158,6 +159,31 @@ abstract class AbsSettingsActivity(
                 decimalDialog(
                     title = title, message = msg,
                     text = value, hint = hint,
+                    posBtnTxtRes = R.string.dialog_btn_set,
+                    tag = tag
+                )
+            )
+        }
+    }
+
+    protected inner class SliderItem(
+        title: String,
+        private val desc: String? = null,
+        private val msg: String = "",
+        private val min: Float,
+        private val max: Float,
+        private val step: Float,
+        private val value: Float,
+        @DrawableRes iconRes: Int = NO_RES,
+        private val tag: String
+    ) : SettingItem(title, iconRes) {
+
+        override fun inflate(hideDivider: Boolean) {
+            inflateDialogItem(
+                title, desc ?: value.toString(), hideDivider, iconRes,
+                sliderDialog(
+                    title = title, message = msg,
+                    min = min, max = max, step = step, value = value,
                     posBtnTxtRes = R.string.dialog_btn_set,
                     tag = tag
                 )

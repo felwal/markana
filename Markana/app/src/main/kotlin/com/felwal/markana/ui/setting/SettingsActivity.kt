@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
 import com.felwal.android.util.getQuantityString
-import com.felwal.android.widget.dialog.NumberDialog
+import com.felwal.android.widget.dialog.DecimalDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
 import com.felwal.android.widget.dialog.TextDialog
 import com.felwal.markana.R
@@ -27,7 +27,7 @@ open class SettingsActivity :
     AbsSettingsActivity(dividerMode = DividerMode.IN_SECTION, indentEverything = false),
     SingleChoiceDialog.DialogListener,
     TextDialog.DialogListener,
-    NumberDialog.DialogListener {
+    DecimalDialog.DialogListener {
 
     // view
     private lateinit var binding: ActivitySettingsBinding
@@ -86,14 +86,16 @@ open class SettingsActivity :
                     iconRes = R.drawable.ic_color_24,
                     onSwitch = { prefs.notePreviewColor = !prefs.notePreviewColor }
                 ),
-                IntItem(
+                SliderItem(
                     title = getString(R.string.tv_settings_item_title_preview_max_lines),
                     desc = getQuantityString(
                         R.plurals.tv_settings_item_desc_preview_max_lines,
                         prefs.notePreviewMaxLines
                     ),
-                    value = prefs.notePreviewMaxLines,
-                    hint = "Default: 12",
+                    min = 0f,
+                    max = 20f,
+                    step = 1f,
+                    value = prefs.notePreviewMaxLines.toFloat(),
                     iconRes = R.drawable.ic_line_spacing_24,
                     tag = DIALOG_MAX_LINES
                 )
@@ -171,9 +173,9 @@ open class SettingsActivity :
         reflateViews()
     }
 
-    override fun onNumberDialogPositiveClick(input: Int, tag: String) {
+    override fun onDecimalDialogPositiveClick(input: Float, tag: String) {
         when (tag) {
-            DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input
+            DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input.toInt()
         }
         reflateViews()
     }

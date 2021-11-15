@@ -8,12 +8,12 @@
         <!-- primary -->
         <item name="colorPrimary">@color/red_primary</item>
         <item name="colorPrimaryVariant">@color/red_primary_dark</item>
-        <item name="colorOnPrimary">@color/fw_white</item>
+        <item name="colorOnPrimary">?android:colorBackground</item>
 
         <!-- secondary -->
-        <item name="colorSecondary">@color/red_accent</item>
-        <item name="colorSecondaryVariant">@color/red_primary</item>
-        <item name="colorOnSecondary">?android:colorBackground</item>
+        <item name="colorSecondary">?colorPrimary</item>
+        <item name="colorSecondaryVariant">?colorPrimaryVariant</item>
+        <item name="colorOnSecondary">?colorOnPrimary</item>
 
         <!-- drawable -->
         <item name="homeAsUpIndicator">@drawable/ic_arrow_back_24</item>
