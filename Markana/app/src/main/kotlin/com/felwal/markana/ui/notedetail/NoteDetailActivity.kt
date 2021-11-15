@@ -251,7 +251,8 @@ class NoteDetailActivity :
             note?.let {
                 //initMarkwon(it)
                 loadContent(it)
-                initUndoRedo(it)
+                // init undo redo after loaded content to ignore first text load
+                initUndoRedo()
             }
         }
         model.noteUri ?: model.createNote(createDocument)
@@ -350,8 +351,8 @@ class NoteDetailActivity :
         }
     }
 
-    private fun initUndoRedo(note: Note) {
-        val colorEnabled = note.getColor(this@NoteDetailActivity)
+    private fun initUndoRedo() {
+        val colorEnabled = getColorAttr(R.attr.colorControlActivated)
         val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
         val undoItem = binding.tb.menu.findItem(R.id.action_undo)
         val redoItem = binding.tb.menu.findItem(R.id.action_redo)

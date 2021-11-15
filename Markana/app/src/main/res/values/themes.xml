@@ -82,7 +82,7 @@
         <item name="colorSemiSurface">@color/semiSurface_blueLight_lt</item>
     </style>
 
-    <style name="Theme.Markana.Cyan">
+    <style name="Theme.Markana.Note.Cyan">
         <item name="colorPrimary">@color/material_cyan_500</item>
         <item name="colorSemiSurface">@color/semiSurface_cyan_lt</item>
     </style>
