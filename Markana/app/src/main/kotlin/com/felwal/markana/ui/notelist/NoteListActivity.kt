@@ -269,7 +269,7 @@ class NoteListActivity :
 
     private fun initRefreshLayout() {
         binding.srl.setOnRefreshListener(this)
-        binding.srl.setProgressBackgroundColorSchemeColor(getColorAttr(android.R.attr.colorBackground))
+        binding.srl.setProgressBackgroundColorSchemeColor(getColorAttr(R.attr.colorSurface))
         binding.srl.setColorSchemeColors(getColorAttr(R.attr.colorControlActivated))
     }
 
