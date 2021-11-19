@@ -3,19 +3,18 @@ package com.felwal.markana.ui.notedetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.forEach
 import com.felwal.android.util.coerceSelection
 import com.felwal.android.util.copyToClipboard
 import com.felwal.android.util.getColorAttr
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
+import com.felwal.android.util.getResIdAttr
 import com.felwal.android.util.makeMultilinePreventEnter
 import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.android.util.searchView
@@ -34,12 +33,12 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
-import com.felwal.markana.prefs
+import com.felwal.markana.util.closeIcon
+import com.felwal.markana.util.fixCloseIconRipple
 import com.felwal.markana.util.getResIdArray
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.outdent
-import com.felwal.markana.util.setCloseIcon
 import com.felwal.markana.util.toEpochSecond
 import com.felwal.markana.util.toggleBulletList
 import com.felwal.markana.util.toggleChecklist
@@ -153,7 +152,8 @@ class NoteDetailActivity :
             queryHint = getString(R.string.tv_notedetail_find_hint)
 
             // set close icon (the default is not of 'round' style)
-            setCloseIcon(R.drawable.ic_close_24)
+            closeIcon.setImageResource(R.drawable.ic_close_24)
+            fixCloseIconRipple()
 
             // set listener
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {

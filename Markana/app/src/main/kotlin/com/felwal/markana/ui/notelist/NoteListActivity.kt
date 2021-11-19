@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
@@ -18,6 +16,7 @@ import com.felwal.android.util.getDrawableCompat
 import com.felwal.android.util.getInteger
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
+import com.felwal.android.util.getResIdAttr
 import com.felwal.android.util.isPortrait
 import com.felwal.android.util.launchActivity
 import com.felwal.android.util.removeAll
@@ -35,7 +34,8 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
-import com.felwal.markana.util.setCloseIcon
+import com.felwal.markana.util.closeIcon
+import com.felwal.markana.util.fixCloseIconRipple
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
@@ -161,7 +161,8 @@ class NoteListActivity :
                     queryHint = getString(R.string.tv_notelist_search_hint)
 
                     // set close icon (the default is not of 'round' style)
-                    setCloseIcon(R.drawable.ic_close_24)
+                    closeIcon.setImageResource(R.drawable.ic_close_24)
+                    fixCloseIconRipple()
 
                     // set listener
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener{

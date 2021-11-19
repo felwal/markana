@@ -9,6 +9,7 @@ import androidx.annotation.ArrayRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import com.felwal.android.util.getResIdAttr
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.prefs
 import kotlin.math.round
@@ -41,7 +42,8 @@ val Float.px: Float get() =
 val Float.dp: Float get() =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, this, Resources.getSystem().displayMetrics)
 
-fun SearchView.setCloseIcon(@DrawableRes resId: Int) {
-    val ivClose = findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
-    ivClose.setImageResource(resId)
-}
+val SearchView.closeIcon: ImageView get() = findViewById(androidx.appcompat.R.id.search_close_btn)
+
+fun SearchView.fixCloseIconRipple() = closeIcon.setBackgroundResource(
+    context.getResIdAttr(android.R.attr.actionBarItemBackground)
+)
