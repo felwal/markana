@@ -36,6 +36,7 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
+import com.felwal.markana.util.submitListKeepScroll
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
@@ -167,6 +168,7 @@ class NoteListActivity :
                     // set listener
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String): Boolean {
+                            // clear focus to not reopen keyboard when activity is resumed
                             clearFocus()
                             return true
                         }
@@ -322,7 +324,9 @@ class NoteListActivity :
     }
 
     private fun submitItems(items: List<Note>) {
-        adapter.submitList(items)
+        // when searching, keeping scroll state results in irregularities
+        if (model.isSearching) adapter.submitList(items)
+        else adapter.submitListKeepScroll(items, binding.rv.layoutManager)
 
         // toggle empty page
         if (items.isEmpty()) {
