@@ -6,7 +6,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.felwal.android.util.getColorAttr
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.markana.R

@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.felwal.android.util.backgroundTint
-import com.felwal.android.util.getColorAttr
+import com.felwal.android.util.dp
+import com.felwal.android.util.getColorByAttr
+import com.felwal.android.util.px
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.prefs.SortBy
@@ -22,9 +24,7 @@ import com.felwal.markana.util.FORMATTER_EARLIER
 import com.felwal.markana.util.FORMATTER_THIS_YEAR
 import com.felwal.markana.util.FORMATTER_TODAY
 import com.felwal.markana.util.atStartOfYear
-import com.felwal.markana.util.dp
 import com.felwal.markana.util.fromEpochSecond
-import com.felwal.markana.util.px
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -114,12 +114,12 @@ class NoteListAdapter(
             // stroke
             else {
                 binding.ivBorder.isGone = false
-                binding.clNote.background.setTint(c.getColorAttr(android.R.attr.colorBackground))
+                binding.clNote.background.setTint(c.getColorByAttr(android.R.attr.colorBackground))
 
                 // check to not set stroke twice
                 if (!note.isSelected) {
                     (binding.ivBorder.background as GradientDrawable)
-                        .setStroke(1.px, c.getColorAttr(android.R.attr.listDivider))
+                        .setStroke(1.px, c.getColorByAttr(android.R.attr.listDivider))
                 }
             }
 
@@ -127,7 +127,7 @@ class NoteListAdapter(
             if (note.isSelected) {
                 binding.ivBorder.isGone = false
                 (binding.ivBorder.background as GradientDrawable)
-                    .setStroke(1.px, c.getColorAttr(R.attr.colorOnBackground))
+                    .setStroke(1.px, c.getColorByAttr(R.attr.colorOnBackground))
             }
 
             // mark pinned (with icon)
@@ -172,7 +172,7 @@ class NoteListAdapter(
             binding.ivPin.drawable.setTint(note.getColor(c))
             binding.clNote.background.setTint(
                 if (note.isSelected) c.getColor(R.color.red_accent_trans)
-                else c.getColorAttr(android.R.attr.colorBackground)
+                else c.getColorByAttr(android.R.attr.colorBackground)
             )
 
             // mark pinned

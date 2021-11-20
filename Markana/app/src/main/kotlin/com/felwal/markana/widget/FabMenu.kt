@@ -14,8 +14,8 @@ import com.felwal.android.util.ANIM_DURATION
 import com.felwal.android.util.backgroundTint
 import com.felwal.android.util.crossfadeIn
 import com.felwal.android.util.crossfadeOut
-import com.felwal.android.util.getColorAttr
-import com.felwal.android.util.getDrawableCompatFilter
+import com.felwal.android.util.getColorByAttr
+import com.felwal.android.util.getDrawableCompatWithFilter
 import com.felwal.markana.R
 import com.felwal.markana.databinding.ItemFabMenuBinding
 import com.felwal.markana.databinding.ItemFabMenuItemBinding
@@ -86,8 +86,8 @@ class FabMenu(
     }
 
     private fun animateFab() {
-        @ColorInt val closedColor: Int = context.getColorAttr(R.attr.colorSecondary)
-        @ColorInt val openColor: Int = context.getColorAttr(R.attr.colorSurface)
+        @ColorInt val closedColor: Int = context.getColorByAttr(R.attr.colorSecondary)
+        @ColorInt val openColor: Int = context.getColorByAttr(R.attr.colorSurface)
 
         @ColorInt val fromColor: Int
         @ColorInt val toColor: Int
@@ -97,13 +97,13 @@ class FabMenu(
         if (isMenuOpen) {
             fromColor = openColor
             toColor = closedColor
-            toIcon = context.getDrawableCompatFilter(R.drawable.ic_add_24, R.attr.colorOnSecondary)
+            toIcon = context.getDrawableCompatWithFilter(R.drawable.ic_add_24, R.attr.colorOnSecondary)
         }
         // animate to open menu
         else {
             fromColor = closedColor
             toColor = openColor
-            toIcon = context.getDrawableCompatFilter(R.drawable.ic_close_24, R.attr.colorControlActivated)
+            toIcon = context.getDrawableCompatWithFilter(R.drawable.ic_close_24, R.attr.colorControlActivated)
         }
 
         binding.fab.animateFab(fromColor, toColor, toIcon)

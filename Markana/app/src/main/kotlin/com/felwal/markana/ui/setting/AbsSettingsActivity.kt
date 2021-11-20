@@ -350,7 +350,7 @@ abstract class AbsSettingsActivity(
             tvValue.setTextRemoveIfEmpty(value)
 
             // view
-            root.enableRipple(this@AbsSettingsActivity)
+            root.enableRipple()
             vDivider.isInvisible = hideDivider
 
             // icon
@@ -374,7 +374,7 @@ abstract class AbsSettingsActivity(
             tvDesc.setTextRemoveIfEmpty(desc)
 
             // view
-            root.enableRipple(this@AbsSettingsActivity)
+            root.enableRipple()
             vDivider.isInvisible = hideDivider
 
             // icon

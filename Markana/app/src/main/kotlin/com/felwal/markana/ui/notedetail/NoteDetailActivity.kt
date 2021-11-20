@@ -9,12 +9,14 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import com.felwal.android.util.closeIcon
 import com.felwal.android.util.coerceSelection
 import com.felwal.android.util.copyToClipboard
-import com.felwal.android.util.getColorAttr
+import com.felwal.android.util.enableActionItemRipple
+import com.felwal.android.util.getColorByAttr
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
-import com.felwal.android.util.getResIdAttr
+import com.felwal.android.util.getResIdArray
 import com.felwal.android.util.makeMultilinePreventEnter
 import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.android.util.searchView
@@ -33,9 +35,6 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
-import com.felwal.markana.util.closeIcon
-import com.felwal.markana.util.fixCloseIconRipple
-import com.felwal.markana.util.getResIdArray
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.outdent
@@ -153,7 +152,7 @@ class NoteDetailActivity :
 
             // set close icon (the default is not of 'round' style)
             closeIcon.setImageResource(R.drawable.ic_close_24)
-            fixCloseIconRipple()
+            closeIcon.enableActionItemRipple()
 
             // set listener
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -352,7 +351,7 @@ class NoteDetailActivity :
     }
 
     private fun initUndoRedo() {
-        val colorEnabled = getColorAttr(R.attr.colorControlActivated)
+        val colorEnabled = getColorByAttr(R.attr.colorControlActivated)
         val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
         val undoItem = binding.tb.menu.findItem(R.id.action_undo)
         val redoItem = binding.tb.menu.findItem(R.id.action_redo)

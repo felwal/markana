@@ -10,13 +10,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.felwal.android.util.closeIcon
 import com.felwal.android.util.common
-import com.felwal.android.util.getColorAttr
+import com.felwal.android.util.enableActionItemRipple
+import com.felwal.android.util.getColorByAttr
 import com.felwal.android.util.getDrawableCompat
+import com.felwal.android.util.getDrawableCompatWithTint
 import com.felwal.android.util.getInteger
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
-import com.felwal.android.util.getResIdAttr
 import com.felwal.android.util.isPortrait
 import com.felwal.android.util.launchActivity
 import com.felwal.android.util.removeAll
@@ -34,8 +36,6 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
-import com.felwal.markana.util.closeIcon
-import com.felwal.markana.util.fixCloseIconRipple
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
@@ -162,10 +162,10 @@ class NoteListActivity :
 
                     // set close icon (the default is not of 'round' style)
                     closeIcon.setImageResource(R.drawable.ic_close_24)
-                    fixCloseIconRipple()
+                    closeIcon.enableActionItemRipple()
 
                     // set listener
-                    setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String): Boolean {
                             clearFocus()
                             return true
@@ -270,8 +270,8 @@ class NoteListActivity :
 
     private fun initRefreshLayout() {
         binding.srl.setOnRefreshListener(this)
-        binding.srl.setProgressBackgroundColorSchemeColor(getColorAttr(R.attr.colorSurface))
-        binding.srl.setColorSchemeColors(getColorAttr(R.attr.colorControlActivated))
+        binding.srl.setProgressBackgroundColorSchemeColor(getColorByAttr(R.attr.colorSurface))
+        binding.srl.setColorSchemeColors(getColorByAttr(R.attr.colorControlActivated))
     }
 
     override fun onRefresh() {
@@ -332,13 +332,17 @@ class NoteListActivity :
             if (model.isSearching) {
                 binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_search_title)
                 binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_search_message)
-                binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_search_24, R.attr.colorAccent))
+                binding.inEmpty.ivEmpty.setImageDrawable(
+                    getDrawableCompatWithTint(R.drawable.ic_search_24, R.attr.colorAccent)
+                )
             }
             // set new user empty page
             else {
                 binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_new_title)
                 binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_new_message)
-                binding.inEmpty.ivEmpty.setImageDrawable(getDrawableCompat(R.drawable.ic_note_24, R.attr.colorAccent))
+                binding.inEmpty.ivEmpty.setImageDrawable(
+                    getDrawableCompatWithTint(R.drawable.ic_note_24, R.attr.colorAccent)
+                )
             }
         }
         else binding.inEmpty.root.isGone = true
@@ -382,7 +386,7 @@ class NoteListActivity :
     private fun initToolbar() {
         setSupportActionBar(binding.tb)
         supportActionBar?.setHomeAsUpIndicator(
-            getDrawableCompat(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
+            getDrawableCompatWithTint(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
         )
     }
 
