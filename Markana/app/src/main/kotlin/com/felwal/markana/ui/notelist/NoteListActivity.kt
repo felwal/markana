@@ -390,7 +390,7 @@ class NoteListActivity :
     private fun initToolbar() {
         setSupportActionBar(binding.tb)
         supportActionBar?.setHomeAsUpIndicator(
-            getDrawableCompatWithTint(R.drawable.ic_cancel_24, R.attr.colorControlActivated)
+            getDrawableCompatWithTint(R.drawable.ic_close_24, R.attr.colorControlNormal)
         )
     }
 
