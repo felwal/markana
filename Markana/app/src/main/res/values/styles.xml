@@ -23,6 +23,7 @@
         <item name="elevation">@dimen/elev_ab</item>
         <item name="titleTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
+        <item name="collapseIcon">@drawable/ic_done_24</item>
     </style>
 
     <!-- widget -->
