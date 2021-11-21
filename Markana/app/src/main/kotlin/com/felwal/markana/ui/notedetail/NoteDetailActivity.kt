@@ -150,6 +150,9 @@ class NoteDetailActivity :
             // set hint (xml attribute doesn't work)
             queryHint = getString(R.string.tv_notedetail_find_hint)
 
+            // set background
+            setBackgroundResource(R.drawable.layer_searchview_bg)
+
             // set close icon (the default is not of 'round' style)
             closeIcon.setImageResource(R.drawable.ic_close_24)
             closeIcon.enableActionItemRipple()

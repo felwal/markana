@@ -161,6 +161,9 @@ class NoteListActivity :
                     // set hint (xml attribute doesn't work)
                     queryHint = getString(R.string.tv_notelist_search_hint)
 
+                    // set background
+                    setBackgroundResource(R.drawable.layer_searchview_bg)
+
                     // set close icon (the default is not of 'round' style)
                     closeIcon.setImageResource(R.drawable.ic_close_24)
                     closeIcon.enableActionItemRipple()
