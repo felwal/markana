@@ -11,7 +11,8 @@ private const val KEY_GRID_VIEW = "grid_view"
 
 private const val KEY_THEME = "theme"
 private const val KEY_COLOR_ITEMS = "preview_color"
-private const val KEY_SHOW_MIME = "show_mime"
+private const val KEY_SHOW_METADATA = "preview_metadata"
+private const val KEY_SHOW_MIME = "preview_mime"
 private const val KEY_MAX_LINES = "preview_max_lines"
 
 private const val KEY_MD_SYMBOL_EMPH = "symbol_italic"
@@ -80,6 +81,10 @@ class Prefs(c: Context) {
     var notePreviewColor: Boolean
         get() = sp.getBoolean(KEY_COLOR_ITEMS, true)
         set(value) = sp.putBoolean(KEY_COLOR_ITEMS, value)
+
+    var notePreviewMetadata: Boolean
+        get() = sp.getBoolean(KEY_SHOW_METADATA, false)
+        set(value) = sp.putBoolean(KEY_SHOW_METADATA, value)
 
     var notePreviewMime: Boolean
         get() = sp.getBoolean(KEY_SHOW_MIME, true)

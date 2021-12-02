@@ -26,11 +26,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="-2dp"
+            android:paddingStart="@dimen/spacing_diminutive"
             app:layout_constraintBottom_toBottomOf="@+id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_title"
             app:srcCompat="@drawable/ic_pin_16"
-            app:tint="@color/red_primary" />
+            app:tint="@color/red_primary"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -41,7 +43,7 @@
             android:textColor="?colorAccent"
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.Markana.Subtitle1"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_pin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="note.md" />
@@ -54,11 +56,25 @@
             android:maxLines="12"
             android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.Markana.Body2"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
             tools:text="Body text text text text ... \ntext text ..." />
+
+        <TextView
+            android:id="@+id/tv_metadata"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_diminutive"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.Markana.Caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_body"
+            tools:text="Modified 19 Aug"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

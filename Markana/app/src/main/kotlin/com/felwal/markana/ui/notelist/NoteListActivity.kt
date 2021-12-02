@@ -64,6 +64,7 @@ class NoteListActivity :
 
     // settings helper
     private var notePreviewColor = prefs.notePreviewColor
+    private var notePreviewMetadata = prefs.notePreviewMetadata
     private var notePreviewMime = prefs.notePreviewMime
     private var notePreviewMaxLines = prefs.notePreviewMaxLines
 
@@ -103,11 +104,13 @@ class NoteListActivity :
         // apply updated settings
         if (
             notePreviewColor != prefs.notePreviewColor
+            || notePreviewMetadata != prefs.notePreviewMetadata
             || notePreviewMime != prefs.notePreviewMime
             || notePreviewMaxLines != prefs.notePreviewMaxLines
         ) {
             adapter.notifyDataSetChanged()
             notePreviewColor = prefs.notePreviewColor
+            notePreviewMetadata = prefs.notePreviewMetadata
             notePreviewMime = prefs.notePreviewMime
             notePreviewMaxLines = prefs.notePreviewMaxLines
         }

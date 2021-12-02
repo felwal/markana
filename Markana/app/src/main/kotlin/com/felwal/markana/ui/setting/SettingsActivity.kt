@@ -14,6 +14,7 @@ import com.felwal.markana.data.prefs.Strong
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
+import com.felwal.markana.util.checkbox
 import com.felwal.markana.util.updateDayNight
 
 private const val DIALOG_THEME = "themeDialog"
@@ -79,12 +80,21 @@ open class SettingsActivity :
                     selectedIndex = prefs.themeInt,
                     iconRes = R.drawable.ic_theme_24,
                     tag = DIALOG_THEME
-                ),
+                )
+            ),
+            ItemSection(
+                title = getString(R.string.tv_settings_header_notepreview),
                 BooleanItem(
                     title = getString(R.string.tv_settings_item_title_preview_color),
                     value = prefs.notePreviewColor,
                     iconRes = R.drawable.ic_color_24,
                     onSwitch = { prefs.notePreviewColor = !prefs.notePreviewColor }
+                ),
+                BooleanItem(
+                    title = getString(R.string.tv_settings_item_title_preview_metadata),
+                    value = prefs.notePreviewMetadata,
+                    iconRes = R.drawable.ic_calendar_24,
+                    onSwitch = { prefs.notePreviewMetadata = !prefs.notePreviewMetadata }
                 ),
                 BooleanItem(
                     title = getString(R.string.tv_settings_item_title_preview_mime),
@@ -141,8 +151,8 @@ open class SettingsActivity :
                 BooleanItem(
                     title = getString(R.string.tv_settings_item_title_checkbox_space),
                     value = prefs.checkboxSpace,
-                    descOn = "- [ ]",
-                    descOff = "- []",
+                    descOn = checkbox(checked = false, emptySpace = true),
+                    descOff = checkbox(checked = false, emptySpace = false),
                     iconRes = R.drawable.ic_checkbox_blank_24,
                     onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
                 ),

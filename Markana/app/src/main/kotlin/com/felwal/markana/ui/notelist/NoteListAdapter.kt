@@ -82,8 +82,9 @@ class NoteListAdapter(
         fun bind(note: Note) {
             currentNote = note
 
-            // text
+            // title
             binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutMime
+            // body
             when {
                 prefs.notePreviewMaxLines <= 0 -> {
                     binding.tvBody.isGone = true
@@ -96,6 +97,17 @@ class NoteListAdapter(
                     binding.tvBody.maxLines = prefs.notePreviewMaxLines
                     binding.tvBody.isGone = false
                     binding.tvBody.text = note.content.trim() // TODO: dont get the full string
+                }
+            }
+            // metadata
+            binding.tvMetadata.isGone = !prefs.notePreviewMetadata
+            if (prefs.notePreviewMetadata) {
+                binding.tvMetadata.text =
+                if (prefs.sortBy == SortBy.OPENED) {
+                    "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
+                }
+                else {
+                    "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
                 }
             }
 
@@ -129,7 +141,7 @@ class NoteListAdapter(
             }
 
             // mark pinned (with icon)
-            binding.ivPin.isInvisible = !note.isPinned
+            binding.ivPin.isGone = !note.isPinned
         }
     }
 
@@ -174,7 +186,7 @@ class NoteListAdapter(
             )
 
             // mark pinned
-            binding.ivPin.isInvisible = !note.isPinned
+            binding.ivPin.isGone = !note.isPinned
         }
     }
 }

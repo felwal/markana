@@ -90,7 +90,7 @@
 
     <style name="TextAppearance.Markana.Caption">
         <item name="android:textSize">@dimen/type_caption</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textColor">?android:textColorTertiary</item>
     </style>
 
 </resources>

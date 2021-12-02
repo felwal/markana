@@ -9,6 +9,8 @@ import com.felwal.android.util.copy
 import com.felwal.android.util.updateEditable
 import com.felwal.markana.prefs
 
+fun checkbox(checked: Boolean, emptySpace: Boolean) = "$bullet[${if (checked) "x" else if (emptySpace) " " else ""}] "
+
 private val emph get() = prefs.emphSymbol
 private val strong get() = prefs.strongSymbol
 private const val strikethrough = "~~"
