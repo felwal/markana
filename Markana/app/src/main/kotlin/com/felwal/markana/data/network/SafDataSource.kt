@@ -8,7 +8,6 @@ import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
@@ -19,13 +18,14 @@ import com.felwal.android.util.tryToastLog
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.Tree
+import com.felwal.markana.util.LOG_TAG
+import com.felwal.markana.util.i
 import com.felwal.markana.util.isMime
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 
-private const val LOG_TAG = "Saf"
 private const val MIME_TEXT_TYPE = "text"
 private const val MIME_ANY = "*/*"
 private const val MIME_TEXT = "text/*"
@@ -128,7 +128,7 @@ class SafDataSource(private val applicationContext: Context) {
 
         if (wrongMimeCount > 0) {
             //applicationContext.coToast("$wrongMimeCount files were not linked due to wrong format")
-            Log.i(LOG_TAG, "$wrongMimeCount files were not linked due to wrong format")
+            i("$wrongMimeCount files were not linked due to wrong format")
         }
 
         return notes

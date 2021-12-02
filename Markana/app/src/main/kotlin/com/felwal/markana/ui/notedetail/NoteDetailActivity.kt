@@ -39,6 +39,7 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
+import com.felwal.markana.util.i
 import com.felwal.markana.util.indent
 import com.felwal.markana.util.insertThematicBreak
 import com.felwal.markana.util.outdent
@@ -67,8 +68,6 @@ import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
-private const val LOG_TAG = "NoteDetail"
-
 private const val EXTRA_COLOR_INDEX = "colorIndex"
 private const val EXTRA_NOTE_URI = "uri"
 private const val EXTRA_FIND_QUERY = "findQuery"
@@ -93,7 +92,7 @@ class NoteDetailActivity :
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
         // the user didn't pick a location; cancel activity
         uri ?: finish().also { return@registerForActivityResult }
-        Log.i(LOG_TAG, "create document uri result: $uri")
+        i("create document uri result: $uri")
 
         model.handleCreatedDocument(uri)
     }
@@ -439,7 +438,7 @@ class NoteDetailActivity :
 
         model.saveNote(note)
 
-        Log.i(LOG_TAG, "note saved: $note")
+        i("note saved: $note")
     }
 
     private fun clearAllFocus() {

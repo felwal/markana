@@ -36,12 +36,11 @@ import com.felwal.markana.databinding.ActivityNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
+import com.felwal.markana.util.i
 import com.felwal.markana.util.submitListKeepScroll
 import com.felwal.markana.util.updateDayNight
 import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
-
-private const val LOG_TAG = "NoteList"
 
 private const val DIALOG_DELETE = "deleteNotes"
 private const val DIALOG_UNLINK = "unlinkNotes"
@@ -71,13 +70,13 @@ class NoteListActivity :
     // saf result launcher
     private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
-        Log.i(LOG_TAG, "open document uri result: $uri")
+        i("open document uri result: $uri")
 
         model.handleOpenedDocument(uri)
     }
     private val openDocumentTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         uri ?: return@registerForActivityResult
-        Log.i(LOG_TAG, "open document tree uri result: $uri")
+        i("open document tree uri result: $uri")
 
         model.handleOpenedTree(uri)
     }
