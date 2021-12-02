@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:alpha="0.04"
+        android:alpha="0.08"
         android:color="?colorOnSurface" />
 
 </selector>

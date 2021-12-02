@@ -16,6 +16,7 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
     val noteData by lazy { MutableLiveData<Note>() }
     var noteUri: String? = null
     var isFindInNoteMode = false
+    var findInNoteLastQuery = ""
     var findInNoteQueryLength = 0
     var findInNoteOccurrenceIndices = listOf<Int>()
     private var findInNoteOccurrenceIndicesCursor = 0
@@ -23,12 +24,12 @@ class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
     // secondary
     val note: Note get() = noteData.value!!
     val findInNoteOccurrenceIndex: Int
-        get() =
-            findInNoteOccurrenceIndices[findInNoteOccurrenceIndicesCursor]
+        get() = findInNoteOccurrenceIndices[findInNoteOccurrenceIndicesCursor]
 
     // shallow
 
     fun findInNote(query: String, content: String) {
+        findInNoteLastQuery = query
         findInNoteQueryLength = query.length
         findInNoteOccurrenceIndices = content.findAll(query, ignoreCase = true)
         findInNoteOccurrenceIndicesCursor = 0

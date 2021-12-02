@@ -3,14 +3,17 @@ package com.felwal.markana.ui.notedetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.widget.addTextChangedListener
 import com.felwal.android.util.closeIcon
 import com.felwal.android.util.coerceSelection
+import com.felwal.android.util.coerceSubstring
 import com.felwal.android.util.copyToClipboard
 import com.felwal.android.util.enableActionItemRipple
 import com.felwal.android.util.getColorByAttr
@@ -106,6 +109,7 @@ class NoteDetailActivity :
 
         initToolbar()
         initViews()
+        initMarkwon()
         initData()
     }
 
@@ -137,11 +141,15 @@ class NoteDetailActivity :
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                     setFindInNoteMode(true)
+                    // dont suppress expansion
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
                     setFindInNoteMode(false)
+                    // save last query even if not submitted
+                    model.findInNoteLastQuery = searchView.query.toString()
+                    // dont suppress collapse
                     return true
                 }
             })
@@ -162,6 +170,9 @@ class NoteDetailActivity :
                 override fun onQueryTextSubmit(query: String): Boolean {
                     model.findInNote(query, binding.etNoteBody.string)
 
+                    // enable prev/next actions if results were found
+                    setFindInNoteNextAndPreviousState(model.findInNoteOccurrenceIndices.isNotEmpty())
+
                     toast(
                         getQuantityString(
                             R.plurals.toast_i_occurrences_found,
@@ -173,7 +184,11 @@ class NoteDetailActivity :
                     return true
                 }
 
-                override fun onQueryTextChange(newText: String): Boolean = true
+                override fun onQueryTextChange(newText: String): Boolean {
+                    // disable prev/next actions to not get any discontinuity between entered text and find results
+                    setFindInNoteNextAndPreviousState(false)
+                    return true
+                }
             })
         }
 
@@ -202,8 +217,16 @@ class NoteDetailActivity :
                 checkedIndex = model.note.colorIndex,
                 tag = DIALOG_COLOR
             ).show(supportFragmentManager)
-            R.id.action_find_previous -> selectPreviousFindInNoteOccurrence()
-            R.id.action_find_next -> selectNextFindInNoteOccurrence()
+            R.id.action_find -> {
+                // get this before clearing
+                val selectedText = etCurrentFocus?.selectedText?.takeIf { it != "" }
+                // clear selection to not get the context menu on every result
+                etCurrentFocus?.clearSelection()
+                // we need to expand it manually to use setQuery
+                item.expandActionView()
+                // find with selected text or last saved query
+                item.searchView.setQuery(selectedText ?: model.findInNoteLastQuery, true)
+            }
             R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
             R.id.action_delete -> alertDialog(
                 title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
@@ -212,7 +235,19 @@ class NoteDetailActivity :
                 tag = DIALOG_DELETE
             ).show(supportFragmentManager)
 
-            // bab
+            // find tb
+            R.id.action_find_previous -> selectPreviousFindInNoteOccurrence()
+            R.id.action_find_next -> selectNextFindInNoteOccurrence()
+
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    private fun onBabOptionsItemSelected(item: MenuItem): Boolean {
+        val etCurrentFocus = currentFocus as? EditText
+
+        when (item.itemId) {
             R.id.action_bold -> etCurrentFocus?.toggleStrong()
             R.id.action_italic -> etCurrentFocus?.toggleEmph()
             R.id.action_strikethrough -> etCurrentFocus?.toggleStrikethrough()
@@ -226,8 +261,9 @@ class NoteDetailActivity :
             R.id.action_indent -> etCurrentFocus?.indent()
             R.id.action_scenebreak -> etCurrentFocus?.insertThematicBreak()
 
-            else -> return super.onOptionsItemSelected(item)
+            else -> return false
         }
+
         return true
     }
 
@@ -251,7 +287,6 @@ class NoteDetailActivity :
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
             note?.let {
-                //initMarkwon(it)
                 loadContent(it)
                 // init undo redo after loaded content to ignore first text load
                 initUndoRedo()
@@ -277,15 +312,20 @@ class NoteDetailActivity :
         }
 
         // bab menu listener
-        binding.bab.setOnMenuItemClickListener(::onOptionsItemSelected)
+        binding.bab.setOnMenuItemClickListener(::onBabOptionsItemSelected)
 
         // animate tb elevation on scroll
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
             binding.ab.isSelected = binding.nsvNote.canScrollVertically(-1)
         }
+
+        binding.etNoteBody.addTextChangedListener {
+            // disable prev/next actions to not get any discontinuity between find query and body content
+            setFindInNoteNextAndPreviousState(false)
+        }
     }
 
-    private fun initMarkwon(note: Note) {
+    private fun initMarkwon() {
         val theme = MarkwonTheme.builderWithDefaults(this).run {
             build()
         }
@@ -297,9 +337,9 @@ class NoteDetailActivity :
 
         val editor = MarkwonEditor.builder(markwon).run {
             // change color
-            /*punctuationSpan(ForegroundColorSpan::class.java) {
-                ForegroundColorSpan(note.getColor(this@NoteDetailActivity))
-            }*/
+            punctuationSpan(ForegroundColorSpan::class.java) {
+                ForegroundColorSpan(getColorByAttr(R.attr.colorPrimary))
+            }
 
             // emphasis
             useEditHandler(StrongEmphasisSpan(), "**", "__")
@@ -352,6 +392,10 @@ class NoteDetailActivity :
             }
         }
     }
+
+    private val EditText.selectedText get() = string.coerceSubstring(selectionStart, selectionEnd)
+
+    private fun EditText.clearSelection() = setSelection(selectionStart)
 
     private fun initUndoRedo() {
         val colorEnabled = getColorByAttr(R.attr.colorControlActivated)
@@ -413,6 +457,7 @@ class NoteDetailActivity :
         if (!enabled) binding.etNoteBody.clearFocus()
 
         // update tb
+        // TODO: replace tb?
         binding.tb.menu.run {
             findItem(R.id.action_find_previous).isVisible = enabled
             findItem(R.id.action_find_next).isVisible = enabled
@@ -422,6 +467,21 @@ class NoteDetailActivity :
             findItem(R.id.action_color).isVisible = !enabled
             findItem(R.id.action_clipboard).isVisible = !enabled
             findItem(R.id.action_delete).isVisible = !enabled
+        }
+    }
+
+    private fun setFindInNoteNextAndPreviousState(enabled: Boolean) {
+        val colorEnabled = getColorByAttr(R.attr.colorControlActivated)
+        val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
+        val itemColor = if (enabled) colorEnabled else colorDisabled
+
+        binding.tb.menu.findItem(R.id.action_find_previous).apply {
+            isEnabled = enabled
+            icon?.setTint(itemColor)
+        }
+        binding.tb.menu.findItem(R.id.action_find_next).apply {
+            isEnabled = enabled
+            icon?.setTint(itemColor)
         }
     }
 
