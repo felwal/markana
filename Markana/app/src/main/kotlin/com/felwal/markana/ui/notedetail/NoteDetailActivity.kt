@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import com.felwal.android.util.closeIcon
 import com.felwal.android.util.coerceSelection
@@ -109,7 +110,6 @@ class NoteDetailActivity :
 
         initToolbar()
         initViews()
-        initMarkwon()
         initData()
     }
 
@@ -287,6 +287,7 @@ class NoteDetailActivity :
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
             note?.let {
+                initMarkwon(it)
                 loadContent(it)
                 // init undo redo after loaded content to ignore first text load
                 initUndoRedo()
@@ -325,7 +326,9 @@ class NoteDetailActivity :
         }
     }
 
-    private fun initMarkwon() {
+    private fun initMarkwon(note: Note) {
+        if (note.extension != "md") return
+
         val theme = MarkwonTheme.builderWithDefaults(this).run {
             build()
         }
@@ -368,6 +371,8 @@ class NoteDetailActivity :
     }
 
     private fun loadContent(note: Note) {
+        binding.bab.isGone = note.extension != "md"
+
         val isInitialLoad = binding.etNoteTitle.string == "" && binding.etNoteBody.string == ""
 
         // set content
@@ -375,7 +380,7 @@ class NoteDetailActivity :
         binding.etNoteBody.setText(note.content)
 
         if (isInitialLoad) {
-            // find action: get findQuery extra, open search view and fire search
+            // find action: get findQuery extra, open search view and submit search
             intent.getStringExtra(EXTRA_FIND_QUERY)?.let { query ->
                 binding.tb.menu.findItem(R.id.action_find).apply {
                     expandActionView()

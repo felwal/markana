@@ -6,7 +6,6 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -83,7 +82,7 @@ class NoteListAdapter(
             currentNote = note
 
             // title
-            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutMime
+            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutExtension
             // body
             when {
                 prefs.notePreviewMaxLines <= 0 -> {
@@ -168,7 +167,7 @@ class NoteListAdapter(
             currentNote = note
 
             // text
-            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutMime
+            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutExtension
             binding.tvModified.text =
                 if (prefs.sortBy == SortBy.OPENED) {
                     "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"

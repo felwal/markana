@@ -3,6 +3,8 @@ package com.felwal.markana.util
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.felwal.android.util.fillUp
+import com.felwal.android.util.toNullable
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.prefs
 
@@ -33,3 +35,13 @@ fun <T, VH : RecyclerView.ViewHolder> ListAdapter<T, VH>.submitListKeepScroll(
         commitCallback?.invoke()
     }
 }
+
+fun CharSequence.split(
+    vararg delimiters: String,
+    lowerLimit: Int,
+    upperLimit: Int,
+    ignoreCase: Boolean = false
+): List<String?> = split(*delimiters, ignoreCase = ignoreCase, limit = upperLimit)
+    .toMutableList()
+    .toNullable()
+    .apply { fillUp(null, lowerLimit) }
