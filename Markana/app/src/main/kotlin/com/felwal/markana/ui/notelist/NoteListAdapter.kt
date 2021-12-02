@@ -10,8 +10,6 @@ import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.felwal.android.util.backgroundTint
-import com.felwal.android.util.dp
 import com.felwal.android.util.getColorByAttr
 import com.felwal.android.util.px
 import com.felwal.markana.R
@@ -85,7 +83,7 @@ class NoteListAdapter(
             currentNote = note
 
             // text
-            binding.tvTitle.text = note.filename
+            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutMime
             when {
                 prefs.notePreviewMaxLines <= 0 -> {
                     binding.tvBody.isGone = true
@@ -158,7 +156,7 @@ class NoteListAdapter(
             currentNote = note
 
             // text
-            binding.tvTitle.text = note.filename
+            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutMime
             binding.tvModified.text =
                 if (prefs.sortBy == SortBy.OPENED) {
                     "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"

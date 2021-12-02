@@ -64,6 +64,7 @@ class NoteListActivity :
 
     // settings helper
     private var notePreviewColor = prefs.notePreviewColor
+    private var notePreviewMime = prefs.notePreviewMime
     private var notePreviewMaxLines = prefs.notePreviewMaxLines
 
     // saf result launcher
@@ -100,9 +101,14 @@ class NoteListActivity :
         if (fabMenu.isMenuOpen) fabMenu.closeMenu()
 
         // apply updated settings
-        if (notePreviewColor != prefs.notePreviewColor || notePreviewMaxLines != prefs.notePreviewMaxLines) {
+        if (
+            notePreviewColor != prefs.notePreviewColor
+            || notePreviewMime != prefs.notePreviewMime
+            || notePreviewMaxLines != prefs.notePreviewMaxLines
+        ) {
             adapter.notifyDataSetChanged()
             notePreviewColor = prefs.notePreviewColor
+            notePreviewMime = prefs.notePreviewMime
             notePreviewMaxLines = prefs.notePreviewMaxLines
         }
     }

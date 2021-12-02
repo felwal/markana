@@ -15,6 +15,11 @@ fun String.isMime(type: String, subType: String): Boolean {
     return thisType == type && (thisSubtype == subType || subType == "*")
 }
 
+fun String.asFilenameWithoutMime(): String {
+    val (filename, mime) = split(".", limit = 2)
+    return filename
+}
+
 // uri
 
 /**

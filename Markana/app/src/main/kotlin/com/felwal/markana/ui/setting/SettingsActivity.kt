@@ -86,6 +86,14 @@ open class SettingsActivity :
                     iconRes = R.drawable.ic_color_24,
                     onSwitch = { prefs.notePreviewColor = !prefs.notePreviewColor }
                 ),
+                BooleanItem(
+                    title = getString(R.string.tv_settings_item_title_preview_mime),
+                    descOn = "filename.md",
+                    descOff = "filename",
+                    value = prefs.notePreviewMime,
+                    iconRes = R.drawable.ic_file_24,
+                    onSwitch = { prefs.notePreviewMime = !prefs.notePreviewMime }
+                ),
                 SliderItem(
                     title = getString(R.string.tv_settings_item_title_preview_max_lines),
                     desc = getQuantityString(

@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.markana.R
+import com.felwal.markana.util.asFilenameWithoutMime
 
 const val ID_AUTO_GENERATE = 0L // must be 0 to enable autoincrement
 const val URI_DEFAULT = ""
@@ -26,6 +27,8 @@ data class Note(
     @PrimaryKey(autoGenerate = true) var id: Long = ID_AUTO_GENERATE
 ) {
     @Ignore var isSelected: Boolean = false
+
+    val filenameWithoutMime get() = filename.asFilenameWithoutMime()
 
     @ColorInt
     fun getColor(c: Context) = c.getIntegerArray(R.array.note_palette)[colorIndex]
