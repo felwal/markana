@@ -140,7 +140,7 @@ class NoteListActivity :
                     SortBy.OPENED -> R.id.action_sort_opened
                 }
             )?.isChecked = true
-            findItem(R.id.action_sort_asc)?.isChecked = prefs.ascending
+            findItem(R.id.action_sort_reverse)?.isChecked = prefs.reverseOrder
 
             // set gridView
             findItem(R.id.action_view_toggle)?.let {
@@ -250,9 +250,9 @@ class NoteListActivity :
                 prefs.sortByInt = SortBy.OPENED.ordinal
                 onOptionsRadioItemSelected(item)
             }
-            R.id.action_sort_asc -> {
+            R.id.action_sort_reverse -> {
                 item.isChecked = !item.isChecked
-                prefs.ascending = item.isChecked
+                prefs.reverseOrder = item.isChecked
                 model.loadNotes()
             }
 

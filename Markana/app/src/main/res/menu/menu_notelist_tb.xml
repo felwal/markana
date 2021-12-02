@@ -44,8 +44,8 @@
                 android:id="@+id/group_sort_order"
                 android:checkableBehavior="all">
                 <item
-                    android:id="@+id/action_sort_asc"
-                    android:title="@string/action_sort_asc" />
+                    android:id="@+id/action_sort_reverse"
+                    android:title="@string/action_sort_reverse" />
             </group>
         </menu>
 

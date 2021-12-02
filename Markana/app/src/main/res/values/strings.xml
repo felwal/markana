@@ -20,7 +20,7 @@
     <string name="action_sort_name">Name</string>
     <string name="action_sort_modified">Modified</string>
     <string name="action_sort_opened">Opened</string>
-    <string name="action_sort_asc">Ascending</string>
+    <string name="action_sort_reverse">Reverse order</string>
     <string name="action_settings">Settings</string>
 
     <!-- notelist selection -->

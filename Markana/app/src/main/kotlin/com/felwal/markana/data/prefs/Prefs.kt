@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 private const val FILENAME = "com.felwal.markana.data.prefs"
 
 private const val KEY_SORT_BY = "sort_by"
-private const val KEY_SORT_ORDER = "sort_order"
+private const val KEY_SORT_ORDER_REVERSED = "sort_order_reversed"
 private const val KEY_GRID_VIEW = "grid_view"
 
 private const val KEY_THEME = "theme"
@@ -63,9 +63,14 @@ class Prefs(c: Context) {
         get() = sp.getInt(KEY_SORT_BY, 0)
         set(value) = sp.putInt(KEY_SORT_BY, value)
 
-    var ascending: Boolean
-        get() = sp.getBoolean(KEY_SORT_ORDER, true)
-        set(value) = sp.putBoolean(KEY_SORT_ORDER, value)
+    val ascending: Boolean get() = when (sortBy) {
+        SortBy.NAME -> !reverseOrder
+        SortBy.MODIFIED -> reverseOrder
+        SortBy.OPENED -> reverseOrder
+    }
+    var reverseOrder: Boolean
+        get() = sp.getBoolean(KEY_SORT_ORDER_REVERSED, false)
+        set(value) = sp.putBoolean(KEY_SORT_ORDER_REVERSED, value)
 
     var gridView: Boolean
         get() = sp.getBoolean(KEY_GRID_VIEW, true)
