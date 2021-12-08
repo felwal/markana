@@ -6,18 +6,24 @@ import android.view.KeyEvent
 import androidx.appcompat.widget.AppCompatEditText
 import com.felwal.android.util.hideKeyboard
 
-/**
- * An EditText which clears focus and hides keyboard on back press.
- */
-class AutoUnfocusEditText(
+class NotepadEditText(
     context: Context,
     attrs: AttributeSet? = null
 ) : AppCompatEditText(context, attrs) {
 
+    /**
+     * Clear focus and hide keyboard on back press
+     */
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent): Boolean =
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             hideKeyboard()
             true
         }
         else false
+
+    /**
+     * Don't allow pasting text with rich text formatting
+     */
+    override fun onTextContextMenuItem(id: Int): Boolean =
+        super.onTextContextMenuItem(if (id == android.R.id.paste) android.R.id.pasteAsPlainText else id)
 }
