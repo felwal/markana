@@ -13,15 +13,23 @@
     android:clipToPadding="false"
     tools:visibility="visible">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_menu_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_menu_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Widget.Markana.Fab.Mini" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_menu_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Markana.Fab.Mini" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_menu_item_title"
@@ -29,9 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_small"
         android:textAppearance="@style/TextAppearance.Markana.Body2"
-        app:layout_constraintBottom_toBottomOf="@+id/fab_menu_item"
-        app:layout_constraintEnd_toStartOf="@+id/fab_menu_item"
-        app:layout_constraintTop_toTopOf="@+id/fab_menu_item"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_menu_item"
+        app:layout_constraintEnd_toStartOf="@+id/ll_menu_item"
+        app:layout_constraintTop_toTopOf="@+id/ll_menu_item"
         app:layout_constraintVertical_bias="0.4"
         tools:text="Item" />
 

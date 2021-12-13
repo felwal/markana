@@ -1,7 +1,6 @@
 package com.felwal.markana.ui.notelist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
@@ -302,7 +301,7 @@ class NoteListActivity :
             binding.ab.isSelected = binding.rv.canScrollVertically(-1)
 
             // show/hide fab
-            fabMenu.showHideOnScroll(scrollY - oldScrollY)
+            fabMenu.updateVisibilityOnScroll(scrollY - oldScrollY)
         }
 
         // adapter
