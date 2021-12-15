@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.felwal.android.util.canScrollUp
 import com.felwal.android.util.closeIcon
 import com.felwal.android.util.common
 import com.felwal.android.util.enableActionItemRipple
@@ -38,7 +39,6 @@ import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.i
 import com.felwal.markana.util.submitListKeepScroll
 import com.felwal.markana.util.updateDayNight
-import com.felwal.markana.widget.FabMenu
 import com.google.android.material.appbar.AppBarLayout
 
 private const val DIALOG_DELETE = "deleteNotes"
@@ -58,7 +58,6 @@ class NoteListActivity :
     // view
     private lateinit var binding: ActivityNotelistBinding
     private lateinit var adapter: NoteListAdapter
-    private lateinit var fabMenu: FabMenu
 
     // settings helper
     private var notePreviewColor = prefs.notePreviewColor
@@ -87,6 +86,7 @@ class NoteListActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityNotelistBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.fam.onSetContentView()
 
         initToolbar()
         initFabMenu()
@@ -97,7 +97,7 @@ class NoteListActivity :
 
     override fun onRestart() {
         super.onRestart()
-        if (fabMenu.isMenuOpen) fabMenu.closeMenu()
+        if (binding.fam.isMenuOpen) binding.fam.closeMenu()
 
         // apply updated settings
         if (
@@ -121,7 +121,7 @@ class NoteListActivity :
     }
 
     override fun onBackPressed() = when {
-        fabMenu.isMenuOpen -> fabMenu.closeMenu()
+        binding.fam.isMenuOpen -> binding.fam.closeMenu()
         model.isSelectionMode -> emptySelection()
         else -> super.onBackPressed()
     }
@@ -298,10 +298,10 @@ class NoteListActivity :
         // animate tb and fab on scroll
         binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // animate tb
-            binding.ab.isSelected = binding.rv.canScrollVertically(-1)
+            binding.ab.isSelected = binding.rv.canScrollUp()
 
             // show/hide fab
-            fabMenu.updateVisibilityOnScroll(scrollY - oldScrollY)
+            binding.fam.updateVisibilityOnScroll(scrollY - oldScrollY)
         }
 
         // adapter
@@ -365,7 +365,7 @@ class NoteListActivity :
     // fab
 
     private fun initFabMenu() {
-        fabMenu = FabMenu(this, layoutInflater, binding.root).apply {
+        binding.fam.apply {
             // create note
             addItem(
                 getString(R.string.tv_notelist_fab_create),

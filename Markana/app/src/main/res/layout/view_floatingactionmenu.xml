@@ -5,62 +5,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
     android:paddingTop="@dimen/spacing_tiny"
     android:paddingBottom="@dimen/spacing_fab"
     android:paddingStart="@dimen/spacing_small"
     android:paddingEnd="@dimen/spacing_fab"
-    android:orientation="vertical"
+    android:layout_gravity="bottom|end"
     android:clipToPadding="false"
-    android:elevation="@dimen/elev_fabmenu"
-    app:layout_constraintBottom_toBottomOf="@+id/cdl_main"
-    app:layout_constraintEnd_toEndOf="parent">
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:theme="?floatingActionMenuTheme">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_diminutive"
-        android:layout_gravity="end|bottom">
+        android:layout_gravity="end|bottom"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            app:backgroundTint="?closedFabColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_add_24"
-            app:tint="?colorOnSecondary"
-            style="@style/Widget.Markana.Fab" />
+            app:srcCompat="?closedIconSrc"
+            app:tint="?closedIconTint"
+            tools:elevation="@dimen/elev_fab"
+            style="?mainFabStyle" />
 
         <ImageView
             android:id="@+id/ivFabClosedIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="9dp"
+            android:elevation="@dimen/elev_fab_pressed_overlay"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_add_24"
-            app:tint="?colorOnSecondary"
+            app:srcCompat="?closedIconSrc"
+            app:tint="?closedIconTint"
             tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/ivFabOpenedIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="9dp"
+            android:elevation="@dimen/elev_fab_pressed_overlay"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_close_24"
-            app:tint="?colorControlActivated"
-            tools:visibility="visible"/>
+            app:srcCompat="?openedIconSrc"
+            app:tint="?openedIconTint"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

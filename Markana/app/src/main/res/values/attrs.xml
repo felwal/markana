@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="colorSemiSurface" format="color|reference"/>
+    <attr name="colorSemiSurface" format="color|reference" />
+    <attr name="floatingActionMenuTheme" format="reference" />
+
+    <declare-styleable name="FloatingActionMenu">
+        <attr name="mainFabStyle" format="reference" />
+        <attr name="miniFabStyle" format="reference" />
+
+        <attr name="closedFabColor" format="color|reference" />
+        <attr name="openedFabColor" format="color|reference" />
+        <attr name="miniFabColor" format="color|reference" />
+
+        <attr name="closedIconTint" format="color|reference" />
+        <attr name="openedIconTint" format="color|reference" />
+        <attr name="miniIconTint" format="color|reference" />
+
+        <attr name="closedIconSrc" format="reference" />
+        <attr name="openedIconSrc" format="reference" />
+
+        <attr name="overlayAlpha" format="float|reference" />
+        <attr name="overlayElevation" format="dimension|reference" />
+
+        <attr name="animDuration" format="integer|reference" />
+        <attr name="animRotation" format="float|reference" />
+
+        <attr name="textAppearance" format="reference" />
+        <attr name="firstMenuItemAsMainFab" format="boolean|reference" />
+    </declare-styleable>
 
 </resources>

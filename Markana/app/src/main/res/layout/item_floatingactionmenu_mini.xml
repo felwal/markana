@@ -11,14 +11,16 @@
     android:layout_gravity="end"
     android:visibility="gone"
     android:clipToPadding="false"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:theme="?floatingActionMenuTheme">
 
     <LinearLayout
         android:id="@+id/ll_menu_item"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/diameter_fab_mini_container"
+        android:layout_height="@dimen/diameter_fab_mini_container"
         android:layout_gravity="center_horizontal"
         android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,7 +29,11 @@
             android:id="@+id/fab_menu_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.Markana.Fab.Mini" />
+            android:tint="?miniIconTint"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            app:backgroundTint="?miniFabColor"
+            style="?miniFabStyle" />
 
     </LinearLayout>
 
@@ -36,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_small"
-        android:textAppearance="@style/TextAppearance.Markana.Body2"
+        android:textAppearance="?textAppearance"
         app:layout_constraintBottom_toBottomOf="@+id/ll_menu_item"
         app:layout_constraintEnd_toStartOf="@+id/ll_menu_item"
         app:layout_constraintTop_toTopOf="@+id/ll_menu_item"

@@ -11,7 +11,6 @@
     <dimen name="spacing_diminutive">4dp</dimen>
 
     <!-- specific -->
-    <dimen name="spacing_fab">@dimen/spacing_small</dimen>
     <dimen name="spacing_settings_first_header_top">@dimen/spacing_tiny</dimen>
     <dimen name="spacing_settings_item_horizontal">@dimen/spacing_small</dimen>
     <dimen name="spacing_settings_item_vertical">@dimen/spacing_small</dimen>
@@ -37,8 +36,6 @@
     <dimen name="elev_ab">4dp</dimen>
     <dimen name="elev_nb">8dp</dimen>
     <dimen name="elev_fab">6dp</dimen>
-    <dimen name="elev_overlay">9dp</dimen>
-    <dimen name="elev_fabmenu">10dp</dimen>
 
     <!-- typography -->
 
@@ -50,5 +47,11 @@
     <dimen name="type_body1">16sp</dimen>
     <dimen name="type_body2">14sp</dimen>
     <dimen name="type_caption">12sp</dimen>
+
+    <dimen name="spacing_fab">@dimen/spacing_small</dimen>
+    <dimen name="elev_fam_overlay">9dp</dimen>
+    <dimen name="elev_fam">10dp</dimen>
+    <dimen name="diameter_fab_mini_container">48dp</dimen>
+    <dimen name="elev_fab_pressed_overlay">15dp</dimen>
 
 </resources>

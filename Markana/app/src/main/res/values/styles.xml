@@ -28,6 +28,34 @@
 
     <!-- widget -->
 
+    <style name="ThemeOverlay.Markana.Fam" parent="">
+        <item name="android:elevation">@dimen/elev_fam</item>
+
+        <item name="mainFabStyle">@style/Widget.Markana.Fab</item>
+        <item name="miniFabStyle">@style/Widget.Markana.Fab.Mini</item>
+
+        <item name="closedFabColor">?colorSecondary</item>
+        <item name="openedFabColor">?colorSurface</item>
+        <item name="miniFabColor">?colorSecondary</item>
+
+        <item name="closedIconTint">?colorOnSecondary</item>
+        <item name="openedIconTint">?colorControlActivated</item>
+        <item name="miniIconTint">?colorOnSecondary</item>
+
+        <item name="closedIconSrc">@drawable/ic_add_24</item>
+        <item name="openedIconSrc">@drawable/ic_close_24</item>
+
+        <item name="textAppearance">@style/TextAppearance.Markana.Body2</item>
+
+        <item name="overlayAlpha">0.96</item>
+        <item name="overlayElevation">@dimen/elev_fam_overlay</item>
+
+        <item name="animDuration">150</item>
+        <item name="animRotation">135</item>
+
+        <item name="firstMenuItemAsMainFab">false</item>
+    </style>
+
     <style name="Widget.Markana.Fab" parent="">
         <item name="android:elevation">@dimen/elev_fab</item>
         <item name="android:focusable">true</item>

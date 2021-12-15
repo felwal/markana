@@ -45,13 +45,3 @@ fun CharSequence.split(
     .toMutableList()
     .toNullable()
     .apply { fillUp(null, lowerLimit) }
-
-class MathUtils {
-    companion object {
-        fun signum(value: Number) = if (value.toFloat() > 0) 1 else if (value.toFloat() < 0) -1 else 0
-
-        fun signum(positive: Boolean?) = if (positive == true) 1 else if (positive == false) -1 else 0
-    }
-}
-
-val Boolean.sign get() = MathUtils.signum(this)
