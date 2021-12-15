@@ -48,10 +48,4 @@
     <dimen name="type_body2">14sp</dimen>
     <dimen name="type_caption">12sp</dimen>
 
-    <dimen name="spacing_fab">@dimen/spacing_small</dimen>
-    <dimen name="elev_fam_overlay">9dp</dimen>
-    <dimen name="elev_fam">10dp</dimen>
-    <dimen name="diameter_fab_mini_container">48dp</dimen>
-    <dimen name="elev_fab_pressed_overlay">15dp</dimen>
-
 </resources>

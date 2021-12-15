@@ -89,7 +89,7 @@ class NoteListActivity :
         binding.fam.onSetContentView()
 
         initToolbar()
-        initFabMenu()
+        initFam()
         initRecycler()
         initRefreshLayout()
         initData()
@@ -364,7 +364,7 @@ class NoteListActivity :
 
     // fab
 
-    private fun initFabMenu() {
+    private fun initFam() {
         binding.fam.apply {
             // create note
             addItem(

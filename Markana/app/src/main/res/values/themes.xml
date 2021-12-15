@@ -29,7 +29,7 @@
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Felwal.Dialog</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Markana.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
-        <item name="floatingActionMenuTheme">@style/ThemeOverlay.Markana.Fam</item>
+        <item name="fw_floatingActionMenuTheme">@style/ThemeOverlay.Markana.Fam</item>
     </style>
 
     <!-- light theme -->
