@@ -53,8 +53,8 @@ interface NoteDao {
     @Query("UPDATE notes SET filename = :filename, content = :content WHERE uri = :uri")
     suspend fun updateNoteContent(uri: String, filename: String, content: String)
 
-    @Query("UPDATE notes SET pinned = :isPinned, color_index = :colorIndex WHERE uri = :uri")
-    suspend fun updateNoteMetadata(uri: String, isPinned: Boolean, colorIndex: Int)
+    @Query("UPDATE notes SET pinned = :isPinned, archived = :isArchived, color_index = :colorIndex WHERE uri = :uri")
+    suspend fun updateNoteMetadata(uri: String, isPinned: Boolean, isArchived: Boolean, colorIndex: Int)
 
     @Delete
     suspend fun deleteNote(vararg notes: Note)
@@ -126,7 +126,7 @@ interface NoteDao {
         }
 
     private fun orderBy(sortBy: SortBy, asc: Boolean) =
-        " ORDER BY pinned DESC, " +
+        " ORDER BY pinned DESC, archived ASC, " +
             when (sortBy) {
                 SortBy.NAME -> "lower(filename) ${order(asc)}, filename "
                 SortBy.MODIFIED -> "modified "

@@ -3,6 +3,7 @@ package com.felwal.markana.ui.notelist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -24,6 +25,7 @@ import com.felwal.android.util.launchActivity
 import com.felwal.android.util.removeAll
 import com.felwal.android.util.searchView
 import com.felwal.android.util.setOptionalIconsVisible
+import com.felwal.android.util.toast
 import com.felwal.android.widget.dialog.AlertDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
 import com.felwal.android.widget.dialog.alertDialog
@@ -45,6 +47,8 @@ private const val DIALOG_DELETE = "deleteNotes"
 private const val DIALOG_UNLINK = "unlinkNotes"
 private const val DIALOG_UNLINK_TREE = "unlinkTrees"
 private const val DIALOG_COLOR = "colorNotes"
+private const val DIALOG_LABEL = "labelNotes"
+private const val DIALOG_ADD_LABEL = "addLabel"
 
 class NoteListActivity :
     AppCompatActivity(),
@@ -202,8 +206,9 @@ class NoteListActivity :
                 disableToolbarScroll()
                 binding.ab.setExpanded(true, false) // anim is not smooth
 
-                // pin action
+                // update selection-count dependent actions
                 updatePinMenuItem(menu)
+                updateArchiveMenuItem(menu)
 
                 // swiperefresh
                 binding.srl.isEnabled = false
@@ -212,8 +217,9 @@ class NoteListActivity :
                 // set menu
                 menuInflater.inflate(R.menu.menu_notelist_tb_selection_multi, menu)
 
-                // pin action
+                // update selection-count dependent actions
                 updatePinMenuItem(menu)
+                updateArchiveMenuItem(menu)
 
                 // swiperefresh
                 binding.srl.isEnabled = false
@@ -257,13 +263,14 @@ class NoteListActivity :
             // single selection tb
             //R.id.action_copy -> copySelection()
 
-            // multi selection tb
+            // single/multi selection tb
             android.R.id.home -> emptySelection()
             R.id.action_pin -> pinSelection()
             R.id.action_color -> colorSelection()
             R.id.action_select_all -> selectAll()
             R.id.action_unlink -> unlinkSelection()
             R.id.action_unlink_tree -> unlinkSelectionTrees()
+            R.id.action_archive -> archiveSelection()
             R.id.action_delete -> deleteSelection()
 
             else -> return super.onOptionsItemSelected(item)
@@ -430,16 +437,36 @@ class NoteListActivity :
     }
 
     private fun updatePinMenuItem(menu: Menu) {
+        // only unpin if all are pinned
         val unpinSelection = model.isSelectionPinned
         val pinItem = menu.findItem(R.id.action_pin)
 
         if (unpinSelection) {
             pinItem.setIcon(R.drawable.ic_pin_24)
             pinItem.tooltipText = getString(R.string.action_unpin)
+            pinItem.title = getString(R.string.action_unpin)
         }
         else {
             pinItem.setIcon(R.drawable.ic_pin_outline_24)
             pinItem.tooltipText = getString(R.string.action_pin)
+            pinItem.title = getString(R.string.action_pin)
+        }
+    }
+
+    private fun updateArchiveMenuItem(menu: Menu) {
+        // only unarchive if all are archived
+        val unarchiveSelection = model.isSelectionArchived
+        val archiveItem = menu.findItem(R.id.action_archive)
+
+        if (unarchiveSelection) {
+            archiveItem.setIcon(R.drawable.ic_unarchive_24)
+            archiveItem.tooltipText = getString(R.string.action_unarchive)
+            archiveItem.title = getString(R.string.action_unarchive)
+        }
+        else {
+            archiveItem.setIcon(R.drawable.ic_archive_24)
+            archiveItem.tooltipText = getString(R.string.action_archive)
+            archiveItem.title = getString(R.string.action_archive)
         }
     }
 
@@ -488,6 +515,11 @@ class NoteListActivity :
         posBtnTxtRes = R.string.dialog_btn_unlink,
         tag = DIALOG_UNLINK_TREE
     ).show(supportFragmentManager)
+
+    private fun archiveSelection() {
+        model.archiveSelectedNotes()
+        emptySelection()
+    }
 
     private fun deleteSelection() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_delete_notes, model.selectionCount),

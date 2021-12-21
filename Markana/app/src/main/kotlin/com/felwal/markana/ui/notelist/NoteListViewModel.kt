@@ -25,6 +25,7 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     val treeSelectionCount: Int get() = selectedNotes.mapNotNull { it.treeId }.toSet().size
     val isSelectionMode: Boolean get() = selectionCount != 0
     val isSelectionPinned: Boolean get() = selectedNotes.all { it.isPinned }
+    val isSelectionArchived: Boolean get() = selectedNotes.all { it.isArchived }
     val searchQueryOrNull get() = if (isSearching) searchQuery else null
     val isSearching: Boolean get() = searchQuery != ""
 
@@ -88,7 +89,28 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
             // determine if to unpin all or pin those not already pinned
             val unpin = notes.all { it.isPinned }
             // apply
-            for (note in notes) note.isPinned = !unpin
+            for (note in notes) {
+                note.isPinned = !unpin
+                // also unarchive to avoid confusing combination of pinned and archived
+                if (note.isPinned) note.isArchived = false
+            }
+
+            repo.updateNoteMetadata(*notes.toTypedArray())
+            loadNotes()
+        }
+    }
+
+    fun archiveSelectedNotes() {
+        viewModelScope.launch {
+            val notes = selectedNotes
+            // determine if to unarchive all or archive those not already archived
+            val unarchive = notes.all { it.isArchived }
+            // apply
+            for (note in notes) {
+                note.isArchived = !unarchive
+                // also unpin to avoid confusing combination of pinned and archived
+                if (note.isArchived) note.isPinned = false
+            }
 
             repo.updateNoteMetadata(*notes.toTypedArray())
             loadNotes()

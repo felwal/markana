@@ -98,7 +98,7 @@ class NoteRepository(
     }
 
     suspend fun updateNoteMetadata(vararg notes: Note) = withIO {
-        for (note in notes) db.noteDao().updateNoteMetadata(note.uri, note.isPinned, note.colorIndex)
+        notes.forEach { db.noteDao().updateNoteMetadata(it.uri, it.isPinned, it.isArchived, it.colorIndex) }
     }
 
     suspend fun unlinkNote(uri: String) = withIO {

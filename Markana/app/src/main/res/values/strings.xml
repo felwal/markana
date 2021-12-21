@@ -30,6 +30,8 @@
     <string name="action_select_all">Select all</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_unlink_tree">Unlink folder</string>
+    <string name="action_archive">Archive</string>
+    <string name="action_unarchive">Unarchive</string>
     <string name="action_delete">Delete</string>
     <string name="action_copy">Copy</string>
 

@@ -21,6 +21,7 @@ data class Note(
     @ColumnInfo(name = "modified") var modified: Long? = null,
     @ColumnInfo(name = "opened") var opened: Long? = modified,
     @ColumnInfo(name = "pinned") var isPinned: Boolean = false,
+    @ColumnInfo(name = "archived") var isArchived: Boolean = false,
     @ColumnInfo(name = "color_index") var colorIndex: Int = 0,
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
     @ColumnInfo(name = "tree_id") var treeId: Long? = null,
@@ -33,12 +34,23 @@ data class Note(
     val extension get() = filename.split(".", lowerLimit = 2, upperLimit = 2)[1]
 
     @ColorInt
-    fun getColor(c: Context) = c.getIntegerArray(R.array.note_palette)[colorIndex]
+    fun getColor(c: Context): Int {
+        val color = c.getIntegerArray(R.array.note_palette)[colorIndex]
+
+        return if (isArchived) color.multiplyAlphaComponent(0.5f)
+        else color
+    }
 
     @ColorInt
-    fun getBackgroundColor(c: Context) =
-        if (colorIndex == 0) c.getIntegerArray(R.array.note_palette_bg)[colorIndex]
-        else c.getIntegerArray(R.array.note_palette_bg)[colorIndex].multiplyAlphaComponent(0.15f)
+    fun getBackgroundColor(c: Context): Int {
+        val color =
+            if (colorIndex == 0) c.getIntegerArray(R.array.note_palette_bg)[colorIndex]
+            else c.getIntegerArray(R.array.note_palette_bg)[colorIndex].multiplyAlphaComponent(0.15f)
+
+        return if (isArchived) color.multiplyAlphaComponent(0.4f)
+        else color
+    }
+
 
     override fun toString(): String = "$filename: $content"
 }

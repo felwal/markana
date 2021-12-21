@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.felwal.android.util.getColorByAttr
+import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.android.util.px
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
@@ -114,6 +115,12 @@ class NoteListAdapter(
             binding.tvTitle.setTextColor(note.getColor(c))
             binding.ivPin.drawable.setTint(note.getColor(c))
             binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
+
+            // body
+            binding.tvBody.setTextColor(
+                if (!note.isArchived) c.getColorByAttr(android.R.attr.textColorSecondary)
+                else c.getColorByAttr(android.R.attr.textColorSecondary).multiplyAlphaComponent(0.4f)
+            )
 
             // fill
             if (prefs.notePreviewColor) {
