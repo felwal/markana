@@ -376,7 +376,7 @@ class NoteListActivity :
             // create note
             addItem(
                 getString(R.string.tv_notelist_fab_create),
-                getDrawableCompat(R.drawable.ic_create_24)
+                R.drawable.ic_create_24
             ) {
                 emptySelection()
                 NoteDetailActivity.startActivity(this@NoteListActivity)
@@ -385,7 +385,7 @@ class NoteListActivity :
             // link note
             addItem(
                 getString(R.string.tv_notelist_fab_link),
-                getDrawableCompat(R.drawable.ic_link_24)
+                R.drawable.ic_link_24
             ) {
                 emptySelection()
                 model.linkNote(openDocument)
@@ -394,7 +394,7 @@ class NoteListActivity :
             // link folder
             addItem(
                 getString(R.string.tv_notelist_fab_link_folder),
-                getDrawableCompat(R.drawable.ic_folder_add_24)
+                R.drawable.ic_folder_add_24
             ) {
                 emptySelection()
                 model.linkFolder(openDocumentTree)

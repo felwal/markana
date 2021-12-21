@@ -25,7 +25,7 @@ private const val DIALOG_BOLD = "boldDialog"
 private const val DIALOG_BULLET_LIST = "bulletListDialog"
 private const val DIALOG_HR = "hrDialog"
 
-open class SettingsActivity :
+class SettingsActivity :
     AbsSettingsActivity(dividerMode = DividerMode.IN_SECTION, indentEverything = false),
     SingleChoiceDialog.DialogListener,
     TextDialog.DialogListener,
