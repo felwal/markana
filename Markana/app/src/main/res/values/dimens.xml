@@ -12,18 +12,11 @@
 
     <!-- specific -->
     <dimen name="spacing_settings_first_header_top">@dimen/spacing_tiny</dimen>
-    <dimen name="spacing_settings_item_horizontal">@dimen/spacing_small</dimen>
-    <dimen name="spacing_settings_item_vertical">@dimen/spacing_small</dimen>
     <dimen name="spacing_searchview_vertical">4dp</dimen>
     <dimen name="spacing_searchview_right">8dp</dimen>
 
     <!-- layout -->
 
-    <!-- settings item -->
-    <dimen name="height_settings_item">50dp</dimen>
-    <dimen name="height_settings_header">30dp</dimen>
-
-    <!-- misc -->
     <dimen name="corner_radius_note">10dp</dimen>
     <dimen name="corner_radius_searchview">25dp</dimen>
 

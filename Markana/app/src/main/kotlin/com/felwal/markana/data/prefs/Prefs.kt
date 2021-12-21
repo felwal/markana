@@ -113,7 +113,7 @@ class Prefs(c: Context) {
 
     val bulletListSymbol: String get() = Bullet.values()[bulletListSymbolInt].symbol
     var bulletListSymbolInt: Int
-        get() = sp.getInt(KEY_MD_SYMBOL_BULLET_LIST, 0)
+        get() = sp.getInt(KEY_MD_SYMBOL_BULLET_LIST, 1)
         set(value) = sp.putInt(KEY_MD_SYMBOL_BULLET_LIST, value)
 
     var breakSymbol: String

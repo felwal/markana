@@ -21,6 +21,11 @@
         <!-- drawable -->
         <item name="homeAsUpIndicator">@drawable/ic_arrow_back_24</item>
 
+        <!-- settings -->
+        <item name="fw_settingHeaderTextAppearance">@style/TextAppearance.Markana.Subtitle2</item>
+        <item name="fw_settingItemTextAppearance">@style/TextAppearance.Markana.Subtitle1</item>
+        <item name="fw_settingDescTextAppearance">@style/TextAppearance.Markana.Body2</item>
+
         <!-- style -->
         <item name="android:textViewStyle">@style/Widget.Markana.TextView</item>
         <item name="android:editTextStyle">@style/Widget.Markana.EditText</item>

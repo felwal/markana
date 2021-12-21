@@ -3,6 +3,7 @@ package com.felwal.markana.ui.setting
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
+import com.felwal.android.ui.AbsSettingsActivity
 import com.felwal.android.util.getQuantityString
 import com.felwal.android.widget.dialog.DecimalDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
