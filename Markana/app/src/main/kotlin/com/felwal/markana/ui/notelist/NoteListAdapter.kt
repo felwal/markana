@@ -16,7 +16,6 @@ import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.prefs.SortBy
 import com.felwal.markana.databinding.ItemNotelistGridNoteBinding
-import com.felwal.markana.databinding.ItemNotelistListNoteBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.FORMATTER_EARLIER
 import com.felwal.markana.util.FORMATTER_THIS_YEAR
@@ -41,21 +40,11 @@ class NoteListAdapter(
 
         val binding = ItemNotelistGridNoteBinding.inflate(inflater)
         return GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
-
-        /*return if (prefs.gridView) {
-            val binding = ItemNotelistGridNoteBinding.inflate(inflater)
-            GridNoteViewHolder(parent.context, binding, onClick, onLongClick)
-        }
-        else {
-            val binding = ItemNotelistListNoteBinding.inflate(inflater)
-            ListNoteViewHolder(parent.context, binding, onClick, onLongClick)
-        }*/
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val note = getItem(position)
         if (holder is GridNoteViewHolder) holder.bind(note)
-        else if (holder is ListNoteViewHolder) holder.bind(note)
     }
 
     // viewholder
@@ -84,6 +73,8 @@ class NoteListAdapter(
 
             // title
             binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutExtension
+            binding.tvTitle.setTextColor(note.getColor(c))
+
             // body
             when {
                 prefs.notePreviewMaxLines <= 0 -> {
@@ -99,35 +90,30 @@ class NoteListAdapter(
                     binding.tvBody.text = note.content.trim() // TODO: dont get the full string
                 }
             }
-            // metadata
-            binding.tvMetadata.isGone = !prefs.notePreviewMetadata
-            if (prefs.notePreviewMetadata) {
-                binding.tvMetadata.text =
-                if (prefs.sortBy == SortBy.OPENED) {
-                    "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
-                }
-                else {
-                    "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
-                }
-            }
-
-            // color
-            binding.tvTitle.setTextColor(note.getColor(c))
-            binding.ivPin.drawable.setTint(note.getColor(c))
-            binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
-
-            // body
             binding.tvBody.setTextColor(
                 if (!note.isArchived) c.getColorByAttr(android.R.attr.textColorSecondary)
                 else c.getColorByAttr(android.R.attr.textColorSecondary).multiplyAlphaComponent(0.4f)
             )
 
-            // fill
+            // metadata
+            binding.tvMetadata.isGone = !prefs.notePreviewMetadata
+            if (prefs.notePreviewMetadata) {
+                binding.tvMetadata.text =
+                    if (prefs.sortBy == SortBy.OPENED) {
+                        "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
+                    }
+                    else {
+                        "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
+                    }
+            }
+
+            // container: fill
+            binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)
             if (prefs.notePreviewColor) {
                 binding.ivBorder.isGone = true
                 binding.clNote.background.setTint(note.getBackgroundColor(c))
             }
-            // stroke
+            // container: stroke
             else {
                 binding.ivBorder.isGone = false
                 binding.clNote.background.setTint(c.getColorByAttr(android.R.attr.colorBackground))
@@ -146,52 +132,9 @@ class NoteListAdapter(
                     .setStroke(1.px, c.getColorByAttr(R.attr.colorOnBackground))
             }
 
-            // mark pinned (with icon)
-            binding.ivPin.isGone = !note.isPinned
-        }
-    }
 
-    class ListNoteViewHolder(
-        private val c: Context,
-        private val binding: ItemNotelistListNoteBinding,
-        private val onClick: (Note) -> Unit,
-        private val onLongClick: (Note) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        private var currentNote: Note? = null
-
-        init {
-            binding.clNote.setOnClickListener {
-                currentNote?.let { onClick(it) }
-            }
-            binding.clNote.setOnLongClickListener {
-                currentNote?.let { onLongClick(it) }
-                return@setOnLongClickListener true
-            }
-        }
-
-        fun bind(note: Note) {
-            currentNote = note
-
-            // text
-            binding.tvTitle.text = if (prefs.notePreviewMime) note.filename else note.filenameWithoutExtension
-            binding.tvModified.text =
-                if (prefs.sortBy == SortBy.OPENED) {
-                    "Opened ${note.opened?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
-                }
-                else {
-                    "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
-                }
-
-            // color
-            binding.ivIcon.drawable.setTint(note.getColor(c))
+            // pin icon
             binding.ivPin.drawable.setTint(note.getColor(c))
-            binding.clNote.background.setTint(
-                if (note.isSelected) c.getColor(R.color.red_accent_trans)
-                else c.getColorByAttr(android.R.attr.colorBackground)
-            )
-
-            // mark pinned
             binding.ivPin.isGone = !note.isPinned
         }
     }
