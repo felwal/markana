@@ -3,7 +3,6 @@ package com.felwal.markana.ui.notelist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -15,7 +14,6 @@ import com.felwal.android.util.closeIcon
 import com.felwal.android.util.common
 import com.felwal.android.util.enableActionItemRipple
 import com.felwal.android.util.getColorByAttr
-import com.felwal.android.util.getDrawableCompat
 import com.felwal.android.util.getDrawableCompatWithTint
 import com.felwal.android.util.getInteger
 import com.felwal.android.util.getIntegerArray
@@ -25,7 +23,6 @@ import com.felwal.android.util.launchActivity
 import com.felwal.android.util.removeAll
 import com.felwal.android.util.searchView
 import com.felwal.android.util.setOptionalIconsVisible
-import com.felwal.android.util.toast
 import com.felwal.android.widget.dialog.AlertDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
 import com.felwal.android.widget.dialog.alertDialog
@@ -65,6 +62,7 @@ class NoteListActivity :
 
     // settings helper
     private var notePreviewColor = prefs.notePreviewColor
+    private var notePreviewListIcon = prefs.notePreviewListIcon
     private var notePreviewMetadata = prefs.notePreviewMetadata
     private var notePreviewMime = prefs.notePreviewMime
     private var notePreviewMaxLines = prefs.notePreviewMaxLines
@@ -106,12 +104,15 @@ class NoteListActivity :
         // apply updated settings
         if (
             notePreviewColor != prefs.notePreviewColor
+            || notePreviewListIcon != prefs.notePreviewListIcon
             || notePreviewMetadata != prefs.notePreviewMetadata
             || notePreviewMime != prefs.notePreviewMime
             || notePreviewMaxLines != prefs.notePreviewMaxLines
         ) {
             adapter.notifyDataSetChanged()
+
             notePreviewColor = prefs.notePreviewColor
+            notePreviewListIcon = prefs.notePreviewListIcon
             notePreviewMetadata = prefs.notePreviewMetadata
             notePreviewMime = prefs.notePreviewMime
             notePreviewMaxLines = prefs.notePreviewMaxLines

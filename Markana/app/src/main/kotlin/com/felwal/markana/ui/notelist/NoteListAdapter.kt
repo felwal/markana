@@ -132,6 +132,9 @@ class NoteListAdapter(
                     .setStroke(1.px, c.getColorByAttr(R.attr.colorOnBackground))
             }
 
+            // item icon
+            binding.ivItem.drawable.setTint(note.getColor(c))
+            binding.ivItem.isGone = prefs.gridView || !prefs.notePreviewListIcon
 
             // pin icon
             binding.ivPin.drawable.setTint(note.getColor(c))

@@ -92,6 +92,12 @@ class SettingsActivity :
                     onSwitch = { prefs.notePreviewColor = !prefs.notePreviewColor }
                 ),
                 BooleanItem(
+                    title = getString(R.string.tv_settings_item_title_preview_icon),
+                    value = prefs.notePreviewListIcon,
+                    iconRes = R.drawable.ic_note_24,
+                    onSwitch = { prefs.notePreviewListIcon = !prefs.notePreviewListIcon }
+                ),
+                BooleanItem(
                     title = getString(R.string.tv_settings_item_title_preview_metadata),
                     value = prefs.notePreviewMetadata,
                     iconRes = R.drawable.ic_calendar_24,

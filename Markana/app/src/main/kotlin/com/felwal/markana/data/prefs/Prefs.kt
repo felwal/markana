@@ -5,16 +5,22 @@ import android.content.SharedPreferences
 
 private const val FILENAME = "com.felwal.markana.data.prefs"
 
+// notelist
 private const val KEY_SORT_BY = "sort_by"
 private const val KEY_SORT_ORDER_REVERSED = "sort_order_reversed"
 private const val KEY_GRID_VIEW = "grid_view"
 
-private const val KEY_THEME = "theme"
-private const val KEY_COLOR_ITEMS = "preview_color"
-private const val KEY_SHOW_METADATA = "preview_metadata"
-private const val KEY_SHOW_MIME = "preview_mime"
-private const val KEY_MAX_LINES = "preview_max_lines"
+// settings: appearane
+private const val KEY_APPEARANCE_THEME = "theme"
 
+// settings: note preview
+private const val KEY_PREVIEW_COLOR_ITEMS = "preview_color"
+private const val KEY_PREVIEW_LIST_ICON = "preview_list_icon"
+private const val KEY_PREVIEW_SHOW_METADATA = "preview_metadata"
+private const val KEY_PREVIEW_SHOW_MIME = "preview_mime"
+private const val KEY_PREVIEW_MAX_LINES = "preview_max_lines"
+
+// settings: markdown
 private const val KEY_MD_SYMBOL_EMPH = "symbol_italic"
 private const val KEY_MD_SYMBOL_STRONG = "symbol_bold"
 private const val KEY_MD_SYMBOL_BULLET_LIST = "symbol_bullet_list"
@@ -80,24 +86,30 @@ class Prefs(c: Context) {
 
     val theme: Theme get() = Theme.values()[themeInt]
     var themeInt: Int
-        get() = sp.getInt(KEY_THEME, 0)
-        set(value) = sp.putInt(KEY_THEME, value)
+        get() = sp.getInt(KEY_APPEARANCE_THEME, 0)
+        set(value) = sp.putInt(KEY_APPEARANCE_THEME, value)
+
+    // settings: note preview
 
     var notePreviewColor: Boolean
-        get() = sp.getBoolean(KEY_COLOR_ITEMS, true)
-        set(value) = sp.putBoolean(KEY_COLOR_ITEMS, value)
+        get() = sp.getBoolean(KEY_PREVIEW_COLOR_ITEMS, true)
+        set(value) = sp.putBoolean(KEY_PREVIEW_COLOR_ITEMS, value)
+
+    var notePreviewListIcon: Boolean
+        get() = sp.getBoolean(KEY_PREVIEW_LIST_ICON, true)
+        set(value) = sp.putBoolean(KEY_PREVIEW_LIST_ICON, value)
 
     var notePreviewMetadata: Boolean
-        get() = sp.getBoolean(KEY_SHOW_METADATA, false)
-        set(value) = sp.putBoolean(KEY_SHOW_METADATA, value)
+        get() = sp.getBoolean(KEY_PREVIEW_SHOW_METADATA, false)
+        set(value) = sp.putBoolean(KEY_PREVIEW_SHOW_METADATA, value)
 
     var notePreviewMime: Boolean
-        get() = sp.getBoolean(KEY_SHOW_MIME, true)
-        set(value) = sp.putBoolean(KEY_SHOW_MIME, value)
+        get() = sp.getBoolean(KEY_PREVIEW_SHOW_MIME, true)
+        set(value) = sp.putBoolean(KEY_PREVIEW_SHOW_MIME, value)
 
     var notePreviewMaxLines: Int
-        get() = sp.getInt(KEY_MAX_LINES, 12)
-        set(value) = sp.putInt(KEY_MAX_LINES, value)
+        get() = sp.getInt(KEY_PREVIEW_MAX_LINES, 12)
+        set(value) = sp.putInt(KEY_PREVIEW_MAX_LINES, value)
 
     // settings: markdown
 
