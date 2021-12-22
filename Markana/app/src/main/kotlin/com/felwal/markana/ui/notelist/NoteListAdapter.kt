@@ -92,7 +92,7 @@ class NoteListAdapter(
             }
             binding.tvBody.setTextColor(
                 if (!note.isArchived) c.getColorByAttr(android.R.attr.textColorSecondary)
-                else c.getColorByAttr(android.R.attr.textColorSecondary).multiplyAlphaComponent(0.4f)
+                else c.getColorByAttr(android.R.attr.textColorSecondary).multiplyAlphaComponent(0.35f)
             )
 
             // metadata
@@ -106,6 +106,10 @@ class NoteListAdapter(
                         "Modified ${note.modified?.fromEpochSecond()?.formatNoteItem() ?: "never"}"
                     }
             }
+            binding.tvMetadata.setTextColor(
+                if (!note.isArchived) c.getColorByAttr(android.R.attr.textColorTertiary)
+                else c.getColorByAttr(android.R.attr.textColorTertiary).multiplyAlphaComponent(0.35f)
+            )
 
             // container: fill
             binding.clNote.background.setTintMode(PorterDuff.Mode.SRC_OVER)

@@ -37,7 +37,7 @@ data class Note(
     fun getColor(c: Context): Int {
         val color = c.getIntegerArray(R.array.note_palette)[colorIndex]
 
-        return if (isArchived) color.multiplyAlphaComponent(0.5f)
+        return if (isArchived) color.multiplyAlphaComponent(0.35f)
         else color
     }
 
@@ -47,10 +47,9 @@ data class Note(
             if (colorIndex == 0) c.getIntegerArray(R.array.note_palette_bg)[colorIndex]
             else c.getIntegerArray(R.array.note_palette_bg)[colorIndex].multiplyAlphaComponent(0.15f)
 
-        return if (isArchived) color.multiplyAlphaComponent(0.4f)
+        return if (isArchived) color.multiplyAlphaComponent(0.35f)
         else color
     }
-
 
     override fun toString(): String = "$filename: $content"
 }
