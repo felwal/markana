@@ -98,7 +98,6 @@
     <string name="tv_settings_item_title_italic_symbol">Italic symbol</string>
     <string name="tv_settings_item_title_bold_symbol">Bold symbol</string>
     <string name="tv_settings_item_title_hr_symbol">Theme break symbol</string>
-    <string name="tv_settings_item_title_checkbox_space">Space in blank checkbox</string>
     <string name="tv_settings_item_title_about">About</string>
     <string name="tv_settings_item_msg_about">Made by Felix Wallin</string>
 

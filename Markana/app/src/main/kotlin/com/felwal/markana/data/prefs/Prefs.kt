@@ -25,7 +25,6 @@ private const val KEY_MD_SYMBOL_EMPH = "symbol_italic"
 private const val KEY_MD_SYMBOL_STRONG = "symbol_bold"
 private const val KEY_MD_SYMBOL_BULLET_LIST = "symbol_bullet_list"
 private const val KEY_MD_SYMBOL_BREAK = "symbol_horizontal_rule"
-private const val KEY_MD_CHECKBOX_SPACE = "checkbox_space"
 
 // names and values
 
@@ -131,10 +130,6 @@ class Prefs(c: Context) {
     var breakSymbol: String
         get() = sp.getString(KEY_MD_SYMBOL_BREAK, "***") ?: "***"
         set(value) = sp.putString(KEY_MD_SYMBOL_BREAK, value)
-
-    var checkboxSpace: Boolean
-        get() = sp.getBoolean(KEY_MD_CHECKBOX_SPACE, false)
-        set(value) = sp.putBoolean(KEY_MD_CHECKBOX_SPACE, value)
 }
 
 fun SharedPreferences.putBoolean(key: String, value: Boolean) = edit().putBoolean(key, value).apply()

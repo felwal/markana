@@ -15,7 +15,6 @@ import com.felwal.markana.data.prefs.Strong
 import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
-import com.felwal.markana.util.checkbox
 import com.felwal.markana.util.updateDayNight
 
 private const val DIALOG_THEME = "themeDialog"
@@ -154,15 +153,7 @@ class SettingsActivity :
                     hint = "3 or more of *, -, or _",
                     iconRes = R.drawable.ic_horizontal_rule_24,
                     tag = DIALOG_HR
-                ),
-                BooleanItem(
-                    title = getString(R.string.tv_settings_item_title_checkbox_space),
-                    value = prefs.checkboxSpace,
-                    descOn = checkbox(checked = false, emptySpace = true),
-                    descOff = checkbox(checked = false, emptySpace = false),
-                    iconRes = R.drawable.ic_checkbox_blank_24,
-                    onSwitch = { prefs.checkboxSpace = !prefs.checkboxSpace }
-                ),
+                )
             ),
             ItemSection(
                 title = "About and other",

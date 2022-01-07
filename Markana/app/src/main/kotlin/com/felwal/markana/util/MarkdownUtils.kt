@@ -9,8 +9,6 @@ import com.felwal.android.util.copy
 import com.felwal.android.util.updateEditable
 import com.felwal.markana.prefs
 
-fun checkbox(checked: Boolean, emptySpace: Boolean) = "$bullet[${if (checked) "x" else if (emptySpace) " " else ""}] "
-
 private val emph get() = prefs.emphSymbol
 private val strong get() = prefs.strongSymbol
 private const val strikethrough = "~~"
@@ -19,7 +17,7 @@ private fun header(level: Int) = "#".repeat(level) + " "
 private const val quote = "> "
 private val bullet get() = prefs.bulletListSymbol + " "
 private fun number(i: Int) = "${i + 1}. "
-private fun checkbox(checked: Boolean) = "$bullet[${if (checked) "x" else if (prefs.checkboxSpace) " " else ""}] "
+private fun checkbox(checked: Boolean) = "$bullet[${if (checked) "x" else " "}] "
 private const val indent = "  "
 private val thematicBreak get() = prefs.breakSymbol + "\n"
 
