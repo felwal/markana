@@ -20,6 +20,7 @@
 
         <!-- drawable -->
         <item name="homeAsUpIndicator">@drawable/ic_arrow_back_24</item>
+        <item name="fw_colorDialogSelectedIcon">@drawable/ic_done_24</item>
 
         <!-- settings -->
         <item name="fw_settingHeaderTextAppearance">@style/TextAppearance.Markana.Subtitle2</item>

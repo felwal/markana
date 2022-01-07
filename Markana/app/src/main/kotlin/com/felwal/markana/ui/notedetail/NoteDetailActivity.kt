@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -16,7 +15,6 @@ import com.felwal.android.util.closeIcon
 import com.felwal.android.util.coerceSelection
 import com.felwal.android.util.coerceSubstring
 import com.felwal.android.util.copyToClipboard
-import com.felwal.android.util.enableActionItemRipple
 import com.felwal.android.util.getColorByAttr
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
@@ -25,6 +23,7 @@ import com.felwal.android.util.makeMultilinePreventEnter
 import com.felwal.android.util.multiplyAlphaComponent
 import com.felwal.android.util.searchView
 import com.felwal.android.util.selectEnd
+import com.felwal.android.util.setActionItemRipple
 import com.felwal.android.util.setOptionalIconsVisible
 import com.felwal.android.util.showKeyboard
 import com.felwal.android.util.string
@@ -162,7 +161,7 @@ class NoteDetailActivity :
 
             // set close icon (the default is not of 'round' style)
             closeIcon.setImageResource(R.drawable.ic_close_24)
-            closeIcon.enableActionItemRipple()
+            closeIcon.setActionItemRipple()
 
             // set listener
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -286,7 +285,7 @@ class NoteDetailActivity :
         model.noteData.observe(this) { note ->
             note ?: finish() // the note was not found or had not granted access
             note?.let {
-                initMarkwon(it)
+                //initMarkwon(it)
                 loadContent(it)
                 // init undo redo after loaded content to ignore first text load
                 initUndoRedo()

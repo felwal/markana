@@ -12,7 +12,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.felwal.android.util.canScrollUp
 import com.felwal.android.util.closeIcon
 import com.felwal.android.util.common
-import com.felwal.android.util.enableActionItemRipple
 import com.felwal.android.util.getColorByAttr
 import com.felwal.android.util.getDrawableCompatWithTint
 import com.felwal.android.util.getInteger
@@ -22,6 +21,7 @@ import com.felwal.android.util.isPortrait
 import com.felwal.android.util.launchActivity
 import com.felwal.android.util.removeAll
 import com.felwal.android.util.searchView
+import com.felwal.android.util.setActionItemRipple
 import com.felwal.android.util.setOptionalIconsVisible
 import com.felwal.android.widget.dialog.AlertDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
@@ -178,7 +178,7 @@ class NoteListActivity :
 
                     // set close icon (the default is not of 'round' style)
                     closeIcon.setImageResource(R.drawable.ic_close_24)
-                    closeIcon.enableActionItemRipple()
+                    closeIcon.setActionItemRipple()
 
                     // set listener
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
