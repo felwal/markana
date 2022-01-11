@@ -19,13 +19,16 @@ class NoteRepository(
 ) {
     // read
 
-    suspend fun getNotes(searchQuery: String): List<Note> = withIO {
-        if (searchQuery == "") db.noteDao().getNotes(prefs.sortBy, prefs.ascending)
-        else db.noteDao().getNotes(searchQuery, prefs.sortBy, prefs.ascending)
+    suspend fun getNotes(labelId: Long, searchQuery: String): List<Note> = withIO {
+        db.noteDao().getNotes(labelId, searchQuery, prefs.sortBy, prefs.ascending)
     }
 
     suspend fun getNote(uri: String): Note? = withIO {
         db.noteDao().getNote(uri)
+    }
+
+    suspend fun getLabels(): List<Label> = withIO {
+        db.labelDao().getLabels().toMutableList().apply { add(0, Label("Backlog")) }
     }
 
     // sync: download from saf to db
@@ -69,6 +72,19 @@ class NoteRepository(
 
     // write
 
+    suspend fun addLabel(name: String) = withIO {
+        db.labelDao().addLabel(Label(name))
+    }
+
+    suspend fun renameLabel(id: Long, newName: String) = withIO {
+        db.labelDao().renameLabel(id, newName)
+    }
+
+    suspend fun deleteLabel(id: Long) = withIO {
+        db.labelDao().deleteLabel(id)
+        db.noteDao().removeLabelReferences(id)
+    }
+
     fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) {
         /** Saving to db is done in [handleOpenedDocument], which should be called from [openDocumentLauncher]. */
         saf.openFile(openDocumentLauncher)
@@ -98,7 +114,7 @@ class NoteRepository(
     }
 
     suspend fun updateNoteMetadata(vararg notes: Note) = withIO {
-        notes.forEach { db.noteDao().updateNoteMetadata(it.uri, it.isPinned, it.isArchived, it.colorIndex) }
+        notes.forEach { db.noteDao().updateNoteMetadata(it.uri, it.isPinned, it.isArchived, it.colorIndex, it.labelId) }
     }
 
     suspend fun unlinkNote(uri: String) = withIO {

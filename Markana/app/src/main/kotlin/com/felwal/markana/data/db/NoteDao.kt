@@ -53,8 +53,13 @@ interface NoteDao {
     @Query("UPDATE notes SET filename = :filename, content = :content WHERE uri = :uri")
     suspend fun updateNoteContent(uri: String, filename: String, content: String)
 
-    @Query("UPDATE notes SET pinned = :isPinned, archived = :isArchived, color_index = :colorIndex WHERE uri = :uri")
-    suspend fun updateNoteMetadata(uri: String, isPinned: Boolean, isArchived: Boolean, colorIndex: Int)
+    @Query(
+        "UPDATE notes SET pinned = :isPinned, archived = :isArchived, color_index = :colorIndex, label_id = :labelId WHERE uri = :uri"
+    )
+    suspend fun updateNoteMetadata(uri: String, isPinned: Boolean, isArchived: Boolean, colorIndex: Int, labelId: Long)
+
+    @Query("UPDATE notes SET label_id = 0 WHERE label_id = :labelId")
+    suspend fun removeLabelReferences(labelId: Long)
 
     @Delete
     suspend fun deleteNote(vararg notes: Note)
@@ -88,14 +93,12 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE tree_id ISNULL AND uri LIKE '%' || :uriPathString")
     suspend fun getNoteLinkedIndependently(uriPathString: String): Note?
 
-    suspend fun getNotes(sortBy: SortBy, asc: Boolean): List<Note> =
-        getNotesQuery(SimpleSQLiteQuery("SELECT * FROM notes" + orderBy(sortBy, asc)))
-
-    suspend fun getNotes(searchQuery: String, sortBy: SortBy, asc: Boolean): List<Note> =
+    suspend fun getNotes(labelId: Long, searchQuery: String, sortBy: SortBy, asc: Boolean): List<Note> =
         getNotesQuery(
             SimpleSQLiteQuery(
-                "SELECT * FROM notes WHERE " +
-                    like(searchQuery, "filename", "content") +
+                "SELECT * FROM notes WHERE label_id = " + labelId +
+                    if (searchQuery.isNotEmpty()) " AND " + like(searchQuery, "filename", "content")
+                    else { "" } +
                     orderBy(sortBy, asc)
             )
         )

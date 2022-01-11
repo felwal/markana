@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 private const val FILENAME = "com.felwal.markana.data.prefs"
 
 // notelist
+private const val KEY_SELECTED_LABEL_POSITION = "selected_tab"
 private const val KEY_SORT_BY = "sort_by"
 private const val KEY_SORT_ORDER_REVERSED = "sort_order_reversed"
 private const val KEY_GRID_VIEW = "grid_view"
@@ -62,6 +63,10 @@ class Prefs(c: Context) {
     private val sp: SharedPreferences = c.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
 
     // notelist
+
+    var selectedLabelPosition: Int
+        get() = sp.getInt(KEY_SELECTED_LABEL_POSITION, 0)
+        set(value) = sp.putInt(KEY_SELECTED_LABEL_POSITION, value)
 
     val sortBy: SortBy get() = SortBy.values()[sortByInt]
     var sortByInt: Int

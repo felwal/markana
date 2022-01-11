@@ -24,6 +24,9 @@
     <dimen name="width_stroke_wide">2dp</dimen>
     <dimen name="height_divider">1dp</dimen>
 
+    <dimen name="height_tab_indicator">3dp</dimen>
+    <dimen name="radius_tab_indicator">3dp</dimen>
+
     <!-- elevation -->
 
     <dimen name="elev_ab">4dp</dimen>

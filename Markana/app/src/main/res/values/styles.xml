@@ -67,7 +67,17 @@
     <style name="Widget.Markana.EditText.NoTint">
         <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
-    
+
+    <style name="Widget.Markana.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="elevation">0dp</item>
+        <item name="android:background">?android:colorBackground</item>
+        <item name="tabIndicator">@drawable/shape_indicator_tab</item>
+        <item name="tabIndicatorHeight">@dimen/height_tab_indicator</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabTextAppearance">@style/TextAppearance.Markana.Subtitle1.TabLayoutTitle</item>
+        <item name="tabSelectedTextColor">?colorControlActivated</item>
+    </style>
+
     <!-- textappearance -->
 
     <style name="TextAppearance.Markana" parent="TextAppearance.AppCompat">
@@ -87,6 +97,10 @@
 
     <style name="TextAppearance.Markana.Subtitle1">
         <item name="android:textSize">@dimen/type_subtitle1</item>
+    </style>
+
+    <style name="TextAppearance.Markana.Subtitle1.TabLayoutTitle">
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
     <style name="TextAppearance.Markana.Subtitle2">

@@ -45,3 +45,7 @@ fun CharSequence.split(
     .toMutableList()
     .toNullable()
     .apply { fillUp(null, lowerLimit) }
+
+inline fun <T> Iterable<T?>.forEachNotNull(action: (T) -> Unit) {
+    for (element in this) element?.let { action(element) }
+}

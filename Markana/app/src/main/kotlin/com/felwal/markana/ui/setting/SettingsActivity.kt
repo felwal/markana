@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
 import com.felwal.android.ui.AbsSettingsActivity
+import com.felwal.android.util.canScrollUp
 import com.felwal.android.util.getQuantityString
 import com.felwal.android.widget.dialog.DecimalDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
@@ -66,7 +67,7 @@ class SettingsActivity :
 
         // animate tb elevation on scroll
         binding.nsv.setOnScrollChangeListener { _, _, _, _, _ ->
-            binding.ab.isSelected = binding.nsv.canScrollVertically(-1)
+            binding.ab.isActivated = binding.nsv.canScrollUp()
         }
     }
 

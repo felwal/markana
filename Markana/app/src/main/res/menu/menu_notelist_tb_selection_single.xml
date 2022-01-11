@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.felwal.markana.ui.notelist.NoteListActivity">
+    tools:context="com.felwal.markana.ui.labelpager.LabelPagerActivity">
 
     <!--
     <item
@@ -31,6 +31,18 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_label"
+        android:title="@string/action_label"
+        android:icon="@drawable/ic_label_24"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_archive"
+        android:title="@string/action_archive"
+        android:icon="@drawable/ic_archive_24"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_unlink"
         android:title="@string/action_unlink"
         android:icon="@drawable/ic_unlink_24"
@@ -40,12 +52,6 @@
         android:id="@+id/action_unlink_tree"
         android:title="@string/action_unlink_tree"
         android:icon="@drawable/ic_unlink_24"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_archive"
-        android:title="@string/action_archive"
-        android:icon="@drawable/ic_archive_24"
         app:showAsAction="never" />
 
     <item

@@ -1,4 +1,4 @@
-package com.felwal.markana.ui.notelist
+package com.felwal.markana.ui.labelpager
 
 import android.content.Context
 import android.graphics.PorterDuff
@@ -25,15 +25,10 @@ import com.felwal.markana.util.fromEpochSecond
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class NoteListAdapter(
+class NoteListListAdapter(
     private val onClick: (Note) -> Unit,
     private val onLongClick: (Note) -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteDiffCallback()) {
-
-    fun invertViewType() {
-        prefs.gridView = !prefs.gridView
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -1,66 +1,68 @@
-package com.felwal.markana.ui.notelist
+package com.felwal.markana.ui.labelpager
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isGone
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.felwal.android.util.canScrollUp
+import androidx.core.view.children
 import com.felwal.android.util.closeIcon
 import com.felwal.android.util.common
-import com.felwal.android.util.getColorByAttr
 import com.felwal.android.util.getDrawableCompatWithTint
-import com.felwal.android.util.getInteger
 import com.felwal.android.util.getIntegerArray
 import com.felwal.android.util.getQuantityString
-import com.felwal.android.util.isPortrait
 import com.felwal.android.util.launchActivity
-import com.felwal.android.util.removeAll
+import com.felwal.android.util.popup
 import com.felwal.android.util.searchView
 import com.felwal.android.util.setActionItemRipple
+import com.felwal.android.util.setBorderlessItemRipple
 import com.felwal.android.util.setOptionalIconsVisible
 import com.felwal.android.widget.dialog.AlertDialog
 import com.felwal.android.widget.dialog.SingleChoiceDialog
+import com.felwal.android.widget.dialog.TextDialog
 import com.felwal.android.widget.dialog.alertDialog
 import com.felwal.android.widget.dialog.colorDialog
-import com.felwal.markana.App
+import com.felwal.android.widget.dialog.radioDialog
+import com.felwal.android.widget.dialog.textDialog
 import com.felwal.markana.R
-import com.felwal.markana.data.Note
+import com.felwal.markana.app
+import com.felwal.markana.data.Label
 import com.felwal.markana.data.prefs.SortBy
-import com.felwal.markana.databinding.ActivityNotelistBinding
+import com.felwal.markana.databinding.ActivityLabelpagerBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
 import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.i
-import com.felwal.markana.util.submitListKeepScroll
 import com.felwal.markana.util.updateDayNight
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-private const val DIALOG_DELETE = "deleteNotes"
-private const val DIALOG_UNLINK = "unlinkNotes"
-private const val DIALOG_UNLINK_TREE = "unlinkTrees"
-private const val DIALOG_COLOR = "colorNotes"
-private const val DIALOG_LABEL = "labelNotes"
+private const val DIALOG_DELETE_NOTES = "deleteNotes"
+private const val DIALOG_UNLINK_NOTES = "unlinkNotes"
+private const val DIALOG_UNLINK_TREES = "unlinkTrees"
+private const val DIALOG_COLOR_NOTES = "colorNotes"
+private const val DIALOG_LABEL_NOTES = "labelNotes"
 private const val DIALOG_ADD_LABEL = "addLabel"
+private const val DIALOG_RENAME_LABEL = "renameLabel"
+private const val DIALOG_DELETE_LABEL = "deleteLabel"
 
-class NoteListActivity :
+class LabelPagerActivity :
     AppCompatActivity(),
     AlertDialog.DialogListener,
     SingleChoiceDialog.DialogListener,
-    SwipeRefreshLayout.OnRefreshListener {
+    TextDialog.DialogListener {
 
     // data
-    private lateinit var model: NoteListViewModel
+    private lateinit var model: LabelPagerViewModel
 
     // view
-    private lateinit var binding: ActivityNotelistBinding
-    private lateinit var adapter: NoteListAdapter
+    lateinit var binding: ActivityLabelpagerBinding
+    private var stateAdapter: LabelPagerStateAdapter? = null
 
     // settings helper
+    // maybe there is a better way?
     private var notePreviewColor = prefs.notePreviewColor
     private var notePreviewListIcon = prefs.notePreviewListIcon
     private var notePreviewMetadata = prefs.notePreviewMetadata
@@ -68,13 +70,13 @@ class NoteListActivity :
     private var notePreviewMaxLines = prefs.notePreviewMaxLines
 
     // saf result launcher
-    private val openDocument = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
         i("open document uri result: $uri")
 
         model.handleOpenedDocument(uri)
     }
-    private val openDocumentTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+    private val openDocumentTreeLauncher = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         uri ?: return@registerForActivityResult
         i("open document tree uri result: $uri")
 
@@ -86,15 +88,18 @@ class NoteListActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         updateDayNight()
         super.onCreate(savedInstanceState)
-        binding = ActivityNotelistBinding.inflate(layoutInflater)
+        binding = ActivityLabelpagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.fam.onSetContentView()
 
         initToolbar()
         initFam()
-        initRecycler()
-        initRefreshLayout()
         initData()
+    }
+
+    override fun onPause() {
+        prefs.selectedLabelPosition = binding.tl.selectedTabPosition
+        super.onPause()
     }
 
     override fun onRestart() {
@@ -109,7 +114,7 @@ class NoteListActivity :
             || notePreviewMime != prefs.notePreviewMime
             || notePreviewMaxLines != prefs.notePreviewMaxLines
         ) {
-            adapter.notifyDataSetChanged()
+            model.notifyAdapters()
 
             notePreviewColor = prefs.notePreviewColor
             notePreviewListIcon = prefs.notePreviewListIcon
@@ -119,15 +124,9 @@ class NoteListActivity :
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        model.loadNotes()
-        onRefresh()
-    }
-
     override fun onBackPressed() = when {
         binding.fam.isMenuOpen -> binding.fam.closeMenu()
-        model.isSelectionMode -> emptySelection()
+        model.isSelectionMode -> deselectAll()
         else -> super.onBackPressed()
     }
 
@@ -196,7 +195,7 @@ class NoteListActivity :
                 }
 
                 // swiperefresh
-                binding.srl.isEnabled = true
+                model.setRefreshLayoutsEnabled(true)
             }
             1 -> {
                 // set menu
@@ -212,7 +211,7 @@ class NoteListActivity :
                 updateArchiveMenuItem(menu)
 
                 // swiperefresh
-                binding.srl.isEnabled = false
+                model.setRefreshLayoutsEnabled(false)
             }
             else -> {
                 // set menu
@@ -223,7 +222,7 @@ class NoteListActivity :
                 updateArchiveMenuItem(menu)
 
                 // swiperefresh
-                binding.srl.isEnabled = false
+                model.setRefreshLayoutsEnabled(false)
             }
         }
 
@@ -236,11 +235,7 @@ class NoteListActivity :
         when (item.itemId) {
             // normal tb
             R.id.action_settings -> launchActivity<SettingsActivity>()
-            R.id.action_view_toggle -> {
-                adapter.invertViewType()
-                setAdapterAndManager()
-                invalidateOptionsMenu() // update action icon
-            }
+            R.id.action_view_toggle -> invertViewType()
 
             // normal tb: sort submenu
             R.id.action_sort_name -> {
@@ -265,13 +260,14 @@ class NoteListActivity :
             //R.id.action_copy -> copySelection()
 
             // single/multi selection tb
-            android.R.id.home -> emptySelection()
+            android.R.id.home -> deselectAll()
             R.id.action_pin -> pinSelection()
             R.id.action_color -> colorSelection()
             R.id.action_select_all -> selectAll()
+            R.id.action_label -> labelSelection()
+            R.id.action_archive -> archiveSelection()
             R.id.action_unlink -> unlinkSelection()
             R.id.action_unlink_tree -> unlinkSelectionTrees()
-            R.id.action_archive -> archiveSelection()
             R.id.action_delete -> deleteSelection()
 
             else -> return super.onOptionsItemSelected(item)
@@ -283,94 +279,69 @@ class NoteListActivity :
         item.isChecked = true
         model.loadNotes()
         // rebind to update modified/opened tv
-        adapter.notifyDataSetChanged()
+        model.notifyAdapters()
     }
 
-    // swiperefresh
+    // data
 
-    private fun initRefreshLayout() {
-        binding.srl.setOnRefreshListener(this)
-        binding.srl.setProgressBackgroundColorSchemeColor(getColorByAttr(R.attr.colorSurface))
-        binding.srl.setColorSchemeColors(getColorByAttr(R.attr.colorControlActivated))
-    }
+    private fun initData() {
+        val container = app.appContainer
+        model = container.labelPagerViewModel
 
-    override fun onRefresh() {
-        model.syncNotes {
-            binding.srl.isRefreshing = false
+        model.loadLables()
+        model.labelsData.observe(this) { labels ->
+            container.createNoteListViewModels(labels)
+            initViewPager(labels)
         }
     }
 
-    // recycler
+    private fun invertViewType() {
+        prefs.gridView = !prefs.gridView
 
-    private fun initRecycler() {
-        // animate tb and fab on scroll
-        binding.rv.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            // animate tb
-            binding.ab.isSelected = binding.rv.canScrollUp()
+        model.notifyAdapters()
+        model.notifyManagers()
 
-            // show/hide fab
-            binding.fam.updateVisibilityOnScroll(scrollY - oldScrollY)
+        // update action icon
+        invalidateOptionsMenu()
+    }
+
+    // pager
+
+    private fun initViewPager(labels: List<Label>) {
+        stateAdapter = LabelPagerStateAdapter(labels.size, this)
+        binding.vp.adapter = stateAdapter
+
+        // link the TabLayout to the ViewPager
+        TabLayoutMediator(binding.tl, binding.vp) { tab, position ->
+            tab.text = labels[position].name
+        }.attach()
+
+        // load selected tab
+        binding.tl.apply {
+            selectTab(getTabAt(prefs.selectedLabelPosition))
         }
 
-        // adapter
-        adapter = NoteListAdapter(
-            onClick = {
-                if (model.isSelectionMode) selectNote(it)
-                else NoteDetailActivity.startActivity(this, it.uri, it.colorIndex, model.searchQueryOrNull)
-            },
-            onLongClick = {
-                selectNote(it)
-            }
-        )
-        setAdapterAndManager()
-    }
+        // popup menu
+        for ((i, tab) in (binding.tl.getChildAt(0) as ViewGroup).children.withIndex()) {
+            tab.setBorderlessItemRipple()
 
-    private fun setAdapterAndManager() {
-        // set adapter
-        binding.rv.adapter = adapter
-
-        // set manager
-        val spanCount =
-            if (!prefs.gridView) getInteger(R.integer.quantity_notelist_list_columns)
-            else if (isPortrait) getInteger(R.integer.quantity_notelist_grid_columns_portrait)
-            else getInteger(R.integer.quantity_notelist_grid_columns_landscape)
-
-        val manager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
-        manager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
-
-        binding.rv.layoutManager = manager
-    }
-
-    private fun submitItems(items: List<Note>) {
-        // when searching, keeping scroll state results in irregularities
-        if (model.isSearching) adapter.submitList(items)
-        else adapter.submitListKeepScroll(items, binding.rv.layoutManager)
-
-        // toggle empty page
-        if (items.isEmpty()) {
-            binding.inEmpty.root.isGone = false
-
-            // set search empty page
-            if (model.isSearching) {
-                binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_search_title)
-                binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_search_message)
-                binding.inEmpty.ivEmpty.setImageDrawable(
-                    getDrawableCompatWithTint(R.drawable.ic_search_24, R.attr.colorAccent)
-                )
-            }
-            // set new user empty page
-            else {
-                binding.inEmpty.tvEmptyTitle.text = getString(R.string.tv_notelist_empty_new_title)
-                binding.inEmpty.tvEmptyMessage.text = getString(R.string.tv_notelist_empty_new_message)
-                binding.inEmpty.ivEmpty.setImageDrawable(
-                    getDrawableCompatWithTint(R.drawable.ic_note_24, R.attr.colorAccent)
-                )
+            tab.setOnLongClickListener { v ->
+                popup(v, R.menu.menu_notelist_popup_label) { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.action_rename_label -> renameLabel(labels[i].name)
+                        R.id.action_delete_label -> deleteLabel(labels[i])
+                    }
+                    true
+                }
+                true
             }
         }
-        else binding.inEmpty.root.isGone = true
+
+        //
+        model.setRefreshLayoutsEnabled(!model.isSelectionMode)
     }
 
-    // fab
+    // fab & swiperefresh
 
     private fun initFam() {
         binding.fam.apply {
@@ -379,8 +350,8 @@ class NoteListActivity :
                 getString(R.string.tv_notelist_fab_create),
                 R.drawable.ic_create_24
             ) {
-                emptySelection()
-                NoteDetailActivity.startActivity(this@NoteListActivity)
+                deselectAll()
+                NoteDetailActivity.startActivity(this@LabelPagerActivity)
             }
 
             // link note
@@ -388,8 +359,8 @@ class NoteListActivity :
                 getString(R.string.tv_notelist_fab_link),
                 R.drawable.ic_link_24
             ) {
-                emptySelection()
-                model.linkNote(openDocument)
+                deselectAll()
+                model.linkNote(openDocumentLauncher)
             }
 
             // link folder
@@ -397,8 +368,21 @@ class NoteListActivity :
                 getString(R.string.tv_notelist_fab_link_folder),
                 R.drawable.ic_folder_add_24
             ) {
-                emptySelection()
-                model.linkFolder(openDocumentTree)
+                deselectAll()
+                model.linkFolder(openDocumentTreeLauncher)
+            }
+
+            // add label
+            addItem(
+                getString(R.string.tv_notelist_fab_add_label),
+                R.drawable.ic_label_24
+            ) {
+                closeMenu()
+                textDialog(
+                    getString(R.string.dialog_title_add_label),
+                    "", "", getString(R.string.dialog_et_hint_add_label),
+                    tag = DIALOG_ADD_LABEL
+                ).show(supportFragmentManager)
             }
         }
     }
@@ -471,15 +455,37 @@ class NoteListActivity :
         }
     }
 
-    // data
+    fun syncToolbar() {
+        invalidateOptionsMenu()
+        updateToolbarTitle()
+    }
 
-    private fun initData() {
-        val container = (application as App).appContainer
-        model = container.noteListViewModel
+    //
 
-        model.itemsData.observe(this) { items ->
-            submitItems(items)
-        }
+    private fun renameLabel(currentName: String) = textDialog(
+        title = getString(R.string.dialog_title_rename_label),
+        text = currentName,
+        hint = getString(R.string.dialog_et_hint_add_label),
+        tag = DIALOG_RENAME_LABEL
+    ).show(supportFragmentManager)
+
+    private fun deleteLabel(label: Label) = alertDialog(
+        title = getString(R.string.dialog_title_delete_label),
+        message = getString(R.string.dialog_msg_delete_label),
+        tag = DIALOG_DELETE_LABEL,
+        passValue = label.id.toString()
+    ).show(supportFragmentManager)
+
+    // selection
+
+    private fun selectAll() {
+        model.selectAllNotes()
+        syncToolbar()
+    }
+
+    private fun deselectAll() {
+        model.deselectAllNotes()
+        syncToolbar()
     }
 
     private fun copySelection() {
@@ -493,108 +499,92 @@ class NoteListActivity :
 
     private fun pinSelection() {
         model.pinSelectedNotes()
-        emptySelection()
+        deselectAll()
     }
 
     private fun colorSelection() = colorDialog(
         title = getString(R.string.dialog_title_color_notes),
         colors = getIntegerArray(R.array.note_palette),
         checkedIndex = model.selectedNotes.common { it.colorIndex },
-        tag = DIALOG_COLOR
+        tag = DIALOG_COLOR_NOTES
     ).show(supportFragmentManager)
+
+    private fun labelSelection() {
+        val names = model.labels.map { it.name }
+        val selectedIndex = model.labels.map { it.id }.indexOf(model.selectedNotes[0].labelId)
+        val icons = IntArray(names.size) { R.drawable.ic_label_24 }
+
+        radioDialog(getString(R.string.dialog_title_label_notes),
+            names, selectedIndex, icons,
+            tag = DIALOG_LABEL_NOTES
+        ).show(supportFragmentManager)
+    }
+
+    private fun archiveSelection() {
+        model.archiveSelectedNotes()
+        deselectAll()
+    }
 
     private fun unlinkSelection() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_unlink_notes, model.selectionCount),
         message = getQuantityString(R.plurals.dialog_msg_unlink_notes, model.selectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
-        tag = DIALOG_UNLINK
+        tag = DIALOG_UNLINK_NOTES
     ).show(supportFragmentManager)
 
     private fun unlinkSelectionTrees() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_unlink_tree, model.treeSelectionCount),
         message = getQuantityString(R.plurals.dialog_msg_unlink_trees, model.treeSelectionCount),
         posBtnTxtRes = R.string.dialog_btn_unlink,
-        tag = DIALOG_UNLINK_TREE
+        tag = DIALOG_UNLINK_TREES
     ).show(supportFragmentManager)
-
-    private fun archiveSelection() {
-        model.archiveSelectedNotes()
-        emptySelection()
-    }
 
     private fun deleteSelection() = alertDialog(
         title = getQuantityString(R.plurals.dialog_title_delete_notes, model.selectionCount),
         message = getString(R.string.dialog_msg_delete_notes),
         posBtnTxtRes = R.string.dialog_btn_delete,
-        tag = DIALOG_DELETE
+        tag = DIALOG_DELETE_NOTES
     ).show(supportFragmentManager)
-
-    // selection
-
-    private fun selectNote(note: Note) {
-        // sync with data and adapter
-        val index = model.toggleNoteSelection(note)
-        adapter.notifyItemChanged(index)
-
-        // sync tb
-        invalidateOptionsMenu()
-        updateToolbarTitle()
-    }
-
-    private fun selectAll() {
-        for (note in model.items) {
-            if (note.isSelected) continue
-
-            // sync with data and adapter
-            val index = model.toggleNoteSelection(note)
-            adapter.notifyItemChanged(index)
-        }
-
-        // sync tb
-        invalidateOptionsMenu()
-        updateToolbarTitle()
-    }
-
-    private fun emptySelection() {
-        for (note in model.selectedNotes) {
-            note.isSelected = false
-
-            val index = model.items.indexOf(note)
-            model.itemsData.value?.set(index, note)
-            adapter.notifyItemChanged(index)
-        }
-        model.selectionIndices.removeAll()
-
-        // sync tb
-        invalidateOptionsMenu()
-        updateToolbarTitle()
-    }
 
     // dialog
 
     override fun onAlertDialogPositiveClick(passValue: String?, tag: String) {
         when (tag) {
-            DIALOG_DELETE -> {
+            DIALOG_DELETE_NOTES -> {
                 model.deleteSelectedNotes()
-                emptySelection()
+                deselectAll()
             }
-            DIALOG_UNLINK -> {
+            DIALOG_UNLINK_NOTES -> {
                 model.unlinkSelectedNotes()
-                emptySelection()
+                deselectAll()
             }
-            DIALOG_UNLINK_TREE -> {
+            DIALOG_UNLINK_TREES -> {
                 model.unlinkSelectedTrees()
-                emptySelection()
+                deselectAll()
+            }
+            DIALOG_DELETE_LABEL -> {
+                passValue?.let { model.deleteLabel(it.toLong()) }
             }
         }
     }
 
     override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
         when (tag) {
-            DIALOG_COLOR -> {
+            DIALOG_COLOR_NOTES -> {
                 model.colorSelectedNotes(selectedIndex)
-                emptySelection()
+                deselectAll()
             }
+            DIALOG_LABEL_NOTES -> {
+                model.labelSelectedNotes(selectedIndex)
+                deselectAll()
+            }
+        }
+    }
+
+    override fun onTextDialogPositiveClick(input: String, tag: String) {
+        when (tag) {
+            DIALOG_ADD_LABEL -> model.addLabel(input)
+            DIALOG_RENAME_LABEL -> model.renameLabel(1, input) // TODO
         }
     }
 }

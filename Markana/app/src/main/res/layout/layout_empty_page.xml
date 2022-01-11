@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="?colorAccent"
-        tools:srcCompat="@android:drawable/ic_dialog_info" />
+        tools:srcCompat="@drawable/ic_note_24" />
 
     <TextView
         android:id="@+id/tv_empty_title"

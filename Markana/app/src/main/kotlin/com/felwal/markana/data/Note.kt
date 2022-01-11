@@ -23,6 +23,7 @@ data class Note(
     @ColumnInfo(name = "pinned") var isPinned: Boolean = false,
     @ColumnInfo(name = "archived") var isArchived: Boolean = false,
     @ColumnInfo(name = "color_index") var colorIndex: Int = 0,
+    @ColumnInfo(name = "label_id") var labelId: Long = 0,
     @ColumnInfo(name = "uri") var uri: String = URI_DEFAULT,
     @ColumnInfo(name = "tree_id") var treeId: Long? = null,
     @PrimaryKey(autoGenerate = true) var id: Long = ID_AUTO_GENERATE

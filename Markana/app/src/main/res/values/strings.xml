@@ -27,13 +27,17 @@
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
     <string name="action_color">Change color</string>
-    <string name="action_select_all">Select all</string>
+    <string name="action_select_all">Select all (with label)</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_unlink_tree">Unlink folder</string>
     <string name="action_archive">Archive</string>
+    <string name="action_label">Change labels</string>
     <string name="action_unarchive">Unarchive</string>
     <string name="action_delete">Delete</string>
     <string name="action_copy">Copy</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_rename_label">Rename label</string>
+    <string name="action_delete_label">Delete label</string>
 
     <!-- notedetail -->
     <string name="action_undo">Undo</string>
@@ -78,6 +82,7 @@
     <string name="tv_notelist_fab_create">Create note</string>
     <string name="tv_notelist_fab_link">Link file</string>
     <string name="tv_notelist_fab_link_folder">Link folder</string>
+    <string name="tv_notelist_fab_add_label">Add label</string>
     <string name="tv_notelist_search_hint">Search …</string>
 
     <!-- settings -->
@@ -117,6 +122,10 @@
         <item quantity="other">Unlink %d folders?</item>
     </plurals>
     <string name="dialog_title_color_notes">Note colour</string>
+    <string name="dialog_title_label_notes">Label as</string>
+    <string name="dialog_title_add_label">Add label</string>
+    <string name="dialog_title_rename_label">Rename label</string>
+    <string name="dialog_title_delete_label">Delete this label?</string>
 
     <!-- message -->
     <string name="dialog_msg_delete_notes">This action cannot be undone.</string>
@@ -132,12 +141,16 @@
         <item quantity="other">This will unlink the containing folders and all notes therein.
             You can always link them again.</item>
     </plurals>
+    <string name="dialog_msg_delete_label">Your notes will be moved to Backlog.</string>
 
     <!-- button -->
     <string name="dialog_btn_continue">Continue</string>
     <string name="dialog_btn_set">Set</string>
     <string name="dialog_btn_delete">Delete</string>
     <string name="dialog_btn_unlink">Unlink</string>
+
+    <!-- custom -->
+    <string name="dialog_et_hint_add_label">Label</string>
 
     <!-- toast -->
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context=".ui.notelist.NoteListActivity">
+    tools:context=".ui.labelpager.LabelPagerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/ab"
@@ -34,41 +34,34 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabMode="scrollable"
+            app:tabBackground="?selectableItemBackgroundBorderless"
+            style="@style/Widget.Markana.TabLayout" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        layout="@layout/layout_empty_page"
-        android:id="@+id/in_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ab" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/srl"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="@dimen/spacing_diminutive"
-            android:paddingVertical="@dimen/spacing_diminutive"
-            android:clipToPadding="false"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb"
-            tools:context="com.felwal.markana.ui.notelist.NoteListActivity"
-            tools:itemCount="1"
-            tools:listitem="@layout/item_notelist_grid_note" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.felwal.android.widget.FloatingActionMenu
         android:id="@+id/fam"

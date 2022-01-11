@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
+import com.felwal.android.util.canScrollUp
 import com.felwal.android.util.closeIcon
 import com.felwal.android.util.coerceSelection
 import com.felwal.android.util.coerceSubstring
@@ -35,6 +36,7 @@ import com.felwal.android.widget.dialog.colorDialog
 import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
+import com.felwal.markana.app
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.network.CreateTextDocument
 import com.felwal.markana.databinding.ActivityNotedetailBinding
@@ -276,7 +278,7 @@ class NoteDetailActivity :
     // data
 
     private fun initData() {
-        appContainer = (application as App).appContainer
+        appContainer = app.appContainer
         appContainer.noteDetailContainer = NoteDetailContainer(appContainer.noteRepository)
         model = appContainer.noteDetailContainer!!.noteDetailViewModel
 
@@ -315,7 +317,7 @@ class NoteDetailActivity :
 
         // animate tb elevation on scroll
         binding.nsvNote.setOnScrollChangeListener { _, _, _, _, _ ->
-            binding.ab.isSelected = binding.nsvNote.canScrollVertically(-1)
+            binding.ab.isActivated = binding.nsvNote.canScrollUp()
         }
 
         binding.etNoteBody.addTextChangedListener {

@@ -1,35 +1,57 @@
-package com.felwal.markana.ui.notelist
+package com.felwal.markana.ui.labelpager.notelist
 
-import android.net.Uri
-import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.felwal.android.util.removeAll
 import com.felwal.android.util.toggleInclusion
 import com.felwal.android.util.withUI
+import com.felwal.markana.data.Label
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
+import com.felwal.markana.ui.labelpager.LabelPagerViewModel
 import kotlinx.coroutines.launch
 
-class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
+class NoteListViewModel(
+    private val repo: NoteRepository,
+    private val labelPagerViewModel: LabelPagerViewModel,
+    val label: Label
+) : ViewModel() {
 
-    // primary
-    val itemsData by lazy { MutableLiveData<MutableList<Note>>() }
-    val selectionIndices: MutableList<Int> = mutableListOf()
+    val notesData by lazy {
+        MutableLiveData<MutableList<Note>>()
+    }
+    val notifyAdapterData by lazy {
+        MutableLiveData<Boolean>().apply {
+            postValue(false)
+        }
+    }
+    val notifyManagerData by lazy {
+        MutableLiveData<Boolean>().apply {
+            postValue(false)
+        }
+    }
+    val srlEnabledData by lazy {
+        MutableLiveData<Boolean>().apply {
+            postValue(true)
+        }
+    }
+
+    private val selectionIndices: MutableList<Int> = mutableListOf()
     private var searchQuery: String = ""
 
-    // secondary
-    val items: List<Note> get() = itemsData.value ?: listOf()
-    val selectedNotes: List<Note> get() = items.filter { it.isSelected }
+    val notes: List<Note> get() = notesData.value ?: listOf()
+    val selectedNotes: List<Note> get() = notes.filter { it.isSelected }
     val selectionCount: Int get() = selectionIndices.size
-    val treeSelectionCount: Int get() = selectedNotes.mapNotNull { it.treeId }.toSet().size
-    val isSelectionMode: Boolean get() = selectionCount != 0
-    val isSelectionPinned: Boolean get() = selectedNotes.all { it.isPinned }
-    val isSelectionArchived: Boolean get() = selectedNotes.all { it.isArchived }
+    val isSelectionMode: Boolean get() = labelPagerViewModel.isSelectionMode
     val searchQueryOrNull get() = if (isSearching) searchQuery else null
-    val isSearching: Boolean get() = searchQuery != ""
+    val isSearching: Boolean get() = searchQuery.isNotEmpty()
 
     // shallow
+
+    fun notifyAdapter() = notifyAdapterData.postValue(true)
+
+    fun notifyManager() = notifyManagerData.postValue(true)
 
     fun searchNotes(query: String) {
         searchQuery = query
@@ -39,25 +61,47 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
     fun toggleNoteSelection(note: Note): Int {
         note.isSelected = !note.isSelected
 
-        val index = items.indexOf(note)
-        itemsData.value?.set(index, note)
+        val index = notes.indexOf(note)
+        notesData.value?.set(index, note)
         selectionIndices.toggleInclusion(index)
 
         return index
+    }
+
+    fun selectAllNotes() {
+        for (note in notes) {
+            if (note.isSelected) continue
+
+            // sync with data and adapter
+            val index = toggleNoteSelection(note)
+            //listAdapter.notifyItemChanged(index)
+        }
+        notifyAdapter()
+    }
+
+    fun deselectAllNotes() {
+        for (note in selectedNotes) {
+            note.isSelected = false
+
+            val index = notes.indexOf(note)
+            notesData.value?.set(index, note)
+            //listAdapter.notifyItemChanged(index)
+        }
+        selectionIndices.removeAll()
+        notifyAdapter()
     }
 
     // read
 
     fun loadNotes() {
         viewModelScope.launch {
-            val notes = repo.getNotes(searchQuery)
+            val notes = repo.getNotes(label.id, searchQuery)
                 .toMutableList()
                 .onEachIndexed { index, note ->
                     // sync with selection
                     note.isSelected = index in selectionIndices
                 }
-
-            itemsData.postValue(notes)
+            notesData.postValue(notes)
         }
     }
 
@@ -73,16 +117,6 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
 
     // write
 
-    fun linkNote(openDocumentLauncher: ActivityResultLauncher<Array<String>>) {
-        repo.linkNote(openDocumentLauncher)
-        loadNotes()
-    }
-
-    fun linkFolder(openTreeLauncher: ActivityResultLauncher<Uri>) {
-        repo.linkFolder(openTreeLauncher)
-        loadNotes()
-    }
-
     fun pinSelectedNotes() {
         viewModelScope.launch {
             val notes = selectedNotes
@@ -94,6 +128,17 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
                 // also unarchive to avoid confusing combination of pinned and archived
                 if (note.isPinned) note.isArchived = false
             }
+
+            repo.updateNoteMetadata(*notes.toTypedArray())
+            loadNotes()
+        }
+    }
+
+    fun labelSelectedNotes(labelId: Long) {
+        viewModelScope.launch {
+            val notes = selectedNotes
+
+            for (note in notes) note.labelId = labelId
 
             repo.updateNoteMetadata(*notes.toTypedArray())
             loadNotes()
@@ -150,20 +195,6 @@ class NoteListViewModel(private val repo: NoteRepository) : ViewModel() {
             selectedNotes.map { it.uri }.forEach {
                 repo.deleteNote(it)
             }
-            loadNotes()
-        }
-    }
-
-    fun handleOpenedDocument(uri: Uri) {
-        viewModelScope.launch {
-            repo.handleOpenedDocument(uri)
-            loadNotes()
-        }
-    }
-
-    fun handleOpenedTree(uri: Uri) {
-        viewModelScope.launch {
-            repo.handleOpenedDocumentTree(uri)
             loadNotes()
         }
     }

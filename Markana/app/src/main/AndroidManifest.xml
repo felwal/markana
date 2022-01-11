@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Markana">
 
         <activity
-            android:name="com.felwal.markana.ui.notelist.NoteListActivity"
+            android:name="com.felwal.markana.ui.labelpager.LabelPagerActivity"
             android:label="@string/title_activity_notelist">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,13 +24,13 @@
 
         <activity
             android:name="com.felwal.markana.ui.notedetail.NoteDetailActivity"
-            android:parentActivityName="com.felwal.markana.ui.notelist.NoteListActivity"
+            android:parentActivityName="com.felwal.markana.ui.labelpager.LabelPagerActivity"
             android:label="@string/title_activity_notedetail"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name="com.felwal.markana.ui.setting.SettingsActivity"
-            android:parentActivityName="com.felwal.markana.ui.notelist.NoteListActivity"
+            android:parentActivityName="com.felwal.markana.ui.labelpager.LabelPagerActivity"
             android:label="@string/title_activity_settings" />
 
     </application>
