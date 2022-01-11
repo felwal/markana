@@ -35,17 +35,3 @@ fun <T, VH : RecyclerView.ViewHolder> ListAdapter<T, VH>.submitListKeepScroll(
         commitCallback?.invoke()
     }
 }
-
-fun CharSequence.split(
-    vararg delimiters: String,
-    lowerLimit: Int,
-    upperLimit: Int,
-    ignoreCase: Boolean = false
-): List<String?> = split(*delimiters, ignoreCase = ignoreCase, limit = upperLimit)
-    .toMutableList()
-    .toNullable()
-    .apply { fillUp(null, lowerLimit) }
-
-inline fun <T> Iterable<T?>.forEachNotNull(action: (T) -> Unit) {
-    for (element in this) element?.let { action(element) }
-}

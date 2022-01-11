@@ -512,7 +512,7 @@ class NoteDetailActivity :
 
     // dialog
 
-    override fun onAlertDialogPositiveClick(passValue: String?, tag: String) {
+    override fun onAlertDialogPositiveClick(tag: String, passValue: String?) {
         when (tag) {
             DIALOG_DELETE -> {
                 model.deleteNote()
@@ -521,7 +521,7 @@ class NoteDetailActivity :
         }
     }
 
-    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
+    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_COLOR -> {
                 model.note.colorIndex = selectedIndex

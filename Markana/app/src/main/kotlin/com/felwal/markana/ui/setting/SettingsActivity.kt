@@ -77,7 +77,7 @@ class SettingsActivity :
                 title = getString(R.string.tv_settings_header_appearance),
                 SingleSelectionItem(
                     title = getString(R.string.tv_settings_item_title_theme),
-                    values = Theme.values().map { it.title },
+                    values = Theme.values().map { it.title }.toTypedArray(),
                     selectedIndex = prefs.themeInt,
                     iconRes = R.drawable.ic_theme_24,
                     tag = DIALOG_THEME
@@ -129,21 +129,21 @@ class SettingsActivity :
                 title = getString(R.string.tv_settings_header_markdown),
                 SingleSelectionItem(
                     title = getString(R.string.tv_settings_item_title_italic_symbol),
-                    values = Emph.values().map { it.title },
+                    values = Emph.values().map { it.title }.toTypedArray(),
                     selectedIndex = prefs.emphSymbolInt,
                     iconRes = R.drawable.ic_italic_24,
                     tag = DIALOG_ITALIC
                 ),
                 SingleSelectionItem(
                     title = getString(R.string.tv_settings_item_title_bold_symbol),
-                    values = Strong.values().map { it.title },
+                    values = Strong.values().map { it.title }.toTypedArray(),
                     selectedIndex = prefs.strongSymbolInt,
                     iconRes = R.drawable.ic_bold_24,
                     tag = DIALOG_BOLD
                 ),
                 SingleSelectionItem(
                     title = getString(R.string.tv_settings_item_title_bullet_list_symbol),
-                    values = Bullet.values().map { it.title },
+                    values = Bullet.values().map { it.title }.toTypedArray(),
                     selectedIndex = prefs.bulletListSymbolInt,
                     iconRes = R.drawable.ic_list_bullet_24,
                     tag = DIALOG_BULLET_LIST
@@ -170,7 +170,7 @@ class SettingsActivity :
 
     // dialog
 
-    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
+    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_THEME -> {
                 prefs.themeInt = selectedIndex
@@ -183,14 +183,14 @@ class SettingsActivity :
         reflateViews()
     }
 
-    override fun onTextDialogPositiveClick(input: String, tag: String) {
+    override fun onTextDialogPositiveClick(input: String, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_HR -> prefs.breakSymbol = input
         }
         reflateViews()
     }
 
-    override fun onDecimalDialogPositiveClick(input: Float, tag: String) {
+    override fun onDecimalDialogPositiveClick(input: Float, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input.toInt()
         }

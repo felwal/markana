@@ -515,7 +515,7 @@ class LabelPagerActivity :
         val icons = IntArray(names.size) { R.drawable.ic_label_24 }
 
         radioDialog(getString(R.string.dialog_title_label_notes),
-            names, selectedIndex, icons,
+            names.toTypedArray(), selectedIndex, icons,
             tag = DIALOG_LABEL_NOTES
         ).show(supportFragmentManager)
     }
@@ -548,7 +548,7 @@ class LabelPagerActivity :
 
     // dialog
 
-    override fun onAlertDialogPositiveClick(passValue: String?, tag: String) {
+    override fun onAlertDialogPositiveClick(tag: String, passValue: String?) {
         when (tag) {
             DIALOG_DELETE_NOTES -> {
                 model.deleteSelectedNotes()
@@ -568,7 +568,7 @@ class LabelPagerActivity :
         }
     }
 
-    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String) {
+    override fun onSingleChoiceDialogItemSelected(selectedIndex: Int, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_COLOR_NOTES -> {
                 model.colorSelectedNotes(selectedIndex)
@@ -581,7 +581,7 @@ class LabelPagerActivity :
         }
     }
 
-    override fun onTextDialogPositiveClick(input: String, tag: String) {
+    override fun onTextDialogPositiveClick(input: String, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_ADD_LABEL -> model.addLabel(input)
             DIALOG_RENAME_LABEL -> model.renameLabel(1, input) // TODO
