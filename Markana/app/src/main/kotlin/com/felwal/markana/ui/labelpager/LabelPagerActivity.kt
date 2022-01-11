@@ -479,7 +479,7 @@ class LabelPagerActivity :
     // selection
 
     private fun selectAll() {
-        model.selectAllNotes()
+        model.selectAllNotes(binding.tl.selectedTabPosition)
         syncToolbar()
     }
 

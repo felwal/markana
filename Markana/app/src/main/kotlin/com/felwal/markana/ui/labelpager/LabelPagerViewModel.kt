@@ -37,7 +37,7 @@ class LabelPagerViewModel(private val repo: NoteRepository) : ViewModel() {
 
     // shallow
 
-    fun selectAllNotes() = forEachModel { it.selectAllNotes() }
+    fun selectAllNotes(selectedLabelPosition: Int) = noteListViewModels[selectedLabelPosition].selectAllNotes()
 
     fun deselectAllNotes() = forEachModel { it.deselectAllNotes() }
 
