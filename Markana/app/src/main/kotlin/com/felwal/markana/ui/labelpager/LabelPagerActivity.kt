@@ -328,7 +328,7 @@ class LabelPagerActivity :
             tab.setOnLongClickListener { v ->
                 popup(v, R.menu.menu_notelist_popup_label) { menuItem ->
                     when (menuItem.itemId) {
-                        R.id.action_rename_label -> renameLabel(labels[i].name)
+                        R.id.action_rename_label -> renameLabel(labels[i])
                         R.id.action_delete_label -> deleteLabel(labels[i])
                     }
                     true
@@ -462,11 +462,12 @@ class LabelPagerActivity :
 
     //
 
-    private fun renameLabel(currentName: String) = textDialog(
+    private fun renameLabel(label: Label) = textDialog(
         title = getString(R.string.dialog_title_rename_label),
-        text = currentName,
+        text = label.name,
         hint = getString(R.string.dialog_et_hint_add_label),
-        tag = DIALOG_RENAME_LABEL
+        tag = DIALOG_RENAME_LABEL,
+        passValue = label.id.toString()
     ).show(supportFragmentManager)
 
     private fun deleteLabel(label: Label) = alertDialog(
@@ -584,7 +585,9 @@ class LabelPagerActivity :
     override fun onTextDialogPositiveClick(input: String, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_ADD_LABEL -> model.addLabel(input)
-            DIALOG_RENAME_LABEL -> model.renameLabel(1, input) // TODO
+            DIALOG_RENAME_LABEL -> {
+                passValue?.let { model.renameLabel(it.toLong(), input) }
+            }
         }
     }
 }
