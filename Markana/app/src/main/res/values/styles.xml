@@ -17,13 +17,15 @@
     <style name="Widget.Markana.SearchView" parent="Widget.AppCompat.SearchView" />
 
     <style name="Widget.Markana.Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?android:colorBackground</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:theme">@style/ThemeOverlay.Markana.ActionBar</item>
         <item name="elevation">@dimen/elev_ab</item>
+
+        <item name="android:background">?android:colorBackground</item>
         <item name="titleTextColor">?android:textColorPrimary</item>
-        <item name="popupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="collapseIcon">@drawable/ic_done_24</item>
+
+        <item name="android:theme">@style/ThemeOverlay.Markana.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.Markana.ActionBarPopup</item>
     </style>
 
     <!-- widget -->
