@@ -37,6 +37,7 @@ import com.felwal.markana.ui.setting.SettingsActivity
 import com.felwal.markana.util.i
 import com.felwal.markana.util.updateDayNight
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 private const val DIALOG_DELETE_NOTES = "deleteNotes"
@@ -322,7 +323,7 @@ class LabelPagerActivity :
         }
 
         // popup menu
-        for ((i, tab) in (binding.tl.getChildAt(0) as ViewGroup).children.withIndex()) {
+        for ((i, tab) in binding.tl.tabs.withIndex()) {
             tab.setBorderlessItemRipple()
 
             tab.setOnLongClickListener { v ->
@@ -340,6 +341,8 @@ class LabelPagerActivity :
         //
         model.setRefreshLayoutsEnabled(!model.isSelectionMode)
     }
+
+    val TabLayout.tabs get() = (getChildAt(0) as ViewGroup).children
 
     // fab & swiperefresh
 

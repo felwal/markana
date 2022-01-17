@@ -5,48 +5,48 @@
 
     <array name="note_palette">
         <item>@color/text_primary_dk</item>
-        <item>@color/material_red_300</item>
-        <item>@color/material_pink_300</item>
-        <item>@color/material_purple_300</item>
-        <item>@color/material_purple_deep_300</item>
-        <item>@color/material_indigo_300</item>
-        <item>@color/material_blue_300</item>
-        <item>@color/material_blue_light_300</item>
-        <item>@color/material_cyan_300</item>
-        <item>@color/material_teal_300</item>
-        <item>@color/material_green_300</item>
-        <item>@color/material_green_light_300</item>
-        <item>@color/material_lime_300</item>
-        <item>@color/material_yellow_300</item>
-        <item>@color/material_amber_300</item>
-        <item>@color/material_orange_300</item>
-        <item>@color/material_orange_deep_300</item>
-        <item>@color/material_brown_300</item>
-        <item>@color/material_grey_300</item>
-        <item>@color/material_grey_blue_300</item>
+        <item>@color/fw_material_red_300</item>
+        <item>@color/fw_material_pink_300</item>
+        <item>@color/fw_material_purple_300</item>
+        <item>@color/fw_material_purple_deep_300</item>
+        <item>@color/fw_material_indigo_300</item>
+        <item>@color/fw_material_blue_300</item>
+        <item>@color/fw_material_blue_light_300</item>
+        <item>@color/fw_material_cyan_300</item>
+        <item>@color/fw_material_teal_300</item>
+        <item>@color/fw_material_green_300</item>
+        <item>@color/fw_material_green_light_300</item>
+        <item>@color/fw_material_lime_300</item>
+        <item>@color/fw_material_yellow_300</item>
+        <item>@color/fw_material_amber_300</item>
+        <item>@color/fw_material_orange_300</item>
+        <item>@color/fw_material_orange_deep_300</item>
+        <item>@color/fw_material_brown_300</item>
+        <item>@color/fw_material_grey_300</item>
+        <item>@color/fw_material_grey_blue_300</item>
     </array>
 
     <array name="note_palette_bg">
         <item>@color/semi_surface_mono_dk</item>
-        <item>@color/material_red_700</item>
-        <item>@color/material_pink_700</item>
-        <item>@color/material_purple_700</item>
-        <item>@color/material_purple_deep_700</item>
-        <item>@color/material_indigo_700</item>
-        <item>@color/material_blue_700</item>
-        <item>@color/material_blue_light_700</item>
-        <item>@color/material_cyan_700</item>
-        <item>@color/material_teal_700</item>
-        <item>@color/material_green_700</item>
-        <item>@color/material_green_light_700</item>
-        <item>@color/material_lime_700</item>
-        <item>@color/material_yellow_700</item>
-        <item>@color/material_amber_700</item>
-        <item>@color/material_orange_700</item>
-        <item>@color/material_orange_deep_700</item>
-        <item>@color/material_brown_700</item>
-        <item>@color/material_grey_700</item>
-        <item>@color/material_grey_blue_700</item>
+        <item>@color/fw_material_red_700</item>
+        <item>@color/fw_material_pink_700</item>
+        <item>@color/fw_material_purple_700</item>
+        <item>@color/fw_material_purple_deep_700</item>
+        <item>@color/fw_material_indigo_700</item>
+        <item>@color/fw_material_blue_700</item>
+        <item>@color/fw_material_blue_light_700</item>
+        <item>@color/fw_material_cyan_700</item>
+        <item>@color/fw_material_teal_700</item>
+        <item>@color/fw_material_green_700</item>
+        <item>@color/fw_material_green_light_700</item>
+        <item>@color/fw_material_lime_700</item>
+        <item>@color/fw_material_yellow_700</item>
+        <item>@color/fw_material_amber_700</item>
+        <item>@color/fw_material_orange_700</item>
+        <item>@color/fw_material_orange_deep_700</item>
+        <item>@color/fw_material_brown_700</item>
+        <item>@color/fw_material_grey_700</item>
+        <item>@color/fw_material_grey_blue_700</item>
     </array>
 
 </resources>

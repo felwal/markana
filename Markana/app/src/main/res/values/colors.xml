@@ -4,7 +4,7 @@
     <!-- palette -->
 
     <!-- main -->
-    <color name="red_400">@color/material_red_400</color>
+    <color name="red_400">@color/fw_material_red_400</color>
 
     <!-- greyscale -->
     <color name="grey_16">#27292B</color>

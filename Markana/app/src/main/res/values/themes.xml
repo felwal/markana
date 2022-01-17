@@ -5,9 +5,6 @@
     <style name="Theme.Default" parent="Theme.Felwal">
         <item name="android:statusBarColor" tools:targetApi="l">?android:colorBackground</item>
 
-        <!-- text -->
-        <item name="android:textColorTertiary">@animator/selector_color_text_tertiary</item>
-
         <!-- primary -->
         <item name="colorPrimary">@color/red_400</item>
         <item name="colorOnPrimary">?android:colorBackground</item>
@@ -57,98 +54,98 @@
     </style>
 
     <style name="Theme.Markana.Note.Red">
-        <item name="colorPrimary">@color/material_red_500</item>
-        <item name="colorPrimaryVariant">@color/material_red_200</item>
+        <item name="colorPrimary">@color/fw_material_red_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_red_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Pink">
-        <item name="colorPrimary">@color/material_pink_500</item>
-        <item name="colorPrimaryVariant">@color/material_pink_200</item>
+        <item name="colorPrimary">@color/fw_material_pink_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_pink_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Purple">
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryVariant">@color/material_purple_200</item>
+        <item name="colorPrimary">@color/fw_material_purple_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_purple_200</item>
     </style>
 
     <style name="Theme.Markana.Note.PurpleDeep">
-        <item name="colorPrimary">@color/material_purple_deep_500</item>
-        <item name="colorPrimaryVariant">@color/material_purple_deep_200</item>
+        <item name="colorPrimary">@color/fw_material_purple_deep_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_purple_deep_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Indigo">
-        <item name="colorPrimary">@color/material_indigo_500</item>
-        <item name="colorPrimaryVariant">@color/material_indigo_200</item>
+        <item name="colorPrimary">@color/fw_material_indigo_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_indigo_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Blue">
-        <item name="colorPrimary">@color/material_blue_500</item>
-        <item name="colorPrimaryVariant">@color/material_blue_200</item>
+        <item name="colorPrimary">@color/fw_material_blue_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_blue_200</item>
     </style>
 
     <style name="Theme.Markana.Note.BlueLight">
-        <item name="colorPrimary">@color/material_blue_light_500</item>
-        <item name="colorPrimaryVariant">@color/material_blue_light_200</item>
+        <item name="colorPrimary">@color/fw_material_blue_light_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_blue_light_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Cyan">
-        <item name="colorPrimary">@color/material_cyan_500</item>
-        <item name="colorPrimaryVariant">@color/material_cyan_200</item>
+        <item name="colorPrimary">@color/fw_material_cyan_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_cyan_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Teal">
-        <item name="colorPrimary">@color/material_teal_500</item>
-        <item name="colorPrimaryVariant">@color/material_teal_200</item>
+        <item name="colorPrimary">@color/fw_material_teal_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_teal_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Green">
-        <item name="colorPrimary">@color/material_green_500</item>
-        <item name="colorPrimaryVariant">@color/material_green_200</item>
+        <item name="colorPrimary">@color/fw_material_green_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_green_200</item>
     </style>
 
     <style name="Theme.Markana.Note.GreenLight">
-        <item name="colorPrimary">@color/material_green_light_500</item>
-        <item name="colorPrimaryVariant">@color/material_green_light_200</item>
+        <item name="colorPrimary">@color/fw_material_green_light_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_green_light_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Lime">
-        <item name="colorPrimary">@color/material_lime_500</item>
-        <item name="colorPrimaryVariant">@color/material_lime_200</item>
+        <item name="colorPrimary">@color/fw_material_lime_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_lime_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Yellow">
-        <item name="colorPrimary">@color/material_yellow_700</item>
-        <item name="colorPrimaryVariant">@color/material_yellow_200</item>
+        <item name="colorPrimary">@color/fw_material_yellow_700</item>
+        <item name="colorPrimaryVariant">@color/fw_material_yellow_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Amber">
-        <item name="colorPrimary">@color/material_amber_600</item>
-        <item name="colorPrimaryVariant">@color/material_amber_200</item>
+        <item name="colorPrimary">@color/fw_material_amber_600</item>
+        <item name="colorPrimaryVariant">@color/fw_material_amber_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Orange">
-        <item name="colorPrimary">@color/material_orange_500</item>
-        <item name="colorPrimaryVariant">@color/material_orange_200</item>
+        <item name="colorPrimary">@color/fw_material_orange_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_orange_200</item>
     </style>
 
     <style name="Theme.Markana.Note.OrangeDeep">
-        <item name="colorPrimary">@color/material_orange_deep_500</item>
-        <item name="colorPrimaryVariant">@color/material_orange_deep_200</item>
+        <item name="colorPrimary">@color/fw_material_orange_deep_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_orange_deep_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Brown">
-        <item name="colorPrimary">@color/material_brown_500</item>
-        <item name="colorPrimaryVariant">@color/material_brown_200</item>
+        <item name="colorPrimary">@color/fw_material_brown_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_brown_200</item>
     </style>
 
     <style name="Theme.Markana.Note.Grey">
-        <item name="colorPrimary">@color/material_grey_500</item>
-        <item name="colorPrimaryVariant">@color/material_grey_200</item>
+        <item name="colorPrimary">@color/fw_material_grey_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_grey_200</item>
     </style>
 
     <style name="Theme.Markana.Note.GreyBlue">
-        <item name="colorPrimary">@color/material_grey_blue_500</item>
-        <item name="colorPrimaryVariant">@color/material_grey_blue_200</item>
+        <item name="colorPrimary">@color/fw_material_grey_blue_500</item>
+        <item name="colorPrimaryVariant">@color/fw_material_grey_blue_200</item>
     </style>
 
 </resources>
