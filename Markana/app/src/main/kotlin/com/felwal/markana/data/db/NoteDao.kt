@@ -93,15 +93,22 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE tree_id ISNULL AND uri LIKE '%' || :uriPathString")
     suspend fun getNoteLinkedIndependently(uriPathString: String): Note?
 
-    suspend fun getNotes(labelId: Long, searchQuery: String, sortBy: SortBy, asc: Boolean): List<Note> =
-        getNotesQuery(
-            SimpleSQLiteQuery(
-                "SELECT * FROM notes WHERE label_id = " + labelId +
-                    if (searchQuery.isNotEmpty()) " AND " + like(searchQuery, "filename", "content")
-                    else { "" } +
-                    orderBy(sortBy, asc)
-            )
+    suspend fun getNotes(
+        labelId: Long,
+        searchQuery: String,
+        sortBy: SortBy,
+        asc: Boolean,
+        showArchived: Boolean
+    ): List<Note> = getNotesQuery(
+        SimpleSQLiteQuery(
+            "SELECT * FROM notes WHERE label_id = " + labelId +
+                if (searchQuery.isNotEmpty()) " AND " + like(searchQuery, "filename", "content")
+                else { "" } +
+                if (!showArchived) " AND archived != 1"
+                else { "" } +
+                orderBy(sortBy, asc)
         )
+    )
 
     @RawQuery
     suspend fun getNotesQuery(sortQuery: SupportSQLiteQuery?): List<Note>

@@ -20,7 +20,7 @@ class NoteRepository(
     // read
 
     suspend fun getNotes(labelId: Long, searchQuery: String): List<Note> = withIO {
-        db.noteDao().getNotes(labelId, searchQuery, prefs.sortBy, prefs.ascending)
+        db.noteDao().getNotes(labelId, searchQuery, prefs.sortBy, prefs.ascending, prefs.showArchived)
     }
 
     suspend fun getNote(uri: String): Note? = withIO {

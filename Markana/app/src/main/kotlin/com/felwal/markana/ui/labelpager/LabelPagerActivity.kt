@@ -135,7 +135,7 @@ class LabelPagerActivity :
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.apply {
-            // set sorting
+            // set sort by
             findItem(
                 when (prefs.sortBy) {
                     SortBy.NAME -> R.id.action_sort_name
@@ -143,7 +143,12 @@ class LabelPagerActivity :
                     SortBy.OPENED -> R.id.action_sort_opened
                 }
             )?.isChecked = true
+
+            // set sort options
             findItem(R.id.action_sort_reverse)?.isChecked = prefs.reverseOrder
+
+            // set filter
+            findItem(R.id.action_filter_show_archived)?.isChecked = prefs.showArchived
 
             // set gridView
             findItem(R.id.action_view_toggle)?.let {
@@ -254,6 +259,11 @@ class LabelPagerActivity :
             R.id.action_sort_reverse -> {
                 item.isChecked = !item.isChecked
                 prefs.reverseOrder = item.isChecked
+                model.loadNotes()
+            }
+            R.id.action_filter_show_archived -> {
+                item.isChecked = !item.isChecked
+                prefs.showArchived = item.isChecked
                 model.loadNotes()
             }
 

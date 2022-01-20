@@ -9,6 +9,7 @@ private const val FILENAME = "com.felwal.markana.data.prefs"
 private const val KEY_SELECTED_LABEL_POSITION = "selected_tab"
 private const val KEY_SORT_BY = "sort_by"
 private const val KEY_SORT_ORDER_REVERSED = "sort_order_reversed"
+private const val KEY_FILTER_SHOW_ARCHIVED = "filter_show_archived"
 private const val KEY_GRID_VIEW = "grid_view"
 
 // settings: appearane
@@ -81,6 +82,10 @@ class Prefs(c: Context) {
     var reverseOrder: Boolean
         get() = sp.getBoolean(KEY_SORT_ORDER_REVERSED, false)
         set(value) = sp.putBoolean(KEY_SORT_ORDER_REVERSED, value)
+
+    var showArchived: Boolean
+        get() = sp.getBoolean(KEY_FILTER_SHOW_ARCHIVED, true)
+        set(value) = sp.putBoolean(KEY_FILTER_SHOW_ARCHIVED, value)
 
     var gridView: Boolean
         get() = sp.getBoolean(KEY_GRID_VIEW, true)

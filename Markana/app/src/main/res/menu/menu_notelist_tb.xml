@@ -41,11 +41,19 @@
             </group>
 
             <group
-                android:id="@+id/group_sort_order"
+                android:id="@+id/group_sort_options"
                 android:checkableBehavior="all">
                 <item
                     android:id="@+id/action_sort_reverse"
                     android:title="@string/action_sort_reverse" />
+            </group>
+
+            <group
+                android:id="@+id/group_filter"
+                android:checkableBehavior="all">
+                <item
+                    android:id="@+id/action_filter_show_archived"
+                    android:title="@string/action_filter_show_archived" />
             </group>
         </menu>
 
