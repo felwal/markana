@@ -28,8 +28,8 @@
                 android:id="@+id/tb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:menu="@menu/menu_notelist_tb"
-                tools:title="@string/title_activity_notelist"
+                tools:menu="@menu/menu_labelpager_tb"
+                tools:title="@string/title_activity_labelpager"
                 style="@style/Widget.Markana.Toolbar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

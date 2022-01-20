@@ -165,7 +165,7 @@ class LabelPagerActivity :
         when (model.selectionCount) {
             0 -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_notelist_tb, menu)
+                menuInflater.inflate(R.menu.menu_labelpager_tb, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
                 // change scroll flags: scroll and snap tb
@@ -176,7 +176,7 @@ class LabelPagerActivity :
                 val searchItem = menu.findItem(R.id.action_search)
                 searchItem.searchView.apply {
                     // set hint (xml attribute doesn't work)
-                    queryHint = getString(R.string.tv_notelist_search_hint)
+                    queryHint = getString(R.string.tv_labelpager_search_hint)
 
                     // set background
                     setBackgroundResource(R.drawable.layer_searchview_bg)
@@ -205,7 +205,7 @@ class LabelPagerActivity :
             }
             1 -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_notelist_tb_selection_single, menu)
+                menuInflater.inflate(R.menu.menu_labelpager_tb_selection_single, menu)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
                 // change scroll flags: don't scroll tb
@@ -221,7 +221,7 @@ class LabelPagerActivity :
             }
             else -> {
                 // set menu
-                menuInflater.inflate(R.menu.menu_notelist_tb_selection_multi, menu)
+                menuInflater.inflate(R.menu.menu_labelpager_tb_selection_multi, menu)
 
                 // update selection-count dependent actions
                 updatePinMenuItem(menu)
@@ -337,7 +337,7 @@ class LabelPagerActivity :
             tab.setBorderlessItemRipple()
 
             tab.setOnLongClickListener { v ->
-                popup(v, R.menu.menu_notelist_popup_label) { menuItem ->
+                popup(v, R.menu.menu_labelpager_popup_label) { menuItem ->
                     when (menuItem.itemId) {
                         R.id.action_rename_label -> renameLabel(labels[i])
                         R.id.action_delete_label -> deleteLabel(labels[i])
@@ -360,7 +360,7 @@ class LabelPagerActivity :
         binding.fam.apply {
             // create note
             addItem(
-                getString(R.string.tv_notelist_fab_create),
+                getString(R.string.tv_labelpager_fab_create),
                 R.drawable.ic_create_24
             ) {
                 deselectAll()
@@ -369,7 +369,7 @@ class LabelPagerActivity :
 
             // link note
             addItem(
-                getString(R.string.tv_notelist_fab_link),
+                getString(R.string.tv_labelpager_fab_link),
                 R.drawable.ic_link_24
             ) {
                 deselectAll()
@@ -378,7 +378,7 @@ class LabelPagerActivity :
 
             // link folder
             addItem(
-                getString(R.string.tv_notelist_fab_link_folder),
+                getString(R.string.tv_labelpager_fab_link_folder),
                 R.drawable.ic_folder_add_24
             ) {
                 deselectAll()
@@ -387,7 +387,7 @@ class LabelPagerActivity :
 
             // add label
             addItem(
-                getString(R.string.tv_notelist_fab_add_label),
+                getString(R.string.tv_labelpager_fab_add_label),
                 R.drawable.ic_label_24
             ) {
                 closeMenu()
@@ -411,11 +411,11 @@ class LabelPagerActivity :
 
     private fun updateToolbarTitle() {
         if (!model.isSelectionMode) {
-            supportActionBar?.title = getString(R.string.title_activity_notelist)
+            supportActionBar?.title = getString(R.string.title_activity_labelpager)
         }
         else {
             supportActionBar?.title =
-                getQuantityString(R.plurals.tb_notelist_title_selection, model.selectionCount)
+                getQuantityString(R.plurals.tb_labelpager_title_selection, model.selectionCount)
         }
     }
 

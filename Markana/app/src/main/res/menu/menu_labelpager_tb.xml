@@ -9,7 +9,7 @@
         android:title="@string/action_search"
         android:icon="@drawable/ic_search_24"
         android:iconifiedByDefault="true"
-        android:queryHint="@string/tv_notelist_search_hint"
+        android:queryHint="@string/tv_labelpager_search_hint"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
 

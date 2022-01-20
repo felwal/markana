@@ -6,7 +6,7 @@
 
     <!-- activity -->
 
-    <string name="title_activity_notelist">@string/app_name</string>
+    <string name="title_activity_labelpager">@string/app_name</string>
     <string name="title_activity_notedetail">Note</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -66,25 +66,27 @@
 
     <!-- view -->
 
-    <!-- notedetail -->
-    <string name="et_notedetail_title_hint">note.txt</string>
-    <string name="et_notedetail_body_hint">Note</string>
-    <string name="tv_notedetail_find_hint">Find …</string>
-
-    <!-- notelist -->
-    <plurals name="tb_notelist_title_selection">
+    <!-- labelpager -->
+    <plurals name="tb_labelpager_title_selection">
         <item quantity="one">%d note</item>
         <item quantity="other">%d notes</item>
     </plurals>
+    <string name="tv_labelpager_fab_create">Create note</string>
+    <string name="tv_labelpager_fab_link">Link file</string>
+    <string name="tv_labelpager_fab_link_folder">Link folder</string>
+    <string name="tv_labelpager_fab_add_label">Add label</string>
+    <string name="tv_labelpager_search_hint">Search …</string>
+
+    <!-- notelist -->
     <string name="tv_notelist_empty_new_title">Welcome to Markana!</string>
     <string name="tv_notelist_empty_new_message">Create your first note with +</string>
     <string name="tv_notelist_empty_search_title">No results found</string>
     <string name="tv_notelist_empty_search_message">Check spelling or try another term</string>
-    <string name="tv_notelist_fab_create">Create note</string>
-    <string name="tv_notelist_fab_link">Link file</string>
-    <string name="tv_notelist_fab_link_folder">Link folder</string>
-    <string name="tv_notelist_fab_add_label">Add label</string>
-    <string name="tv_notelist_search_hint">Search …</string>
+
+    <!-- notedetail -->
+    <string name="et_notedetail_title_hint">note.txt</string>
+    <string name="et_notedetail_body_hint">Note</string>
+    <string name="tv_notedetail_find_hint">Find …</string>
 
     <!-- settings -->
     <string name="tv_settings_header_appearance">Appearance</string>
