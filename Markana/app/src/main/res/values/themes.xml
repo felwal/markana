@@ -45,7 +45,7 @@
 
     <style name="Theme.Markana.Note">
         <item name="colorSecondary">?colorPrimary</item>
-        <item name="ma_colorSemiSurface">@animator/selector_color_semi_surface</item>
+        <item name="ma_colorSemiSurface">@drawable/selector_color_semi_surface</item>
     </style>
 
     <style name="Theme.Markana.Note.Mono">

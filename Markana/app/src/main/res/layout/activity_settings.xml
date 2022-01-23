@@ -10,7 +10,7 @@
         android:id="@+id/ab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stateListAnimator="@animator/selector_elev_ab"
+        android:stateListAnimator="@drawable/selector_elev_ab"
         android:theme="@style/ThemeOverlay.Markana.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
