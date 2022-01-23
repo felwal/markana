@@ -5,14 +5,14 @@
     <style name="Theme.Markana" parent="Theme.Default">
         <item name="android:windowLightStatusBar">false</item>
 
-        <item name="colorSemiSurface">@color/semi_surface_mono_dk</item>
+        <item name="ma_colorSemiSurface">@color/semi_surface_mono_dk</item>
     </style>
 
     <!-- dark note themes -->
 
     <style name="Theme.Markana.Note.Mono">
         <item name="colorPrimary">@color/text_primary_dk</item>
-        <item name="colorSemiSurface">@color/semi_surface_mono_dk</item>
+        <item name="ma_colorSemiSurface">@color/semi_surface_mono_dk</item>
     </style>
 
     <style name="Theme.Markana.Note.Red">

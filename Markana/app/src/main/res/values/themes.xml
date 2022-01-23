@@ -38,19 +38,19 @@
     <style name="Theme.Markana" parent="Theme.Default">
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="colorSemiSurface">@color/semiSurface_mono_lt</item>
+        <item name="ma_colorSemiSurface">@color/semiSurface_mono_lt</item>
     </style>
 
     <!-- light note themes -->
 
     <style name="Theme.Markana.Note">
         <item name="colorSecondary">?colorPrimary</item>
-        <item name="colorSemiSurface">@animator/selector_color_semi_surface</item>
+        <item name="ma_colorSemiSurface">@animator/selector_color_semi_surface</item>
     </style>
 
     <style name="Theme.Markana.Note.Mono">
         <item name="colorPrimary">@color/text_primary_lt</item>
-        <item name="colorSemiSurface">@color/semiSurface_mono_lt</item>
+        <item name="ma_colorSemiSurface">@color/semiSurface_mono_lt</item>
     </style>
 
     <style name="Theme.Markana.Note.Red">

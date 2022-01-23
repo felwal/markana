@@ -5,7 +5,7 @@
 
     <item>
         <shape>
-            <solid android:color="?attr/colorSemiSurface" />
+            <solid android:color="?attr/ma_colorSemiSurface" />
             <corners android:radius="@dimen/corner_radius_note" />
         </shape>
     </item>

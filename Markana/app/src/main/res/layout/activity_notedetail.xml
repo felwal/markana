@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:theme="@style/ThemeOverlay.Markana.ActionBar"
-                app:backgroundTint="?colorSemiSurface"
+                app:backgroundTint="?attr/ma_colorSemiSurface"
                 app:elevation="@dimen/elev_nb"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

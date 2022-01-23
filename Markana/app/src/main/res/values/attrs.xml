@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="colorSemiSurface" format="color|reference" />
+    <attr name="ma_colorSemiSurface" format="color|reference" />
 
 </resources>
