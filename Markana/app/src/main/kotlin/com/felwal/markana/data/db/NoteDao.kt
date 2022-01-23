@@ -111,7 +111,7 @@ interface NoteDao {
     )
 
     @RawQuery
-    suspend fun getNotesQuery(sortQuery: SupportSQLiteQuery?): List<Note>
+    suspend fun getNotesQuery(sortQuery: SupportSQLiteQuery): List<Note>
 
     @Query("SELECT uri FROM notes")
     suspend fun getUris(): List<String>
@@ -120,7 +120,7 @@ interface NoteDao {
         getUrisQuery(SimpleSQLiteQuery("SELECT uri FROM notes" + orderBy(sortBy, asc)))
 
     @RawQuery
-    suspend fun getUrisQuery(sortQuery: SupportSQLiteQuery?): List<String>
+    suspend fun getUrisQuery(sortQuery: SupportSQLiteQuery): List<String>
 
     @Query("SELECT count() FROM notes")
     suspend fun noteCount(): Int

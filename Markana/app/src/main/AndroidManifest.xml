@@ -14,10 +14,11 @@
 
         <activity
             android:name="com.felwal.markana.ui.labelpager.LabelPagerActivity"
-            android:label="@string/title_activity_labelpager">
+            android:label="@string/title_activity_labelpager"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,12 +26,14 @@
         <activity
             android:name="com.felwal.markana.ui.notedetail.NoteDetailActivity"
             android:parentActivityName="com.felwal.markana.ui.labelpager.LabelPagerActivity"
+            android:exported="true"
             android:label="@string/title_activity_notedetail"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name="com.felwal.markana.ui.setting.SettingsActivity"
             android:parentActivityName="com.felwal.markana.ui.labelpager.LabelPagerActivity"
+            android:exported="true"
             android:label="@string/title_activity_settings" />
 
     </application>
