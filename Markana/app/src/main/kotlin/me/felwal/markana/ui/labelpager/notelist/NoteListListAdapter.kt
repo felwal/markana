@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import me.felwal.android.util.dpToPx
 import me.felwal.android.util.getColorByAttr
-import me.felwal.android.util.multiplyAlphaComponent
+import me.felwal.android.util.withAlphaComponentMultiplied
 import me.felwal.markana.R
 import me.felwal.markana.data.Note
 import me.felwal.markana.data.prefs.SortBy
@@ -87,7 +87,7 @@ class NoteListListAdapter(
             }
             binding.tvBody.setTextColor(
                 if (!note.isArchived) c.getColorByAttr(android.R.attr.textColorSecondary)
-                else c.getColorByAttr(android.R.attr.textColorSecondary).multiplyAlphaComponent(0.35f)
+                else c.getColorByAttr(android.R.attr.textColorSecondary).withAlphaComponentMultiplied(0.35f)
             )
 
             // metadata
@@ -103,7 +103,7 @@ class NoteListListAdapter(
             }
             binding.tvMetadata.setTextColor(
                 if (!note.isArchived) c.getColorByAttr(android.R.attr.textColorTertiary)
-                else c.getColorByAttr(android.R.attr.textColorTertiary).multiplyAlphaComponent(0.35f)
+                else c.getColorByAttr(android.R.attr.textColorTertiary).withAlphaComponentMultiplied(0.35f)
             )
 
             // container: fill

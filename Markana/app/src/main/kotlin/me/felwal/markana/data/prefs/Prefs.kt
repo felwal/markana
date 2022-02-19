@@ -2,7 +2,9 @@ package me.felwal.markana.data.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
-import me.felwal.android.annotation.BumpFelwalAndRemove
+import me.felwal.android.util.putBoolean
+import me.felwal.android.util.putInt
+import me.felwal.android.util.putString
 
 private const val FILENAME = "me.felwal.markana.data.prefs"
 
@@ -142,18 +144,3 @@ class Prefs(c: Context) {
         get() = sp.getString(KEY_MD_SYMBOL_BREAK, "***") ?: "***"
         set(value) = sp.putString(KEY_MD_SYMBOL_BREAK, value)
 }
-
-@BumpFelwalAndRemove
-fun SharedPreferences.putBoolean(key: String, value: Boolean) = edit().putBoolean(key, value).apply()
-
-@BumpFelwalAndRemove
-fun SharedPreferences.putFloat(key: String, value: Float) = edit().putFloat(key, value).apply()
-
-@BumpFelwalAndRemove
-fun SharedPreferences.putInt(key: String, value: Int) = edit().putInt(key, value).apply()
-
-@BumpFelwalAndRemove
-fun SharedPreferences.putLong(key: String, value: Long) = edit().putLong(key, value).apply()
-
-@BumpFelwalAndRemove
-fun SharedPreferences.putString(key: String, value: String) = edit().putString(key, value).apply()

@@ -20,6 +20,10 @@ import io.noties.markwon.core.spans.EmphasisSpan
 import io.noties.markwon.core.spans.StrongEmphasisSpan
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
+import me.felwal.android.fragment.dialog.AlertDialog
+import me.felwal.android.fragment.dialog.SingleChoiceDialog
+import me.felwal.android.fragment.dialog.alertDialog
+import me.felwal.android.fragment.dialog.colorDialog
 import me.felwal.android.util.canScrollUp
 import me.felwal.android.util.closeIcon
 import me.felwal.android.util.coerceSelection
@@ -30,7 +34,6 @@ import me.felwal.android.util.getIntegerArray
 import me.felwal.android.util.getQuantityString
 import me.felwal.android.util.getResIdArray
 import me.felwal.android.util.makeMultilinePreventEnter
-import me.felwal.android.util.multiplyAlphaComponent
 import me.felwal.android.util.searchView
 import me.felwal.android.util.selectEnd
 import me.felwal.android.util.setActionItemRipple
@@ -38,11 +41,8 @@ import me.felwal.android.util.setOptionalIconsVisible
 import me.felwal.android.util.showKeyboard
 import me.felwal.android.util.string
 import me.felwal.android.util.toast
+import me.felwal.android.util.withAlphaComponentMultiplied
 import me.felwal.android.widget.control.DialogOption
-import me.felwal.android.widget.dialog.AlertDialog
-import me.felwal.android.widget.dialog.SingleChoiceDialog
-import me.felwal.android.widget.dialog.alertDialog
-import me.felwal.android.widget.dialog.colorDialog
 import me.felwal.markana.AppContainer
 import me.felwal.markana.R
 import me.felwal.markana.app
@@ -405,7 +405,7 @@ class NoteDetailActivity :
 
     private fun initUndoRedo() {
         val colorEnabled = getColorByAttr(R.attr.colorControlActivated)
-        val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
+        val colorDisabled = colorEnabled.withAlphaComponentMultiplied(0.5f)
         val undoItem = binding.tb.menu.findItem(R.id.action_undo)
         val redoItem = binding.tb.menu.findItem(R.id.action_redo)
 
@@ -440,7 +440,7 @@ class NoteDetailActivity :
 
         model.saveNote(note)
 
-        log.i("note saved: $note")
+        log.i("note saved: ${note.filename}")
     }
 
     private fun clearAllFocus() {
@@ -478,7 +478,7 @@ class NoteDetailActivity :
 
     private fun setFindInNoteNextAndPreviousState(enabled: Boolean) {
         val colorEnabled = getColorByAttr(R.attr.colorControlActivated)
-        val colorDisabled = colorEnabled.multiplyAlphaComponent(0.5f)
+        val colorDisabled = colorEnabled.withAlphaComponentMultiplied(0.5f)
         val itemColor = if (enabled) colorEnabled else colorDisabled
 
         binding.tb.menu.findItem(R.id.action_find_previous).apply {

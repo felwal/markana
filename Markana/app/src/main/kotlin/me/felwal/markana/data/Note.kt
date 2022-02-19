@@ -7,8 +7,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import me.felwal.android.util.getIntegerArray
-import me.felwal.android.util.multiplyAlphaComponent
 import me.felwal.android.util.split
+import me.felwal.android.util.withAlphaComponentMultiplied
 import me.felwal.markana.R
 
 const val ID_AUTO_GENERATE = 0L // must be 0 to enable autoincrement
@@ -38,7 +38,7 @@ data class Note(
     fun getColor(c: Context): Int {
         val color = c.getIntegerArray(R.array.note_palette)[colorIndex]
 
-        return if (isArchived) color.multiplyAlphaComponent(0.35f)
+        return if (isArchived) color.withAlphaComponentMultiplied(0.35f)
         else color
     }
 
@@ -46,9 +46,9 @@ data class Note(
     fun getBackgroundColor(c: Context): Int {
         val color =
             if (colorIndex == 0) c.getIntegerArray(R.array.note_palette_bg)[colorIndex]
-            else c.getIntegerArray(R.array.note_palette_bg)[colorIndex].multiplyAlphaComponent(0.15f)
+            else c.getIntegerArray(R.array.note_palette_bg)[colorIndex].withAlphaComponentMultiplied(0.15f)
 
-        return if (isArchived) color.multiplyAlphaComponent(0.35f)
+        return if (isArchived) color.withAlphaComponentMultiplied(0.35f)
         else color
     }
 

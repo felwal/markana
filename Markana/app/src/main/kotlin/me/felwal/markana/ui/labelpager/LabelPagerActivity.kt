@@ -11,6 +11,13 @@ import androidx.core.view.children
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import me.felwal.android.fragment.dialog.AlertDialog
+import me.felwal.android.fragment.dialog.InputDialog
+import me.felwal.android.fragment.dialog.SingleChoiceDialog
+import me.felwal.android.fragment.dialog.alertDialog
+import me.felwal.android.fragment.dialog.colorDialog
+import me.felwal.android.fragment.dialog.inputDialog
+import me.felwal.android.fragment.dialog.radioDialog
 import me.felwal.android.util.closeIcon
 import me.felwal.android.util.common
 import me.felwal.android.util.getDrawableCompatWithTint
@@ -25,13 +32,6 @@ import me.felwal.android.util.setOptionalIconsVisible
 import me.felwal.android.widget.control.DialogOption
 import me.felwal.android.widget.control.InputOption
 import me.felwal.android.widget.control.RadioGroupOption
-import me.felwal.android.widget.dialog.AlertDialog
-import me.felwal.android.widget.dialog.InputDialog
-import me.felwal.android.widget.dialog.SingleChoiceDialog
-import me.felwal.android.widget.dialog.alertDialog
-import me.felwal.android.widget.dialog.colorDialog
-import me.felwal.android.widget.dialog.inputDialog
-import me.felwal.android.widget.dialog.radioDialog
 import me.felwal.markana.R
 import me.felwal.markana.app
 import me.felwal.markana.data.Label

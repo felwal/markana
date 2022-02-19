@@ -3,12 +3,12 @@ package me.felwal.markana.ui.setting
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
-import me.felwal.android.ui.AbsSettingsActivity
+import me.felwal.android.fragment.app.AbsSettingsActivity
+import me.felwal.android.fragment.dialog.InputDialog
+import me.felwal.android.fragment.dialog.SingleChoiceDialog
+import me.felwal.android.fragment.dialog.SliderDialog
 import me.felwal.android.util.canScrollUp
 import me.felwal.android.util.getQuantityString
-import me.felwal.android.widget.dialog.InputDialog
-import me.felwal.android.widget.dialog.SingleChoiceDialog
-import me.felwal.android.widget.dialog.SliderDialog
 import me.felwal.markana.R
 import me.felwal.markana.data.prefs.Bullet
 import me.felwal.markana.data.prefs.Emph
