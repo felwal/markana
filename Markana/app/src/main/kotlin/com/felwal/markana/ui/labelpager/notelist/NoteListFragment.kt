@@ -1,6 +1,5 @@
 package com.felwal.markana.ui.labelpager.notelist
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +8,20 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.felwal.android.util.canScrollUp
-import com.felwal.android.util.getColorByAttr
-import com.felwal.android.util.getDrawableCompatWithTint
-import com.felwal.android.util.getInteger
-import com.felwal.android.util.isPortrait
-import com.felwal.android.util.removeAll
 import com.felwal.markana.R
 import com.felwal.markana.app
 import com.felwal.markana.data.Note
 import com.felwal.markana.databinding.FragmentNotelistBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.ui.labelpager.LabelPagerActivity
-import com.felwal.markana.ui.labelpager.NoteListListAdapter
+import com.felwal.markana.ui.labelpager.notelist.NoteListListAdapter
 import com.felwal.markana.ui.notedetail.NoteDetailActivity
-import com.felwal.markana.util.submitListKeepScroll
+import me.felwal.android.util.canScrollUp
+import me.felwal.android.util.getColorByAttr
+import me.felwal.android.util.getDrawableCompatWithTint
+import me.felwal.android.util.getInteger
+import me.felwal.android.util.isPortrait
+import me.felwal.android.util.submitListKeepScroll
 
 // args
 private const val ARG_POSITION = "labelId"

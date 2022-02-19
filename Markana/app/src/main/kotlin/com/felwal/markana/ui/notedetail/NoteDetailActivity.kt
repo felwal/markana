@@ -11,29 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
-import com.felwal.android.util.canScrollUp
-import com.felwal.android.util.closeIcon
-import com.felwal.android.util.coerceSelection
-import com.felwal.android.util.coerceSubstring
-import com.felwal.android.util.copyToClipboard
-import com.felwal.android.util.getColorByAttr
-import com.felwal.android.util.getIntegerArray
-import com.felwal.android.util.getQuantityString
-import com.felwal.android.util.getResIdArray
-import com.felwal.android.util.makeMultilinePreventEnter
-import com.felwal.android.util.multiplyAlphaComponent
-import com.felwal.android.util.searchView
-import com.felwal.android.util.selectEnd
-import com.felwal.android.util.setActionItemRipple
-import com.felwal.android.util.setOptionalIconsVisible
-import com.felwal.android.util.showKeyboard
-import com.felwal.android.util.string
-import com.felwal.android.util.toast
-import com.felwal.android.widget.dialog.AlertDialog
-import com.felwal.android.widget.dialog.SingleChoiceDialog
-import com.felwal.android.widget.dialog.alertDialog
-import com.felwal.android.widget.dialog.colorDialog
-import com.felwal.markana.App
 import com.felwal.markana.AppContainer
 import com.felwal.markana.R
 import com.felwal.markana.app
@@ -66,6 +43,29 @@ import io.noties.markwon.core.spans.EmphasisSpan
 import io.noties.markwon.core.spans.StrongEmphasisSpan
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
+import me.felwal.android.util.canScrollUp
+import me.felwal.android.util.closeIcon
+import me.felwal.android.util.coerceSelection
+import me.felwal.android.util.coerceSubstring
+import me.felwal.android.util.copyToClipboard
+import me.felwal.android.util.getColorByAttr
+import me.felwal.android.util.getIntegerArray
+import me.felwal.android.util.getQuantityString
+import me.felwal.android.util.getResIdArray
+import me.felwal.android.util.makeMultilinePreventEnter
+import me.felwal.android.util.multiplyAlphaComponent
+import me.felwal.android.util.searchView
+import me.felwal.android.util.selectEnd
+import me.felwal.android.util.setActionItemRipple
+import me.felwal.android.util.setOptionalIconsVisible
+import me.felwal.android.util.showKeyboard
+import me.felwal.android.util.string
+import me.felwal.android.util.toast
+import me.felwal.android.widget.control.DialogOption
+import me.felwal.android.widget.dialog.AlertDialog
+import me.felwal.android.widget.dialog.SingleChoiceDialog
+import me.felwal.android.widget.dialog.alertDialog
+import me.felwal.android.widget.dialog.colorDialog
 import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
@@ -212,10 +212,9 @@ class NoteDetailActivity :
             R.id.action_undo -> contentHistoryManager.undo()
             R.id.action_redo -> contentHistoryManager.redo()
             R.id.action_color -> colorDialog(
-                title = getString(R.string.dialog_title_color_notes),
+                DialogOption(getString(R.string.dialog_title_color_notes), tag = DIALOG_COLOR),
                 colors = getIntegerArray(R.array.note_palette),
                 checkedIndex = model.note.colorIndex,
-                tag = DIALOG_COLOR
             ).show(supportFragmentManager)
             R.id.action_find -> {
                 // get this before clearing
@@ -229,10 +228,12 @@ class NoteDetailActivity :
             }
             R.id.action_clipboard -> copyToClipboard(binding.etNoteBody.string)
             R.id.action_delete -> alertDialog(
-                title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
-                message = getString(R.string.dialog_msg_delete_notes),
-                posBtnTxtRes = R.string.dialog_btn_delete,
-                tag = DIALOG_DELETE
+                DialogOption(
+                    title = getQuantityString(R.plurals.dialog_title_delete_notes, 1),
+                    message = getString(R.string.dialog_msg_delete_notes),
+                    posBtnTxtRes = R.string.dialog_btn_delete,
+                    tag = DIALOG_DELETE
+                )
             ).show(supportFragmentManager)
 
             // find tb

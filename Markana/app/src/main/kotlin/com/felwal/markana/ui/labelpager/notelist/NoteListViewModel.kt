@@ -3,14 +3,14 @@ package com.felwal.markana.ui.labelpager.notelist
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felwal.android.util.removeAll
-import com.felwal.android.util.toggleInclusion
-import com.felwal.android.util.withUI
 import com.felwal.markana.data.Label
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
 import com.felwal.markana.ui.labelpager.LabelPagerViewModel
 import kotlinx.coroutines.launch
+import me.felwal.android.util.removeAll
+import me.felwal.android.util.toggleInclusion
+import me.felwal.android.util.withUI
 
 class NoteListViewModel(
     private val repo: NoteRepository,

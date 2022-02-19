@@ -3,12 +3,6 @@ package com.felwal.markana.ui.setting
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
-import com.felwal.android.ui.AbsSettingsActivity
-import com.felwal.android.util.canScrollUp
-import com.felwal.android.util.getQuantityString
-import com.felwal.android.widget.dialog.DecimalDialog
-import com.felwal.android.widget.dialog.SingleChoiceDialog
-import com.felwal.android.widget.dialog.TextDialog
 import com.felwal.markana.R
 import com.felwal.markana.data.prefs.Bullet
 import com.felwal.markana.data.prefs.Emph
@@ -17,6 +11,11 @@ import com.felwal.markana.data.prefs.Theme
 import com.felwal.markana.databinding.ActivitySettingsBinding
 import com.felwal.markana.prefs
 import com.felwal.markana.util.updateDayNight
+import me.felwal.android.ui.AbsSettingsActivity
+import me.felwal.android.util.canScrollUp
+import me.felwal.android.util.getQuantityString
+import me.felwal.android.widget.dialog.InputDialog
+import me.felwal.android.widget.dialog.SingleChoiceDialog
 
 private const val DIALOG_THEME = "themeDialog"
 private const val DIALOG_MAX_LINES = "maxLinesDialog"
@@ -28,8 +27,7 @@ private const val DIALOG_HR = "hrDialog"
 class SettingsActivity :
     AbsSettingsActivity(dividerMode = DividerMode.IN_SECTION, indentEverything = false),
     SingleChoiceDialog.DialogListener,
-    TextDialog.DialogListener,
-    DecimalDialog.DialogListener {
+    InputDialog.DialogListener {
 
     // view
     private lateinit var binding: ActivitySettingsBinding
@@ -183,15 +181,9 @@ class SettingsActivity :
         reflateViews()
     }
 
-    override fun onTextDialogPositiveClick(input: String, tag: String, passValue: String?) {
+    override fun onInputDialogPositiveClick(input: String, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_HR -> prefs.breakSymbol = input
-        }
-        reflateViews()
-    }
-
-    override fun onDecimalDialogPositiveClick(input: Float, tag: String, passValue: String?) {
-        when (tag) {
             DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input.toInt()
         }
         reflateViews()

@@ -1,4 +1,4 @@
-package com.felwal.markana.ui.labelpager
+package com.felwal.markana.ui.labelpager.notelist
 
 import android.content.Context
 import android.graphics.PorterDuff
@@ -9,9 +9,6 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.felwal.android.util.getColorByAttr
-import com.felwal.android.util.multiplyAlphaComponent
-import com.felwal.android.util.px
 import com.felwal.markana.R
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.prefs.SortBy
@@ -22,6 +19,9 @@ import com.felwal.markana.util.FORMATTER_THIS_YEAR
 import com.felwal.markana.util.FORMATTER_TODAY
 import com.felwal.markana.util.atStartOfYear
 import com.felwal.markana.util.fromEpochSecond
+import me.felwal.android.util.dpToPx
+import me.felwal.android.util.getColorByAttr
+import me.felwal.android.util.multiplyAlphaComponent
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -120,7 +120,7 @@ class NoteListListAdapter(
                 // check to not set stroke twice
                 if (!note.isSelected) {
                     (binding.ivBorder.background as GradientDrawable)
-                        .setStroke(1.px, c.getColorByAttr(android.R.attr.listDivider))
+                        .setStroke(1.dpToPx, c.getColorByAttr(android.R.attr.listDivider))
                 }
             }
 
@@ -128,7 +128,7 @@ class NoteListListAdapter(
             if (note.isSelected) {
                 binding.ivBorder.isGone = false
                 (binding.ivBorder.background as GradientDrawable)
-                    .setStroke(1.px, c.getColorByAttr(R.attr.colorOnBackground))
+                    .setStroke(1.dpToPx, c.getColorByAttr(R.attr.colorOnBackground))
             }
 
             // item icon

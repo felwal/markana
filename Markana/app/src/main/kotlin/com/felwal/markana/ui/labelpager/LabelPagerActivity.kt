@@ -8,24 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
-import com.felwal.android.util.closeIcon
-import com.felwal.android.util.common
-import com.felwal.android.util.getDrawableCompatWithTint
-import com.felwal.android.util.getIntegerArray
-import com.felwal.android.util.getQuantityString
-import com.felwal.android.util.launchActivity
-import com.felwal.android.util.popup
-import com.felwal.android.util.searchView
-import com.felwal.android.util.setActionItemRipple
-import com.felwal.android.util.setBorderlessItemRipple
-import com.felwal.android.util.setOptionalIconsVisible
-import com.felwal.android.widget.dialog.AlertDialog
-import com.felwal.android.widget.dialog.SingleChoiceDialog
-import com.felwal.android.widget.dialog.TextDialog
-import com.felwal.android.widget.dialog.alertDialog
-import com.felwal.android.widget.dialog.colorDialog
-import com.felwal.android.widget.dialog.radioDialog
-import com.felwal.android.widget.dialog.textDialog
 import com.felwal.markana.R
 import com.felwal.markana.app
 import com.felwal.markana.data.Label
@@ -39,6 +21,27 @@ import com.felwal.markana.util.updateDayNight
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import me.felwal.android.util.closeIcon
+import me.felwal.android.util.common
+import me.felwal.android.util.getDrawableCompatWithTint
+import me.felwal.android.util.getIntegerArray
+import me.felwal.android.util.getQuantityString
+import me.felwal.android.util.launchActivity
+import me.felwal.android.util.popup
+import me.felwal.android.util.searchView
+import me.felwal.android.util.setActionItemRipple
+import me.felwal.android.util.setBorderlessItemRipple
+import me.felwal.android.util.setOptionalIconsVisible
+import me.felwal.android.widget.control.DialogOption
+import me.felwal.android.widget.control.InputOption
+import me.felwal.android.widget.control.RadioGroupOption
+import me.felwal.android.widget.dialog.AlertDialog
+import me.felwal.android.widget.dialog.InputDialog
+import me.felwal.android.widget.dialog.SingleChoiceDialog
+import me.felwal.android.widget.dialog.alertDialog
+import me.felwal.android.widget.dialog.colorDialog
+import me.felwal.android.widget.dialog.inputDialog
+import me.felwal.android.widget.dialog.radioDialog
 
 private const val DIALOG_DELETE_NOTES = "deleteNotes"
 private const val DIALOG_UNLINK_NOTES = "unlinkNotes"
@@ -53,7 +56,7 @@ class LabelPagerActivity :
     AppCompatActivity(),
     AlertDialog.DialogListener,
     SingleChoiceDialog.DialogListener,
-    TextDialog.DialogListener {
+    InputDialog.DialogListener {
 
     // data
     private lateinit var model: LabelPagerViewModel
@@ -77,12 +80,13 @@ class LabelPagerActivity :
 
         model.handleOpenedDocument(uri)
     }
-    private val openDocumentTreeLauncher = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-        uri ?: return@registerForActivityResult
-        i("open document tree uri result: $uri")
+    private val openDocumentTreeLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            uri ?: return@registerForActivityResult
+            i("open document tree uri result: $uri")
 
-        model.handleOpenedTree(uri)
-    }
+            model.handleOpenedTree(uri)
+        }
 
     // lifecycle
 
@@ -391,10 +395,9 @@ class LabelPagerActivity :
                 R.drawable.ic_label_24
             ) {
                 closeMenu()
-                textDialog(
-                    getString(R.string.dialog_title_add_label),
-                    "", "", getString(R.string.dialog_et_hint_add_label),
-                    tag = DIALOG_ADD_LABEL
+                inputDialog(
+                    DialogOption(getString(R.string.dialog_title_add_label), "", tag = DIALOG_ADD_LABEL),
+                    InputOption(hint = getString(R.string.dialog_et_hint_add_label))
                 ).show(supportFragmentManager)
             }
         }
@@ -475,19 +478,25 @@ class LabelPagerActivity :
 
     //
 
-    private fun renameLabel(label: Label) = textDialog(
-        title = getString(R.string.dialog_title_rename_label),
-        text = label.name,
-        hint = getString(R.string.dialog_et_hint_add_label),
-        tag = DIALOG_RENAME_LABEL,
-        passValue = label.id.toString()
+    private fun renameLabel(label: Label) = inputDialog(
+        DialogOption(
+            getString(R.string.dialog_title_rename_label),
+            tag = DIALOG_RENAME_LABEL,
+            passValue = label.id.toString()
+        ),
+        InputOption(
+            text = label.name,
+            hint = getString(R.string.dialog_et_hint_add_label)
+        )
     ).show(supportFragmentManager)
 
     private fun deleteLabel(label: Label) = alertDialog(
-        title = getString(R.string.dialog_title_delete_label),
-        message = getString(R.string.dialog_msg_delete_label),
-        tag = DIALOG_DELETE_LABEL,
-        passValue = label.id.toString()
+        DialogOption(
+            title = getString(R.string.dialog_title_delete_label),
+            message = getString(R.string.dialog_msg_delete_label),
+            tag = DIALOG_DELETE_LABEL,
+            passValue = label.id.toString()
+        )
     ).show(supportFragmentManager)
 
     // selection
@@ -517,10 +526,9 @@ class LabelPagerActivity :
     }
 
     private fun colorSelection() = colorDialog(
-        title = getString(R.string.dialog_title_color_notes),
+        DialogOption(getString(R.string.dialog_title_color_notes), tag = DIALOG_COLOR_NOTES),
         colors = getIntegerArray(R.array.note_palette),
-        checkedIndex = model.selectedNotes.common { it.colorIndex },
-        tag = DIALOG_COLOR_NOTES
+        checkedIndex = model.selectedNotes.common { it.colorIndex }
     ).show(supportFragmentManager)
 
     private fun labelSelection() {
@@ -528,9 +536,9 @@ class LabelPagerActivity :
         val selectedIndex = model.labels.map { it.id }.indexOf(model.selectedNotes[0].labelId)
         val icons = IntArray(names.size) { R.drawable.ic_label_24 }
 
-        radioDialog(getString(R.string.dialog_title_label_notes),
-            names.toTypedArray(), selectedIndex, icons,
-            tag = DIALOG_LABEL_NOTES
+        radioDialog(
+            DialogOption(getString(R.string.dialog_title_label_notes), tag = DIALOG_LABEL_NOTES),
+            RadioGroupOption(names.toTypedArray(), selectedIndex, icons)
         ).show(supportFragmentManager)
     }
 
@@ -540,24 +548,30 @@ class LabelPagerActivity :
     }
 
     private fun unlinkSelection() = alertDialog(
-        title = getQuantityString(R.plurals.dialog_title_unlink_notes, model.selectionCount),
-        message = getQuantityString(R.plurals.dialog_msg_unlink_notes, model.selectionCount),
-        posBtnTxtRes = R.string.dialog_btn_unlink,
-        tag = DIALOG_UNLINK_NOTES
+        DialogOption(
+            title = getQuantityString(R.plurals.dialog_title_unlink_notes, model.selectionCount),
+            message = getQuantityString(R.plurals.dialog_msg_unlink_notes, model.selectionCount),
+            posBtnTxtRes = R.string.dialog_btn_unlink,
+            tag = DIALOG_UNLINK_NOTES
+        )
     ).show(supportFragmentManager)
 
     private fun unlinkSelectionTrees() = alertDialog(
-        title = getQuantityString(R.plurals.dialog_title_unlink_tree, model.treeSelectionCount),
-        message = getQuantityString(R.plurals.dialog_msg_unlink_trees, model.treeSelectionCount),
-        posBtnTxtRes = R.string.dialog_btn_unlink,
-        tag = DIALOG_UNLINK_TREES
+        DialogOption(
+            title = getQuantityString(R.plurals.dialog_title_unlink_tree, model.treeSelectionCount),
+            message = getQuantityString(R.plurals.dialog_msg_unlink_trees, model.treeSelectionCount),
+            posBtnTxtRes = R.string.dialog_btn_unlink,
+            tag = DIALOG_UNLINK_TREES
+        )
     ).show(supportFragmentManager)
 
     private fun deleteSelection() = alertDialog(
-        title = getQuantityString(R.plurals.dialog_title_delete_notes, model.selectionCount),
-        message = getString(R.string.dialog_msg_delete_notes),
-        posBtnTxtRes = R.string.dialog_btn_delete,
-        tag = DIALOG_DELETE_NOTES
+        DialogOption(
+            title = getQuantityString(R.plurals.dialog_title_delete_notes, model.selectionCount),
+            message = getString(R.string.dialog_msg_delete_notes),
+            posBtnTxtRes = R.string.dialog_btn_delete,
+            tag = DIALOG_DELETE_NOTES
+        )
     ).show(supportFragmentManager)
 
     // dialog
@@ -595,7 +609,7 @@ class LabelPagerActivity :
         }
     }
 
-    override fun onTextDialogPositiveClick(input: String, tag: String, passValue: String?) {
+    override fun onInputDialogPositiveClick(input: String, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_ADD_LABEL -> model.addLabel(input)
             DIALOG_RENAME_LABEL -> {

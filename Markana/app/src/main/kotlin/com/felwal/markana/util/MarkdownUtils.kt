@@ -3,11 +3,11 @@ package com.felwal.markana.util
 import android.text.Editable
 import android.text.Layout
 import android.widget.EditText
-import com.felwal.android.util.coerceSelection
-import com.felwal.android.util.coerceSubstring
-import com.felwal.android.util.copy
-import com.felwal.android.util.updateEditable
 import com.felwal.markana.prefs
+import me.felwal.android.util.coerceSelection
+import me.felwal.android.util.coerceSubstring
+import me.felwal.android.util.copy
+import me.felwal.android.util.updateEditable
 
 private val emph get() = prefs.emphSymbol
 private val strong get() = prefs.strongSymbol

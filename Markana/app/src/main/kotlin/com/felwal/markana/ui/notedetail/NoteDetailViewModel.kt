@@ -5,10 +5,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felwal.android.util.findAll
 import com.felwal.markana.data.Note
 import com.felwal.markana.data.NoteRepository
 import kotlinx.coroutines.launch
+import me.felwal.android.util.findAll
 
 class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
 

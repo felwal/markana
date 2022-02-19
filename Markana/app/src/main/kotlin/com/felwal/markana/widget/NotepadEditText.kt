@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
 import androidx.appcompat.widget.AppCompatEditText
-import com.felwal.android.util.hideKeyboard
+import me.felwal.android.util.hideKeyboard
 
 class NotepadEditText(
     context: Context,
