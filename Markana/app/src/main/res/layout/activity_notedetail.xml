@@ -61,7 +61,7 @@
                 android:paddingStart="@dimen/spacing_small"
                 android:paddingEnd="@dimen/spacing_small">
 
-                <com.felwal.markana.widget.NotepadEditText
+                <me.felwal.markana.widget.NotepadEditText
                     android:id="@+id/et_note_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                     tools:text="note.md"
                     style="@style/Widget.Markana.EditText.NoTint" />
 
-                <com.felwal.markana.widget.NotepadEditText
+                <me.felwal.markana.widget.NotepadEditText
                     android:id="@+id/et_note_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

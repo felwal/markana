@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.felwal.markana">
+    package="me.felwal.markana">
 
     <application
-        android:name="com.felwal.markana.App"
+        android:name="me.felwal.markana.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Markana">
 
         <activity
-            android:name="com.felwal.markana.ui.labelpager.LabelPagerActivity"
+            android:name="me.felwal.markana.ui.labelpager.LabelPagerActivity"
             android:label="@string/title_activity_labelpager"
             android:exported="true">
 
@@ -24,15 +24,15 @@
         </activity>
 
         <activity
-            android:name="com.felwal.markana.ui.notedetail.NoteDetailActivity"
-            android:parentActivityName="com.felwal.markana.ui.labelpager.LabelPagerActivity"
+            android:name="me.felwal.markana.ui.notedetail.NoteDetailActivity"
+            android:parentActivityName="me.felwal.markana.ui.labelpager.LabelPagerActivity"
             android:exported="true"
             android:label="@string/title_activity_notedetail"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.felwal.markana.ui.setting.SettingsActivity"
-            android:parentActivityName="com.felwal.markana.ui.labelpager.LabelPagerActivity"
+            android:name="me.felwal.markana.ui.setting.SettingsActivity"
+            android:parentActivityName="me.felwal.markana.ui.labelpager.LabelPagerActivity"
             android:exported="true"
             android:label="@string/title_activity_settings" />
 
