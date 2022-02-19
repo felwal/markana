@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.felwal.android.util.findAll
 import me.felwal.markana.data.Note
-import me.felwal.markana.data.NoteRepository
+import me.felwal.markana.data.Repository
 
-class NoteDetailViewModel(private val repo: NoteRepository) : ViewModel() {
+class NoteDetailViewModel(private val repo: Repository) : ViewModel() {
 
     // primary
     val noteData by lazy { MutableLiveData<Note>() }

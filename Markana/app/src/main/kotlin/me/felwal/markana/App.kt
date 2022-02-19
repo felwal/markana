@@ -2,7 +2,12 @@ package me.felwal.markana
 
 import android.app.Activity
 import android.app.Application
+import me.felwal.android.util.FLog
 import me.felwal.markana.data.prefs.Prefs
+
+const val LOG_TAG = "Markana"
+
+val log = FLog(LOG_TAG)
 
 var displayDensity: Float? = null
     private set

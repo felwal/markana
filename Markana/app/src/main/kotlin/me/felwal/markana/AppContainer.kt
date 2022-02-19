@@ -2,7 +2,7 @@ package me.felwal.markana
 
 import android.content.Context
 import me.felwal.markana.data.Label
-import me.felwal.markana.data.NoteRepository
+import me.felwal.markana.data.Repository
 import me.felwal.markana.data.db.DbDataSource
 import me.felwal.markana.data.network.SafDataSource
 import me.felwal.markana.ui.labelpager.LabelPagerViewModel
@@ -19,16 +19,16 @@ class AppContainer(applicationContext: Context) {
     private val saf = SafDataSource(applicationContext)
 
     // repository
-    val noteRepository = NoteRepository(applicationContext, db, saf)
+    val repository = Repository(applicationContext, db, saf)
 
     // viewmodel
-    val labelPagerViewModel = LabelPagerViewModel(noteRepository)
+    val labelPagerViewModel = LabelPagerViewModel(repository)
     var noteListViewModels = listOf<NoteListViewModel>()
 
     //
 
     fun createNoteListViewModels(labels: List<Label>) {
-        noteListViewModels = labels.map { label -> NoteListViewModel(noteRepository, labelPagerViewModel, label) }
+        noteListViewModels = labels.map { label -> NoteListViewModel(repository, labelPagerViewModel, label) }
         labelPagerViewModel.noteListViewModels = noteListViewModels
     }
 }

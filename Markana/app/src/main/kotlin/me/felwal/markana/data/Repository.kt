@@ -12,7 +12,7 @@ import me.felwal.markana.data.network.SafDataSource
 import me.felwal.markana.prefs
 import me.felwal.markana.util.toUriPathString
 
-class NoteRepository(
+class Repository(
     private val applicationContext: Context,
     private val db: DbDataSource,
     private val saf: SafDataSource

@@ -49,7 +49,7 @@ import me.felwal.markana.app
 import me.felwal.markana.data.Note
 import me.felwal.markana.data.network.CreateTextDocument
 import me.felwal.markana.databinding.ActivityNotedetailBinding
-import me.felwal.markana.util.i
+import me.felwal.markana.log
 import me.felwal.markana.util.indent
 import me.felwal.markana.util.insertThematicBreak
 import me.felwal.markana.util.outdent
@@ -93,7 +93,7 @@ class NoteDetailActivity :
     private val createDocument = registerForActivityResult(CreateTextDocument()) { uri ->
         // the user didn't pick a location; cancel activity
         uri ?: finish().also { return@registerForActivityResult }
-        i("create document uri result: $uri")
+        log.i("create document uri result: $uri")
 
         model.handleCreatedDocument(uri)
     }
@@ -280,7 +280,7 @@ class NoteDetailActivity :
 
     private fun initData() {
         appContainer = app.appContainer
-        appContainer.noteDetailContainer = NoteDetailContainer(appContainer.noteRepository)
+        appContainer.noteDetailContainer = NoteDetailContainer(appContainer.repository)
         model = appContainer.noteDetailContainer!!.noteDetailViewModel
 
         // set up uri and load / create file
@@ -440,7 +440,7 @@ class NoteDetailActivity :
 
         model.saveNote(note)
 
-        i("note saved: $note")
+        log.i("note saved: $note")
     }
 
     private fun clearAllFocus() {

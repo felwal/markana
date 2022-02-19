@@ -37,10 +37,10 @@ import me.felwal.markana.app
 import me.felwal.markana.data.Label
 import me.felwal.markana.data.prefs.SortBy
 import me.felwal.markana.databinding.ActivityLabelpagerBinding
+import me.felwal.markana.log
 import me.felwal.markana.prefs
 import me.felwal.markana.ui.notedetail.NoteDetailActivity
 import me.felwal.markana.ui.setting.SettingsActivity
-import me.felwal.markana.util.i
 import me.felwal.markana.util.updateDayNight
 
 private const val DIALOG_DELETE_NOTES = "deleteNotes"
@@ -76,14 +76,14 @@ class LabelPagerActivity :
     // saf result launcher
     private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@registerForActivityResult
-        i("open document uri result: $uri")
+        log.i("open document uri result: $uri")
 
         model.handleOpenedDocument(uri)
     }
     private val openDocumentTreeLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             uri ?: return@registerForActivityResult
-            i("open document tree uri result: $uri")
+            log.i("open document tree uri result: $uri")
 
             model.handleOpenedTree(uri)
         }

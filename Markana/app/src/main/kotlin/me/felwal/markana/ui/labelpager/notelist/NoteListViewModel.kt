@@ -9,11 +9,11 @@ import me.felwal.android.util.toggleInclusion
 import me.felwal.android.util.withUI
 import me.felwal.markana.data.Label
 import me.felwal.markana.data.Note
-import me.felwal.markana.data.NoteRepository
+import me.felwal.markana.data.Repository
 import me.felwal.markana.ui.labelpager.LabelPagerViewModel
 
 class NoteListViewModel(
-    private val repo: NoteRepository,
+    private val repo: Repository,
     private val labelPagerViewModel: LabelPagerViewModel,
     val label: Label
 ) : ViewModel() {

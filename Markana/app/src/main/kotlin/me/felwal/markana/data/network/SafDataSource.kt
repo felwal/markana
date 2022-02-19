@@ -1,5 +1,6 @@
 package me.felwal.markana.data.network
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -15,22 +16,18 @@ import androidx.documentfile.provider.DocumentFile
 import me.felwal.android.util.coToastLog
 import me.felwal.android.util.toastLog
 import me.felwal.android.util.tryToastLog
+import me.felwal.markana.LOG_TAG
 import me.felwal.markana.R
 import me.felwal.markana.data.Note
 import me.felwal.markana.data.Tree
-import me.felwal.markana.util.LOG_TAG
-import me.felwal.markana.util.i
+import me.felwal.markana.log
+import me.felwal.markana.util.MIME_TEXT
+import me.felwal.markana.util.MIME_TEXT_TYPE
 import me.felwal.markana.util.isMime
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStreamReader
-
-private const val MIME_TEXT_TYPE = "text"
-private const val MIME_ANY = "*/*"
-private const val MIME_TEXT = "text/*"
-private const val MIME_TEXT_PLAIN = "text/plain"
-private const val MIME_TEXT_MARKDOWN = "text/markdown"
 
 class SafDataSource(private val applicationContext: Context) {
 
@@ -128,7 +125,7 @@ class SafDataSource(private val applicationContext: Context) {
 
         if (wrongMimeCount > 0) {
             //applicationContext.coToast("$wrongMimeCount files were not linked due to wrong format")
-            i("$wrongMimeCount files were not linked due to wrong format")
+            log.i("$wrongMimeCount files were not linked due to wrong format")
         }
 
         return notes
@@ -263,6 +260,7 @@ class SafDataSource(private val applicationContext: Context) {
         resolver.getDisplayName(uri).substring(0, 1) == "."
 }
 
+@SuppressLint("Range")
 private fun ContentResolver.getDisplayName(uri: Uri): String {
     val cursor = query(uri, null, null, null, null, null)
     cursor?.use {

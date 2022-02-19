@@ -8,6 +8,7 @@ import me.felwal.android.util.canScrollUp
 import me.felwal.android.util.getQuantityString
 import me.felwal.android.widget.dialog.InputDialog
 import me.felwal.android.widget.dialog.SingleChoiceDialog
+import me.felwal.android.widget.dialog.SliderDialog
 import me.felwal.markana.R
 import me.felwal.markana.data.prefs.Bullet
 import me.felwal.markana.data.prefs.Emph
@@ -27,7 +28,8 @@ private const val DIALOG_HR = "hrDialog"
 class SettingsActivity :
     AbsSettingsActivity(dividerMode = DividerMode.IN_SECTION, indentEverything = false),
     SingleChoiceDialog.DialogListener,
-    InputDialog.DialogListener {
+    InputDialog.DialogListener,
+    SliderDialog.DialogListener {
 
     // view
     private lateinit var binding: ActivitySettingsBinding
@@ -184,6 +186,12 @@ class SettingsActivity :
     override fun onInputDialogPositiveClick(input: String, tag: String, passValue: String?) {
         when (tag) {
             DIALOG_HR -> prefs.breakSymbol = input
+        }
+        reflateViews()
+    }
+
+    override fun onSliderDialogPositiveClick(input: Float, tag: String, passValue: String?) {
+        when (tag) {
             DIALOG_MAX_LINES -> prefs.notePreviewMaxLines = input.toInt()
         }
         reflateViews()

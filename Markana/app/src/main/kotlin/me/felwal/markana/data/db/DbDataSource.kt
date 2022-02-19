@@ -20,7 +20,6 @@ abstract class DbDataSource : RoomDatabase() {
     abstract fun labelDao(): LabelDao
 
     companion object {
-
         // for Singleton instantiation
         @Volatile private var instance: DbDataSource? = null
 

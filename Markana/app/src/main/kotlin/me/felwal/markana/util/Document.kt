@@ -5,6 +5,12 @@ import me.felwal.android.util.split
 
 // mime
 
+const val MIME_TEXT_TYPE = "text"
+const val MIME_ANY = "*/*"
+const val MIME_TEXT = "text/*"
+const val MIME_TEXT_PLAIN = "text/plain"
+const val MIME_TEXT_MARKDOWN = "text/markdown"
+
 fun String.isMime(type: String): Boolean {
     val (thisType, thisSubtype) = split("/", lowerLimit = 2)
     return thisType == type

@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.felwal.markana.data.Label
 import me.felwal.markana.data.Note
-import me.felwal.markana.data.NoteRepository
+import me.felwal.markana.data.Repository
 import me.felwal.markana.ui.labelpager.notelist.NoteListViewModel
 
-class LabelPagerViewModel(private val repo: NoteRepository) : ViewModel() {
+class LabelPagerViewModel(private val repo: Repository) : ViewModel() {
 
     val labelsData by lazy {
         MutableLiveData<MutableList<Label>>()
